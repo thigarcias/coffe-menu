@@ -45,7 +45,7 @@ test.describe('cardápio no celular', () => {
     await expect(page.locator('.cat--on')).toHaveText('Salgados')
   })
 
-  test('dica de deslizar aparece no começo, fica acima do dock e some depois de deslizar', async ({ page }) => {
+  test('dica de deslizar aparece no primeiro produto, fica acima do dock e some ao deslizar', async ({ page }) => {
     const hint = page.locator('.swipe-hint')
     await expect(hint).toBeVisible()
     const h = await box(hint)
@@ -53,9 +53,12 @@ test.describe('cardápio no celular', () => {
     expect(h.y).toBeGreaterThanOrEqual((await box(page.locator('.slide__body').first())).bottom - 1)
     await page.locator('.feed').evaluate((el) => el.scrollBy(0, el.clientHeight))
     await expect(hint).toHaveCount(0)
+    // voltando ao primeiro produto, a dica aparece de novo (nada fica gravado)
+    await page.locator('.feed').evaluate((el) => el.scrollTo(0, 0))
+    await expect(hint).toBeVisible()
     await page.reload()
     await page.locator('[data-item]').first().waitFor()
-    await expect(page.locator('.swipe-hint')).toHaveCount(0)
+    await expect(page.locator('.swipe-hint')).toBeVisible()
   })
 
   test('o app preenche a tela inteira, sem faixa vazia', async ({ page }) => {

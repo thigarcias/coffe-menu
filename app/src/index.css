@@ -382,13 +382,13 @@ img { display: block; max-width: none; }
   bottom: calc(max(16px, env(safe-area-inset-bottom)) + var(--dock-h) + 6px);
   transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 0;
-  font-size: 10.5px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
-  color: var(--ink-3); pointer-events: none;
-  animation: hint-in .6s ease-out .8s both;
+  font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--ink-2); pointer-events: none;
+  animation: hint-in .5s ease-out .4s both;
 }
-.swipe-hint svg { margin-top: -2px; animation: nudge 1.8s ease-in-out 1.4s infinite; }
+.swipe-hint svg { margin-top: -3px; animation: nudge 1.6s ease-in-out .9s infinite; }
 @keyframes hint-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+@keyframes nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
 @media (prefers-reduced-motion: reduce) {
   .swipe-hint, .swipe-hint svg { animation: none; }
 }

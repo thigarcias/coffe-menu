@@ -61,25 +61,12 @@ export default function App() {
     })
   }, [])
 
-  // Dica "deslize": aparece até a pessoa passar do primeiro produto, e não volta mais.
-  const [swiped, setSwiped] = useState(() => {
-    try {
-      return localStorage.getItem('cm.swiped') === '1'
-    } catch {
-      return false
-    }
-  })
+  // Dica "deslize": aparece enquanto a pessoa está no primeiro produto.
+  const [atFirst, setAtFirst] = useState(true)
   const onActive = useCallback(
     (item: MenuItem) => {
       setActiveCat(item.category)
-      if (item.id !== items[0]?.id) {
-        setSwiped(true)
-        try {
-          localStorage.setItem('cm.swiped', '1')
-        } catch {
-          /* ignora */
-        }
-      }
+      setAtFirst(item.id === items[0]?.id)
     },
     [items],
   )
@@ -135,10 +122,10 @@ export default function App() {
         <GridView categories={categories} items={items} favorites={favorites} onOpen={goToItem} />
       )}
 
-      {!swiped && mode === 'feed' && !panel && (
+      {atFirst && mode === 'feed' && !panel && (
         <div className="swipe-hint" aria-hidden>
           <span>deslize</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
             <path d="M6 9l6 6 6-6" />
           </svg>
         </div>
