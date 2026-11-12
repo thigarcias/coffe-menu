@@ -1,6 +1,6 @@
 import type { Category, MenuItem } from '../types'
 import { fromPrice } from '../lib/format'
-import { BagPlus } from './Icons'
+import { BagPlus, Close } from './Icons'
 import { ProductImage } from './ProductImage'
 
 interface Props {
@@ -9,12 +9,25 @@ interface Props {
   counts: Map<string, number>
   onOpen: (item: MenuItem) => void
   onAdd: (item: MenuItem) => void
+  /** filtro por tag ativo (veio de um toque numa tag do detalhe) */
+  filter?: { label: string; count: number } | null
+  onClearFilter?: () => void
 }
 
 /** Visão "ver tudo": todas as opções de uma vez, separadas por seção. */
-export function GridView({ categories, items, counts, onOpen, onAdd }: Props) {
+export function GridView({ categories, items, counts, onOpen, onAdd, filter, onClearFilter }: Props) {
   return (
     <div className="grid-view">
+      {filter && (
+        <div className="filter" role="status">
+          <span className="filter__text">
+            <strong>{filter.label}</strong> · {filter.count} {filter.count === 1 ? 'item' : 'itens'}
+          </span>
+          <button className="filter__clear" onClick={onClearFilter} aria-label="Limpar filtro">
+            <Close size={16} /> Limpar
+          </button>
+        </div>
+      )}
       {categories.map((c) => {
         const list = items.filter((i) => i.category === c.id)
         if (!list.length) return null

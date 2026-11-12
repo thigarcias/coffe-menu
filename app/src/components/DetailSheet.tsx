@@ -1,7 +1,8 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import type { MenuItem } from '../types'
-import { money, nameSize } from '../lib/format'
+import { money, nameSize, priceParts } from '../lib/format'
 import { defaultChoices, optionSetOf, unitPrice } from '../lib/cart'
+import type { TagInfo } from '../lib/related'
 import { BagPlus } from './Icons'
 
 interface Props {
@@ -9,12 +10,19 @@ interface Props {
   onAdd: (item: MenuItem) => void
   storyNote?: string
   label?: string
+  /** tags do item, já com rótulo */
+  tags: TagInfo[]
+  /** produtos parecidos (lib/related) */
+  related: MenuItem[]
+  onTag: (tagId: string) => void
+  onOpenItem: (item: MenuItem) => void
 }
 
 const TABS = [
   { id: 'parece', label: 'Parece' },
   { id: 'ingredientes', label: 'Ingredientes' },
   { id: 'origem', label: 'Origem' },
+  { id: 'parecidos', label: 'Parecidos' },
 ] as const
 type Tab = (typeof TABS)[number]['id']
 
@@ -23,7 +31,7 @@ type Tab = (typeof TABS)[number]['id']
  * Se um texto não couber (tela pequena, texto longo), a fonte do painel diminui
  * aos poucos até caber, sem cortar nada.
  */
-export function DetailSheet({ item, onAdd, storyNote, label }: Props) {
+export function DetailSheet({ item, onAdd, storyNote, label, tags, related, onTag, onOpenItem }: Props) {
   const [tab, setTab] = useState<Tab>('parece')
   const panel = useRef<HTMLDivElement>(null)
   const prices = item.prices.filter((p) => p.price != null)
@@ -51,8 +59,19 @@ export function DetailSheet({ item, onAdd, storyNote, label }: Props) {
   return (
     <div className="detail">
       <header className="detail__head">
-        {label && <span className="label">{label}</span>}
+        {!tags.length && label && <span className="label">{label}</span>}
         <h3 className="detail__name" data-size={nameSize(item.name) || undefined}>{item.name}</h3>
+        {!!tags.length && (
+          <div className="tags" aria-label="Tags do produto">
+            {/* a subcategoria vai na mesma linha das tags, para sobrar altura para as abas */}
+            {label && <span className="label tags__label">{label}</span>}
+            {tags.map((t) => (
+              <button key={t.id} className="tag" onClick={() => onTag(t.id)} aria-label={`Ver tudo com a tag ${t.label}`}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+        )}
       </header>
 
       <div className="seg" role="tablist" aria-label="Sobre o produto">
@@ -97,6 +116,23 @@ export function DetailSheet({ item, onAdd, storyNote, label }: Props) {
             {storyNote && <small className="story__note">{storyNote}</small>}
           </div>
         )}
+
+        {tab === 'parecidos' &&
+          (related.length ? (
+            <ul className="related" aria-label="Produtos parecidos">
+              {related.map((r) => (
+                <li key={r.id}>
+                  <button className="related__item" onClick={() => onOpenItem(r)}>
+                    <span className="related__img">{r.image && <img src={r.image} alt="" loading="lazy" />}</span>
+                    <span className="related__name">{r.name}</span>
+                    <span className="related__price">{priceParts(r)?.value}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="detail__desc">Ainda não temos produtos parecidos com este.</p>
+          ))}
       </div>
 
       <footer className="detail__foot">

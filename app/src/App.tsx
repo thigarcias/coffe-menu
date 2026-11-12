@@ -14,6 +14,7 @@ import { Toast, type ToastData } from './components/Toast'
 import { Bag, Grid, Reels, Sparkle } from './components/Icons'
 import { money } from './lib/format'
 import { track } from './lib/track'
+import { related, tagIndex, withTag } from './lib/related'
 import {
   cartCount,
   cartTotal,
@@ -35,6 +36,7 @@ import {
 
 const menu = menuData as Menu
 const orderBy: OrderBy = menu.cafe.orderBy ?? 'nome'
+const tags = tagIndex(menu.tagGroups)
 
 type From = 'feed' | 'grid' | 'detail' | 'quiz'
 type Panel =
@@ -91,6 +93,10 @@ export default function App() {
   const [mode, setMode] = useState<'feed' | 'grid'>('feed')
   const [activeCat, setActiveCat] = useState<string | null>(categories[0]?.id ?? null)
   const [panel, setPanel] = useState<Panel>(null)
+  // filtro por tag na grade ("tudo com caramelo")
+  const [tagFilter, setTagFilter] = useState<string | null>(null)
+  const gridItems = useMemo(() => (tagFilter ? withTag(items, tagFilter) : items), [items, tagFilter])
+  const gridCats = useMemo(() => categories.filter((c) => gridItems.some((i) => i.category === c.id)), [categories, gridItems])
 
   // Sacola e pedido ficam guardados no celular.
   const [cart, setCart] = useState<CartLine[]>(() => loadCart(items))
@@ -234,8 +240,22 @@ export default function App() {
     setPanel({ kind: 'detail', item })
   }
 
+  const pickTag = (tagId: string) => {
+    track({ type: 'tag', tagId, from: panel?.kind === 'detail' ? panel.item.id : null })
+    setTagFilter(tagId)
+    setPanel(null)
+    setMode('grid')
+    requestAnimationFrame(() => document.querySelector('.grid-view')?.scrollTo({ top: 0 }))
+  }
+
+  const openRelated = (item: MenuItem) => {
+    if (panel?.kind === 'detail') track({ type: 'related_open', fromId: panel.item.id, itemId: item.id })
+    openDetails(item)
+  }
+
   const switchMode = () => {
     const next = mode === 'feed' ? 'grid' : 'feed'
+    setTagFilter(null)
     setMode(next)
     track({ type: 'view_mode', mode: next })
   }
@@ -267,7 +287,15 @@ export default function App() {
       />
 
       {mode === 'grid' && (
-        <GridView categories={categories} items={items} counts={counts} onOpen={openDetails} onAdd={(item) => addToCart(item, 'grid')} />
+        <GridView
+          categories={gridCats}
+          items={gridItems}
+          counts={counts}
+          onOpen={openDetails}
+          onAdd={(item) => addToCart(item, 'grid')}
+          filter={tagFilter ? { label: tags.get(tagFilter)?.label ?? tagFilter, count: gridItems.length } : null}
+          onClearFilter={() => setTagFilter(null)}
+        />
       )}
 
       {atFirst && mode === 'feed' && !panel && (
@@ -308,6 +336,7 @@ export default function App() {
       <Sheet open={panel?.kind === 'detail'} onClose={closePanel} title="Detalhes" fixed>
         {panel?.kind === 'detail' && (
           <DetailSheet
+            key={panel.item.id}
             item={panel.item}
             onAdd={(item) => {
               addToCart(item, 'detail')
@@ -315,6 +344,10 @@ export default function App() {
             }}
             storyNote={menu.cafe.storyNote}
             label={catName(panel.item.subcategory ?? panel.item.category)}
+            tags={(panel.item.labels ?? []).flatMap((t) => tags.get(t) ?? [])}
+            related={related(panel.item, items, tags)}
+            onTag={pickTag}
+            onOpenItem={openRelated}
           />
         )}
       </Sheet>

@@ -12,6 +12,8 @@ export type TrackEvent =
   | { type: 'quiz_open' }
   | { type: 'quiz_result'; answers: Record<string, string | string[] | undefined>; itemIds: string[] }
   | { type: 'view_mode'; mode: 'feed' | 'grid' }
+  | { type: 'tag'; tagId: string; from: string | null }
+  | { type: 'related_open'; fromId: string; itemId: string }
   | { type: 'cart_add'; itemId: string; from: 'feed' | 'grid' | 'detail' | 'quiz'; customized: boolean }
   | { type: 'cart_customize'; itemId: string; choices: Choices }
   | { type: 'cart_remove'; itemId: string }

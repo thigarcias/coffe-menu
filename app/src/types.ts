@@ -30,6 +30,16 @@ export interface MenuItem {
   tags: ItemTags
   /** id do conjunto de opções (Menu.optionSets) a personalizar; sem ele, o item entra na sacola direto */
   options?: string
+  /** tags legíveis (ids de Menu.tagGroups): base dos parecidos, do filtro e da recomendação */
+  labels?: string[]
+}
+
+/** Família de tags (Temperatura, Base, Sabor…). O peso diz quanto ela conta para "parecido". */
+export interface TagGroup {
+  id: string
+  name: string
+  weight: number
+  tags: { id: string; label: string }[]
 }
 
 /** Como o pedido é identificado: pelo nome (balcão), pela mesa (QR) ou pelos dois. */
@@ -78,4 +88,5 @@ export interface Menu {
   items: MenuItem[]
   extras?: { name: string; price: number | null }[]
   optionSets?: Record<string, OptionSet>
+  tagGroups?: TagGroup[]
 }

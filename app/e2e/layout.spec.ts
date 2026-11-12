@@ -243,11 +243,12 @@ test.describe('cardápio no celular', () => {
       await expect(sheet).toBeVisible()
       await page.waitForTimeout(450)
       const tabs = sheet.getByRole('tab')
-      await expect(tabs).toHaveCount(3)
-      for (let t = 0; t < 3; t++) {
+      await expect(tabs).toHaveCount(4)
+      for (let t = 0; t < 4; t++) {
         await tabs.nth(t).click()
         const over = await sheet.evaluate((el) => {
-          const list = [el, ...el.querySelectorAll<HTMLElement>('.detail__panel, .detail__panel *')]
+          // o nome no carrossel de parecidos corta em 2 linhas de propósito (o produto abre com o nome inteiro)
+          const list = [el, ...el.querySelectorAll<HTMLElement>('.detail__panel, .detail__panel *:not(.related__name)')]
           return list.filter((n) => n.scrollHeight > n.clientHeight + 1 && getComputedStyle(n).overflowY !== 'visible').map((n) => n.className)
         })
         expect(over, `${id} aba ${t}`).toEqual([])
@@ -305,6 +306,68 @@ test.describe('cardápio no celular', () => {
     const b = await box(cards.nth(1))
     expect(Math.abs(a.y - b.y)).toBeLessThanOrEqual(1)
     expect(b.x).toBeGreaterThan(a.right)
+  })
+
+  /** Abre o detalhe de um produto do feed. */
+  async function openDetail(page: Page, id: string) {
+    await page.locator('.feed').evaluate((feed, id) => {
+      const el = feed.querySelector<HTMLElement>(`[data-item="${id}"]`)!
+      feed.scrollTo({ top: el.offsetTop })
+    }, id)
+    await page.locator(`[data-item="${id}"] .slide__row .capsule`).click()
+    const sheet = page.locator('.sheet-wrap--open .sheet')
+    await expect(sheet).toBeVisible()
+    return sheet
+  }
+
+  test('detalhe mostra as tags numa linha só, com alvo de toque ≥ 44px', async ({ page }) => {
+    const sheet = await openDetail(page, 'caramelo-macchiato')
+    const tags = sheet.locator('.tag')
+    await expect(tags).toHaveText(['Quente', 'Café', 'Caramelo', 'Cremoso', 'Docinho'])
+    const first = await box(tags.first())
+    const last = await box(tags.last())
+    expect(Math.abs(first.y - last.y), 'tags numa linha só').toBeLessThanOrEqual(1)
+    const hit = await tags.first().evaluate((el) => {
+      const r = getComputedStyle(el, '::after')
+      return el.getBoundingClientRect().height - parseFloat(r.top) - parseFloat(r.bottom)
+    })
+    expect(hit).toBeGreaterThanOrEqual(44)
+  })
+
+  test('tocar numa tag abre a grade só com os itens dela, e dá para limpar', async ({ page }) => {
+    const sheet = await openDetail(page, 'caramelo-macchiato')
+    await sheet.locator('.tag', { hasText: 'Caramelo' }).click()
+    await expect(page.locator('.sheet-wrap--open')).toHaveCount(0)
+    const grid = page.locator('.grid-view')
+    await expect(grid).toBeVisible()
+    await expect(grid.locator('.filter')).toContainText('Caramelo')
+    const names = await grid.locator('.card__name').allTextContents()
+    expect(names.length).toBeGreaterThan(5)
+    await expect(grid.locator('.filter')).toContainText(`${names.length} itens`)
+    expect(names).toContain('Caramelo Macchiato')
+    expect(names).not.toContain('Café Americano')
+    await grid.getByRole('button', { name: 'Limpar filtro' }).click()
+    await expect(grid.locator('.filter')).toHaveCount(0)
+    expect(await grid.locator('.card').count()).toBeGreaterThan(names.length)
+  })
+
+  test('aba Parecidos mostra produtos parecidos e abre o escolhido', async ({ page }) => {
+    const sheet = await openDetail(page, 'refresher-de-morango')
+    await sheet.getByRole('tab', { name: 'Parecidos' }).click()
+    const rel = sheet.locator('.related__item')
+    await expect(rel).toHaveCount(6)
+    const names = await sheet.locator('.related__name').allTextContents()
+    expect(names.every((n) => /Refresher|Drink/.test(n)), names.join(', ')).toBe(true)
+    await rel.first().click()
+    await expect(sheet.locator('.detail__name')).toHaveText(names[0])
+    await expect(sheet.getByRole('tab', { name: 'Parece' })).toHaveAttribute('aria-selected', 'true')
+  })
+
+  test('parecidos de comida são comida', async ({ page }) => {
+    const sheet = await openDetail(page, 'bolo-red-velvet-fatia')
+    await sheet.getByRole('tab', { name: 'Parecidos' }).click()
+    const names = await sheet.locator('.related__name').allTextContents()
+    expect(names.some((n) => /Frappuccino|Latte/.test(n)), names.join(', ')).toBe(false)
   })
 })
 

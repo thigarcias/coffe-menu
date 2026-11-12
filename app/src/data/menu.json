@@ -147,7 +147,15 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "mocha"
+      "options": "mocha",
+      "labels": [
+        "quente",
+        "cafe",
+        "caramelo",
+        "avela",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "avela-caramelo-latte-gelado",
@@ -198,7 +206,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "mocha"
+      "options": "mocha",
+      "labels": [
+        "gelado",
+        "cafe",
+        "caramelo",
+        "avela",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "avela-caramelo-frappuccino-base-creme",
@@ -249,7 +265,16 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "sem-cafe",
+        "caramelo",
+        "avela",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "avela-caramelo-frappuccino-base-cafe",
@@ -300,7 +325,16 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cafe",
+        "caramelo",
+        "avela",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "morango-mocha-latte",
@@ -349,7 +383,15 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "quente",
+        "cafe",
+        "chocolate",
+        "frutas-vermelhas",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "morango-mocha-latte-gelado",
@@ -399,7 +441,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "mocha"
+      "options": "mocha",
+      "labels": [
+        "gelado",
+        "cafe",
+        "chocolate",
+        "frutas-vermelhas",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "morango-mocha-frappuccino-base-creme",
@@ -449,7 +499,16 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "chocolate",
+        "sem-cafe",
+        "frutas-vermelhas",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "morango-mocha-frappuccino-base-cafe",
@@ -499,7 +558,16 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cafe",
+        "chocolate",
+        "frutas-vermelhas",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "panettone",
@@ -538,7 +606,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "docinho",
+        "sobremesa",
+        "para-levar"
+      ]
     },
     {
       "id": "panettone-bites",
@@ -577,7 +650,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "labels": [
+        "docinho",
+        "sobremesa",
+        "para-levar"
+      ]
     },
     {
       "id": "caramelo-macchiato",
@@ -622,7 +700,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "quente",
+        "cafe",
+        "caramelo",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "cafe-latte",
@@ -666,7 +751,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "quente",
+        "cafe",
+        "suave",
+        "cremoso"
+      ]
     },
     {
       "id": "cafe-mocha",
@@ -711,7 +802,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "mocha"
+      "options": "mocha",
+      "labels": [
+        "quente",
+        "cafe",
+        "chocolate",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "cafe-mocha-branco",
@@ -756,7 +854,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "mocha"
+      "options": "mocha",
+      "labels": [
+        "quente",
+        "cafe",
+        "chocolate",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "chocolate-quente",
@@ -802,7 +907,14 @@
         "caffeine": false,
         "hunger": 0
       },
-      "options": "chocolate"
+      "options": "chocolate",
+      "labels": [
+        "quente",
+        "chocolate",
+        "sem-cafe",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "doce-de-leite-latte",
@@ -848,7 +960,15 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "mocha"
+      "options": "mocha",
+      "labels": [
+        "quente",
+        "cafe",
+        "caramelo",
+        "doce-de-leite",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "brigadeiro-latte",
@@ -894,7 +1014,15 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "mocha"
+      "options": "mocha",
+      "labels": [
+        "quente",
+        "cafe",
+        "chocolate",
+        "brigadeiro",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "baunilha-latte",
@@ -938,7 +1066,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "quente",
+        "cafe",
+        "baunilha",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "flat-white",
@@ -982,7 +1117,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "quente",
+        "cafe",
+        "intenso",
+        "cremoso"
+      ]
     },
     {
       "id": "avela-latte",
@@ -1029,7 +1170,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "mocha"
+      "options": "mocha",
+      "labels": [
+        "quente",
+        "cafe",
+        "avela",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "chocolate-branco-quente",
@@ -1073,7 +1221,14 @@
         "caffeine": false,
         "hunger": 0
       },
-      "options": "chocolate"
+      "options": "chocolate",
+      "labels": [
+        "quente",
+        "chocolate",
+        "sem-cafe",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "chocolate-gelado",
@@ -1119,7 +1274,14 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "chocolate"
+      "options": "chocolate",
+      "labels": [
+        "gelado",
+        "chocolate",
+        "sem-cafe",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "caramelo-macchiato-gelado",
@@ -1165,7 +1327,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "gelado",
+        "cafe",
+        "caramelo",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "baunilha-latte-gelado",
@@ -1210,7 +1379,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "gelado",
+        "cafe",
+        "baunilha",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "cafe-mocha-gelado",
@@ -1256,7 +1432,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "mocha"
+      "options": "mocha",
+      "labels": [
+        "gelado",
+        "cafe",
+        "chocolate",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "doce-de-leite-latte-gelado",
@@ -1303,7 +1486,15 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "mocha"
+      "options": "mocha",
+      "labels": [
+        "gelado",
+        "cafe",
+        "caramelo",
+        "doce-de-leite",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "cafe-mocha-branco-gelado",
@@ -1349,7 +1540,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "mocha"
+      "options": "mocha",
+      "labels": [
+        "gelado",
+        "cafe",
+        "chocolate",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "shaken-espresso-gelado-double-shot",
@@ -1394,7 +1592,12 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "mocha"
+      "options": "mocha",
+      "labels": [
+        "gelado",
+        "cafe",
+        "intenso"
+      ]
     },
     {
       "id": "chocolate-branco-gelado",
@@ -1439,7 +1642,14 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "chocolate"
+      "options": "chocolate",
+      "labels": [
+        "gelado",
+        "chocolate",
+        "sem-cafe",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "cafe-latte-gelado",
@@ -1483,7 +1693,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "mocha"
+      "options": "mocha",
+      "labels": [
+        "gelado",
+        "cafe",
+        "suave",
+        "cremoso"
+      ]
     },
     {
       "id": "cold-brew-tradicional",
@@ -1525,7 +1741,12 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cold-brew"
+      "options": "cold-brew",
+      "labels": [
+        "gelado",
+        "cafe",
+        "intenso"
+      ]
     },
     {
       "id": "cold-brew-baunilha",
@@ -1570,7 +1791,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cold-brew-leite"
+      "options": "cold-brew-leite",
+      "labels": [
+        "gelado",
+        "cafe",
+        "baunilha",
+        "intenso",
+        "cremoso"
+      ]
     },
     {
       "id": "cold-brew-com-leite",
@@ -1614,7 +1842,12 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cold-brew-leite"
+      "options": "cold-brew-leite",
+      "labels": [
+        "gelado",
+        "cafe",
+        "cremoso"
+      ]
     },
     {
       "id": "flat-white-gelado",
@@ -1658,7 +1891,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "gelado",
+        "cafe",
+        "intenso",
+        "cremoso"
+      ]
     },
     {
       "id": "brown-sugar-shaken-espresso-gelado",
@@ -1702,7 +1941,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "gelado",
+        "cafe",
+        "caramelo",
+        "intenso"
+      ]
     },
     {
       "id": "avela-shaken-espresso",
@@ -1747,7 +1992,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "gelado",
+        "cafe",
+        "avela",
+        "intenso"
+      ]
     },
     {
       "id": "chocolate-shaken-espresso",
@@ -1790,7 +2041,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "gelado",
+        "cafe",
+        "chocolate",
+        "intenso"
+      ]
     },
     {
       "id": "cappuccino-tradicional-gelado",
@@ -1825,7 +2082,12 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "gelado",
+        "cafe",
+        "cremoso"
+      ]
     },
     {
       "id": "cappuccino-tradicional",
@@ -1874,7 +2136,12 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "quente",
+        "cafe",
+        "cremoso"
+      ]
     },
     {
       "id": "cappuccino-doce-de-leite",
@@ -1923,7 +2190,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "quente",
+        "cafe",
+        "doce-de-leite",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "cappuccino-brigadeiro",
@@ -1973,7 +2247,15 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "quente",
+        "cafe",
+        "chocolate",
+        "brigadeiro",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "cappuccino-chocolate",
@@ -2024,7 +2306,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "quente",
+        "cafe",
+        "chocolate",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "cappuccino-canela",
@@ -2074,7 +2363,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "quente",
+        "cafe",
+        "especiarias",
+        "cremoso"
+      ]
     },
     {
       "id": "bolo-red-velvet-fatia",
@@ -2110,7 +2405,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "brownie-espresso",
@@ -2148,7 +2448,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "cafe",
+        "chocolate",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "muffin-de-blueberry",
@@ -2184,7 +2490,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "frutado",
+        "frutas-vermelhas",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "muffin-de-chocolate",
@@ -2221,7 +2533,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "chocolate",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "ring-donuts-chocolate",
@@ -2256,7 +2573,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "chocolate",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "ring-donuts-chocoberry",
@@ -2291,7 +2613,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "frutado",
+        "frutas-vermelhas",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "bolo-de-chocolate-fatia",
@@ -2327,7 +2655,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "chocolate",
+        "brigadeiro",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "cookie-de-baunilha",
@@ -2363,7 +2697,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "labels": [
+        "baunilha",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "bolo-de-limao",
@@ -2398,7 +2737,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "frutado",
+        "citrico",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "cheesecake-de-frutas-vermelhas",
@@ -2433,7 +2778,14 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "frutado",
+        "frutas-vermelhas",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "cinnamon-roll",
@@ -2469,7 +2821,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "especiarias",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "pao-de-mel",
@@ -2504,7 +2861,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "doce-de-leite",
+        "especiarias",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "bolo-de-cenoura-com-chocolate",
@@ -2539,7 +2902,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "chocolate",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "bolo-de-banana",
@@ -2577,7 +2945,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "frutado",
+        "especiarias",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "barra-de-chocolate",
@@ -2612,7 +2986,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "labels": [
+        "chocolate",
+        "docinho",
+        "para-levar"
+      ]
     },
     {
       "id": "sonho-de-doce-de-leite",
@@ -2647,7 +3026,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "doce-de-leite",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "misto-quente",
@@ -2682,7 +3066,14 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "labels": [
+        "queijo",
+        "presunto",
+        "salgado",
+        "cafe-da-manha",
+        "lanche"
+      ]
     },
     {
       "id": "queijo-quente",
@@ -2716,7 +3107,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "labels": [
+        "queijo",
+        "salgado",
+        "cafe-da-manha",
+        "lanche"
+      ]
     },
     {
       "id": "croque-monsieur",
@@ -2752,7 +3149,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "labels": [
+        "queijo",
+        "presunto",
+        "salgado",
+        "lanche"
+      ]
     },
     {
       "id": "pao-de-queijo-mineiro",
@@ -2788,7 +3191,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "queijo",
+        "salgado",
+        "cafe-da-manha"
+      ]
     },
     {
       "id": "mini-pao-de-queijo-tradicional",
@@ -2824,7 +3232,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "queijo",
+        "salgado",
+        "cafe-da-manha"
+      ]
     },
     {
       "id": "coxinha-com-requeijao",
@@ -2860,7 +3273,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "frango",
+        "salgado",
+        "lanche"
+      ]
     },
     {
       "id": "croissant-de-presunto-e-queijo",
@@ -2894,7 +3312,14 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "queijo",
+        "presunto",
+        "salgado",
+        "cafe-da-manha",
+        "lanche"
+      ]
     },
     {
       "id": "croissant-de-frango",
@@ -2927,7 +3352,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "frango",
+        "salgado",
+        "lanche"
+      ]
     },
     {
       "id": "empada-de-palmito",
@@ -2961,7 +3391,11 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "salgado",
+        "lanche"
+      ]
     },
     {
       "id": "empada-de-frango-com-requeijao",
@@ -2995,7 +3429,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "frango",
+        "salgado",
+        "lanche"
+      ]
     },
     {
       "id": "mini-coxinha-de-frango",
@@ -3030,7 +3469,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "frango",
+        "salgado",
+        "lanche"
+      ]
     },
     {
       "id": "torrada-petropolis",
@@ -3064,7 +3508,11 @@
         "iced": false,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "labels": [
+        "suave",
+        "cafe-da-manha"
+      ]
     },
     {
       "id": "ciabatta-de-frango-com-molho-pesto",
@@ -3100,7 +3548,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "labels": [
+        "queijo",
+        "frango",
+        "salgado",
+        "lanche"
+      ]
     },
     {
       "id": "focaccia-de-caprese-com-pesto",
@@ -3137,7 +3591,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "labels": [
+        "queijo",
+        "salgado",
+        "lanche"
+      ]
     },
     {
       "id": "croissant-roll-ovos-com-bacon",
@@ -3173,7 +3632,14 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "labels": [
+        "queijo",
+        "presunto",
+        "salgado",
+        "cafe-da-manha",
+        "lanche"
+      ]
     },
     {
       "id": "sanduiche-proteico-keto",
@@ -3211,7 +3677,15 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "labels": [
+        "queijo",
+        "frango",
+        "presunto",
+        "salgado",
+        "lanche",
+        "proteico"
+      ]
     },
     {
       "id": "mini-pao-de-queijo-com-requeijao-ou-caramelo",
@@ -3244,7 +3718,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "queijo",
+        "salgado",
+        "cafe-da-manha"
+      ]
     },
     {
       "id": "mini-coxinha-com-requeijao",
@@ -3277,7 +3756,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "frango",
+        "salgado",
+        "lanche"
+      ]
     },
     {
       "id": "croissant-tradicional-sem-recheio",
@@ -3310,7 +3794,11 @@
         "iced": false,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "labels": [
+        "suave",
+        "cafe-da-manha"
+      ]
     },
     {
       "id": "croissant-tradicional",
@@ -3343,7 +3831,11 @@
         "iced": false,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "labels": [
+        "suave",
+        "cafe-da-manha"
+      ]
     },
     {
       "id": "baguete-de-frango-com-cream-cheese",
@@ -3377,7 +3869,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "labels": [
+        "frango",
+        "salgado",
+        "lanche"
+      ]
     },
     {
       "id": "baguete-com-pastrami-queijo-e-mostarda",
@@ -3412,7 +3909,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "labels": [
+        "queijo",
+        "presunto",
+        "salgado",
+        "lanche"
+      ]
     },
     {
       "id": "sanduiche-de-carne-desfiada",
@@ -3449,7 +3952,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "labels": [
+        "queijo",
+        "salgado",
+        "lanche"
+      ]
     },
     {
       "id": "cold-brew-com-chocolate-cold-foam-proteico",
@@ -3497,7 +4005,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "cold-brew-leite"
+      "options": "cold-brew-leite",
+      "labels": [
+        "gelado",
+        "cafe",
+        "chocolate",
+        "intenso",
+        "cremoso",
+        "proteico"
+      ]
     },
     {
       "id": "matcha-latte-gelado-com-cold-foam-proteico",
@@ -3545,7 +4061,14 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "leite"
+      "options": "leite",
+      "labels": [
+        "gelado",
+        "matcha",
+        "baunilha",
+        "cremoso",
+        "proteico"
+      ]
     },
     {
       "id": "mocha-frappuccino-com-cold-foam-proteico",
@@ -3593,7 +4116,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cafe",
+        "chocolate",
+        "cremoso",
+        "docinho",
+        "proteico"
+      ]
     },
     {
       "id": "morango-frappuccino-com-cold-foam-proteico",
@@ -3641,7 +4172,16 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "frutado",
+        "sem-cafe",
+        "frutas-vermelhas",
+        "cremoso",
+        "docinho",
+        "proteico"
+      ]
     },
     {
       "id": "baunilha-sem-acucar-latte-proteico",
@@ -3688,7 +4228,14 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "cafe-simples"
+      "options": "cafe-simples",
+      "labels": [
+        "quente",
+        "cafe",
+        "baunilha",
+        "cremoso",
+        "proteico"
+      ]
     },
     {
       "id": "baunilha-sem-acucar-latte-proteico-gelado",
@@ -3736,7 +4283,14 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "cafe-simples"
+      "options": "cafe-simples",
+      "labels": [
+        "gelado",
+        "cafe",
+        "baunilha",
+        "cremoso",
+        "proteico"
+      ]
     },
     {
       "id": "matcha-sem-acucar-latte-proteico-quente",
@@ -3782,7 +4336,14 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "proteico"
+      "options": "proteico",
+      "labels": [
+        "quente",
+        "matcha",
+        "suave",
+        "cremoso",
+        "proteico"
+      ]
     },
     {
       "id": "matcha-sem-acucar-latte-proteico-gelado",
@@ -3829,7 +4390,14 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "proteico"
+      "options": "proteico",
+      "labels": [
+        "gelado",
+        "matcha",
+        "suave",
+        "cremoso",
+        "proteico"
+      ]
     },
     {
       "id": "matcha-latte-proteico-quente",
@@ -3876,7 +4444,14 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "proteico"
+      "options": "proteico",
+      "labels": [
+        "quente",
+        "matcha",
+        "cremoso",
+        "docinho",
+        "proteico"
+      ]
     },
     {
       "id": "matcha-latte-proteico-gelado",
@@ -3923,7 +4498,14 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "proteico"
+      "options": "proteico",
+      "labels": [
+        "gelado",
+        "matcha",
+        "cremoso",
+        "docinho",
+        "proteico"
+      ]
     },
     {
       "id": "cafe-latte-proteico",
@@ -3965,7 +4547,13 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "cafe-simples"
+      "options": "cafe-simples",
+      "labels": [
+        "quente",
+        "cafe",
+        "cremoso",
+        "proteico"
+      ]
     },
     {
       "id": "cafe-latte-proteico-gelado",
@@ -4012,7 +4600,13 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "cafe-simples"
+      "options": "cafe-simples",
+      "labels": [
+        "gelado",
+        "cafe",
+        "cremoso",
+        "proteico"
+      ]
     },
     {
       "id": "cafe-media",
@@ -4056,7 +4650,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "quente",
+        "cafe",
+        "cremoso",
+        "cafe-da-manha"
+      ]
     },
     {
       "id": "cafe-pingado",
@@ -4100,7 +4700,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "espresso-leite"
+      "options": "espresso-leite",
+      "labels": [
+        "quente",
+        "cafe",
+        "intenso",
+        "cafe-da-manha"
+      ]
     },
     {
       "id": "cafe-americano",
@@ -4141,7 +4747,12 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cafe-simples"
+      "options": "cafe-simples",
+      "labels": [
+        "quente",
+        "cafe",
+        "intenso"
+      ]
     },
     {
       "id": "cafe-coado-gelado",
@@ -4182,7 +4793,12 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cafe-simples"
+      "options": "cafe-simples",
+      "labels": [
+        "gelado",
+        "cafe",
+        "intenso"
+      ]
     },
     {
       "id": "cafe-coado",
@@ -4224,7 +4840,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cafe-simples"
+      "options": "cafe-simples",
+      "labels": [
+        "quente",
+        "cafe",
+        "intenso",
+        "cafe-da-manha"
+      ]
     },
     {
       "id": "cafe-americano-gelado",
@@ -4266,7 +4888,12 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cafe-simples"
+      "options": "cafe-simples",
+      "labels": [
+        "gelado",
+        "cafe",
+        "intenso"
+      ]
     },
     {
       "id": "espressos",
@@ -4298,7 +4925,12 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cafe-simples"
+      "options": "cafe-simples",
+      "labels": [
+        "quente",
+        "cafe",
+        "intenso"
+      ]
     },
     {
       "id": "espresso-collection",
@@ -4335,7 +4967,16 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cafe-simples"
+      "options": "cafe-simples",
+      "labels": [
+        "quente",
+        "cafe",
+        "chocolate",
+        "avela",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "brigadeiro-frappuccino-base-cafe",
@@ -4382,7 +5023,16 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cafe",
+        "chocolate",
+        "brigadeiro",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "brigadeiro-frappuccino-base-creme",
@@ -4429,7 +5079,16 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "chocolate",
+        "sem-cafe",
+        "brigadeiro",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "caramelo-frappuccino-base-cafe",
@@ -4476,7 +5135,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cafe",
+        "caramelo",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "caramelo-frappuccino-base-creme",
@@ -4523,7 +5190,15 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "sem-cafe",
+        "caramelo",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "choco-chip-frappuccino-base-cafe",
@@ -4570,7 +5245,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cafe",
+        "chocolate",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "choco-chip-frappuccino-base-creme",
@@ -4617,7 +5300,15 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "chocolate",
+        "sem-cafe",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "super-morango-frappuccino",
@@ -4662,7 +5353,16 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "frutado",
+        "sem-cafe",
+        "frutas-vermelhas",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "mocha-branco-frappuccino",
@@ -4708,7 +5408,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cafe",
+        "chocolate",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "matcha-frappuccino",
@@ -4753,7 +5461,14 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "matcha",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "maracuja-frappuccino",
@@ -4799,7 +5514,16 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "frutado",
+        "sem-cafe",
+        "citrico",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "avela-frappuccino-base-cafe",
@@ -4847,7 +5571,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cafe",
+        "avela",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "avela-frappuccino-base-creme",
@@ -4894,7 +5626,15 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "sem-cafe",
+        "avela",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "doce-de-leite-frappuccino-base-cafe",
@@ -4941,7 +5681,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cafe",
+        "doce-de-leite",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "doce-de-leite-frappuccino-base-creme",
@@ -4988,7 +5736,15 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "sem-cafe",
+        "doce-de-leite",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "baunilha-frappuccino",
@@ -5033,7 +5789,15 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "sem-cafe",
+        "baunilha",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "cafe-frappuccino",
@@ -5077,7 +5841,14 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cafe",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "chai-frappuccino",
@@ -5123,7 +5894,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cha",
+        "especiarias",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "chocolate-frappuccino",
@@ -5168,7 +5947,15 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "chocolate",
+        "sem-cafe",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "chocolate-branco-frappuccino",
@@ -5214,7 +6001,15 @@
         "caffeine": false,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "chocolate",
+        "sem-cafe",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "mocha-frappuccino",
@@ -5260,7 +6055,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cafe",
+        "chocolate",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "matcha-strate-frappuccino-com-morango-cold-foam",
@@ -5306,7 +6109,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "matcha",
+        "frutas-vermelhas",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "mocha-strate-frappuccino-com-caramelo-salgado-cold-foam",
@@ -5353,7 +6164,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cafe",
+        "chocolate",
+        "caramelo",
+        "cremoso",
+        "sobremesa"
+      ]
     },
     {
       "id": "strate-frappuccino-com-brown-sugar-cold-foam",
@@ -5399,7 +6218,15 @@
         "caffeine": true,
         "hunger": 1
       },
-      "options": "frappuccino"
+      "options": "frappuccino",
+      "labels": [
+        "gelado",
+        "cafe",
+        "caramelo",
+        "cremoso",
+        "docinho",
+        "sobremesa"
+      ]
     },
     {
       "id": "chai-latte-quente",
@@ -5443,7 +6270,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "leite"
+      "options": "leite",
+      "labels": [
+        "quente",
+        "cha",
+        "especiarias",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "chai-latte-gelado",
@@ -5488,7 +6322,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "leite"
+      "options": "leite",
+      "labels": [
+        "gelado",
+        "cha",
+        "especiarias",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "cha-chai-gelado",
@@ -5533,7 +6374,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cha"
+      "options": "cha",
+      "labels": [
+        "gelado",
+        "cha",
+        "especiarias",
+        "refrescante"
+      ]
     },
     {
       "id": "cha-chai-gelado-com-limonada",
@@ -5575,7 +6422,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cha"
+      "options": "cha",
+      "labels": [
+        "gelado",
+        "cha",
+        "especiarias",
+        "citrico",
+        "refrescante"
+      ]
     },
     {
       "id": "cha-chai-quente",
@@ -5619,7 +6473,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cha"
+      "options": "cha",
+      "labels": [
+        "quente",
+        "cha",
+        "especiarias",
+        "suave"
+      ]
     },
     {
       "id": "matcha-latte-quente",
@@ -5663,7 +6523,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "leite"
+      "options": "leite",
+      "labels": [
+        "quente",
+        "matcha",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "matcha-latte-gelado",
@@ -5708,7 +6574,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "leite"
+      "options": "leite",
+      "labels": [
+        "gelado",
+        "matcha",
+        "cremoso",
+        "docinho"
+      ]
     },
     {
       "id": "cha-verde-gelado",
@@ -5750,7 +6622,12 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cha"
+      "options": "cha",
+      "labels": [
+        "gelado",
+        "cha",
+        "refrescante"
+      ]
     },
     {
       "id": "cha-verde-gelado-com-limonada",
@@ -5792,7 +6669,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cha"
+      "options": "cha",
+      "labels": [
+        "gelado",
+        "cha",
+        "citrico",
+        "refrescante"
+      ]
     },
     {
       "id": "cha-verde-quente",
@@ -5833,7 +6716,12 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cha"
+      "options": "cha",
+      "labels": [
+        "quente",
+        "cha",
+        "suave"
+      ]
     },
     {
       "id": "cha-preto-quente",
@@ -5874,7 +6762,12 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cha"
+      "options": "cha",
+      "labels": [
+        "quente",
+        "cha",
+        "suave"
+      ]
     },
     {
       "id": "cha-preto-gelado",
@@ -5916,7 +6809,12 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cha"
+      "options": "cha",
+      "labels": [
+        "gelado",
+        "cha",
+        "refrescante"
+      ]
     },
     {
       "id": "cha-preto-gelado-com-limonada",
@@ -5958,7 +6856,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "cha"
+      "options": "cha",
+      "labels": [
+        "gelado",
+        "cha",
+        "citrico",
+        "refrescante"
+      ]
     },
     {
       "id": "refresher-de-morango-com-limonada",
@@ -6001,7 +6905,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "refresher"
+      "options": "refresher",
+      "labels": [
+        "gelado",
+        "frutado",
+        "frutas-vermelhas",
+        "citrico",
+        "refrescante"
+      ]
     },
     {
       "id": "refresher-de-pitaya-com-limonada",
@@ -6044,7 +6955,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "refresher"
+      "options": "refresher",
+      "labels": [
+        "gelado",
+        "frutado",
+        "frutas-vermelhas",
+        "citrico",
+        "refrescante"
+      ]
     },
     {
       "id": "refresher-de-frutas-vermelhas-com-limonada",
@@ -6087,7 +7005,14 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "refresher"
+      "options": "refresher",
+      "labels": [
+        "gelado",
+        "frutado",
+        "frutas-vermelhas",
+        "citrico",
+        "refrescante"
+      ]
     },
     {
       "id": "refresher-de-pitaya",
@@ -6130,7 +7055,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "refresher"
+      "options": "refresher",
+      "labels": [
+        "gelado",
+        "frutado",
+        "frutas-vermelhas",
+        "refrescante"
+      ]
     },
     {
       "id": "refresher-de-morango",
@@ -6173,7 +7104,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "refresher"
+      "options": "refresher",
+      "labels": [
+        "gelado",
+        "frutado",
+        "frutas-vermelhas",
+        "refrescante"
+      ]
     },
     {
       "id": "refresher-de-frutas-vermelhas",
@@ -6216,7 +7153,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "refresher"
+      "options": "refresher",
+      "labels": [
+        "gelado",
+        "frutado",
+        "frutas-vermelhas",
+        "refrescante"
+      ]
     },
     {
       "id": "pink-drink",
@@ -6259,7 +7202,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "refresher"
+      "options": "refresher",
+      "labels": [
+        "gelado",
+        "frutado",
+        "frutas-vermelhas",
+        "refrescante"
+      ]
     },
     {
       "id": "dragon-drink",
@@ -6302,7 +7251,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "refresher"
+      "options": "refresher",
+      "labels": [
+        "gelado",
+        "frutado",
+        "frutas-vermelhas",
+        "refrescante"
+      ]
     },
     {
       "id": "violet-drink",
@@ -6345,7 +7300,13 @@
         "caffeine": true,
         "hunger": 0
       },
-      "options": "refresher"
+      "options": "refresher",
+      "labels": [
+        "gelado",
+        "frutado",
+        "frutas-vermelhas",
+        "refrescante"
+      ]
     },
     {
       "id": "caramelo-stroopwafel",
@@ -6381,7 +7342,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "labels": [
+        "caramelo",
+        "docinho",
+        "para-levar"
+      ]
     },
     {
       "id": "pipoca-caramelo-de-flor-de-sal-pipo",
@@ -6412,7 +7378,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "labels": [
+        "caramelo",
+        "docinho",
+        "para-levar"
+      ]
     },
     {
       "id": "pipoca-manteiga-aviacao-pipo",
@@ -6445,7 +7416,11 @@
         "iced": false,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "labels": [
+        "salgado",
+        "para-levar"
+      ]
     },
     {
       "id": "chocotube",
@@ -6479,7 +7454,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "labels": [
+        "chocolate",
+        "docinho",
+        "para-levar"
+      ]
     },
     {
       "id": "agua-de-coco-coco-legal",
@@ -6508,7 +7488,13 @@
         "iced": true,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "labels": [
+        "gelado",
+        "sem-cafe",
+        "refrescante",
+        "para-levar"
+      ]
     },
     {
       "id": "suco-de-uva",
@@ -6538,7 +7524,14 @@
         "iced": true,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "labels": [
+        "gelado",
+        "frutado",
+        "sem-cafe",
+        "docinho",
+        "para-levar"
+      ]
     },
     {
       "id": "suco-verde",
@@ -6569,7 +7562,14 @@
         "iced": true,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "labels": [
+        "gelado",
+        "frutado",
+        "sem-cafe",
+        "refrescante",
+        "para-levar"
+      ]
     },
     {
       "id": "h2pro-agua-com-colageno",
@@ -6600,7 +7600,13 @@
         "iced": true,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "labels": [
+        "gelado",
+        "sem-cafe",
+        "refrescante",
+        "para-levar"
+      ]
     },
     {
       "id": "agua-sem-gas-sao-lourenco-300ml",
@@ -6629,7 +7635,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "labels": [
+        "gelado",
+        "sem-cafe",
+        "refrescante",
+        "para-levar"
+      ]
     },
     {
       "id": "agua-com-gas-sao-lourenco-300ml",
@@ -6659,7 +7671,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "labels": [
+        "gelado",
+        "sem-cafe",
+        "refrescante",
+        "para-levar"
+      ]
     },
     {
       "id": "agua-sem-gas-sao-lourenco-500ml",
@@ -6688,7 +7706,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "labels": [
+        "gelado",
+        "sem-cafe",
+        "refrescante",
+        "para-levar"
+      ]
     },
     {
       "id": "agua-com-gas-sao-lourenco-500ml",
@@ -6718,7 +7742,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "labels": [
+        "gelado",
+        "sem-cafe",
+        "refrescante",
+        "para-levar"
+      ]
     },
     {
       "id": "agua-sem-gas-na-caixa",
@@ -6747,7 +7777,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "labels": [
+        "gelado",
+        "sem-cafe",
+        "refrescante",
+        "para-levar"
+      ]
     },
     {
       "id": "barra-de-cereal-de-cramberry-e-chocolate",
@@ -6782,7 +7818,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "chocolate",
+        "frutado",
+        "docinho",
+        "para-levar"
+      ]
     },
     {
       "id": "barra-de-cereal-de-coco-e-chocolate",
@@ -6817,7 +7859,12 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "labels": [
+        "chocolate",
+        "docinho",
+        "para-levar"
+      ]
     }
   ],
   "extras": [
@@ -8094,5 +9141,162 @@
         }
       ]
     }
-  }
+  },
+  "tagGroups": [
+    {
+      "id": "temperatura",
+      "name": "Temperatura",
+      "weight": 1,
+      "tags": [
+        {
+          "id": "quente",
+          "label": "Quente"
+        },
+        {
+          "id": "gelado",
+          "label": "Gelado"
+        }
+      ]
+    },
+    {
+      "id": "base",
+      "name": "Base",
+      "weight": 2,
+      "tags": [
+        {
+          "id": "cafe",
+          "label": "Café"
+        },
+        {
+          "id": "cha",
+          "label": "Chá"
+        },
+        {
+          "id": "matcha",
+          "label": "Matcha"
+        },
+        {
+          "id": "chocolate",
+          "label": "Chocolate"
+        },
+        {
+          "id": "frutado",
+          "label": "Frutado"
+        },
+        {
+          "id": "sem-cafe",
+          "label": "Sem café"
+        }
+      ]
+    },
+    {
+      "id": "sabor",
+      "name": "Sabor",
+      "weight": 3,
+      "tags": [
+        {
+          "id": "caramelo",
+          "label": "Caramelo"
+        },
+        {
+          "id": "baunilha",
+          "label": "Baunilha"
+        },
+        {
+          "id": "avela",
+          "label": "Avelã"
+        },
+        {
+          "id": "doce-de-leite",
+          "label": "Doce de leite"
+        },
+        {
+          "id": "brigadeiro",
+          "label": "Brigadeiro"
+        },
+        {
+          "id": "frutas-vermelhas",
+          "label": "Frutas vermelhas"
+        },
+        {
+          "id": "especiarias",
+          "label": "Especiarias"
+        },
+        {
+          "id": "citrico",
+          "label": "Cítrico"
+        },
+        {
+          "id": "queijo",
+          "label": "Queijo"
+        },
+        {
+          "id": "frango",
+          "label": "Frango"
+        },
+        {
+          "id": "presunto",
+          "label": "Presunto e frios"
+        }
+      ]
+    },
+    {
+      "id": "perfil",
+      "name": "Perfil",
+      "weight": 1.5,
+      "tags": [
+        {
+          "id": "intenso",
+          "label": "Intenso"
+        },
+        {
+          "id": "suave",
+          "label": "Suave"
+        },
+        {
+          "id": "cremoso",
+          "label": "Cremoso"
+        },
+        {
+          "id": "refrescante",
+          "label": "Refrescante"
+        },
+        {
+          "id": "docinho",
+          "label": "Docinho"
+        },
+        {
+          "id": "salgado",
+          "label": "Salgado"
+        }
+      ]
+    },
+    {
+      "id": "ocasiao",
+      "name": "Ocasião",
+      "weight": 1,
+      "tags": [
+        {
+          "id": "cafe-da-manha",
+          "label": "Café da manhã"
+        },
+        {
+          "id": "lanche",
+          "label": "Lanche"
+        },
+        {
+          "id": "sobremesa",
+          "label": "Sobremesa"
+        },
+        {
+          "id": "proteico",
+          "label": "Proteico"
+        },
+        {
+          "id": "para-levar",
+          "label": "Para levar"
+        }
+      ]
+    }
+  ]
 }
