@@ -392,3 +392,34 @@ img { display: block; max-width: none; }
 @media (prefers-reduced-motion: reduce) {
   .swipe-hint, .swipe-hint svg { animation: none; }
 }
+
+/* ---------- detalhe em tamanho fixo (sem rolagem) ---------- */
+.sheet--fixed {
+  height: min(540px, calc(100% - 72px));
+  max-height: none; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.sheet--fixed .detail { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
+.detail__head { display: grid; gap: 4px; padding-right: 44px; }
+.detail__head .detail__name { margin: 0; }
+.seg {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 3px;
+  border-radius: var(--r-capsule); background: var(--tint);
+}
+.seg__btn {
+  height: 34px; border-radius: var(--r-capsule); font-size: 13.5px; font-weight: 600; color: var(--ink-2);
+  transition: background .2s, color .2s, box-shadow .2s;
+}
+.seg__btn--on { background: #fff; color: var(--ink); box-shadow: 0 2px 6px rgba(74,52,36,.12); }
+.detail__panel {
+  --fit: 1; /* reduzido pelo componente quando o texto não cabe */
+  flex: 1; min-height: 0; overflow: hidden;
+}
+.detail__panel .lookalike p { font-size: calc(17px * var(--fit)); line-height: 1.45; }
+.detail__panel .ingredients li { font-size: calc(14px * var(--fit)); padding: calc(7px * var(--fit)) 12px; }
+.detail__panel .allergens { font-size: calc(13.5px * var(--fit)); }
+.detail__panel .detail__desc { font-size: calc(14px * var(--fit)); }
+.detail__panel .story p { font-size: calc(15.5px * var(--fit)); line-height: 1.5; }
+.detail__panel .story__note { font-size: calc(11.5px * var(--fit)); }
+.detail__foot { display: grid; gap: 10px; }
+.detail__foot .size { padding: 8px 6px; }

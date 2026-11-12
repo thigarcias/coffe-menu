@@ -152,13 +152,14 @@ export default function App() {
         </div>
       </footer>
 
-      <Sheet open={panel?.kind === 'detail'} onClose={() => setPanel(null)} title="Detalhes">
+      <Sheet open={panel?.kind === 'detail'} onClose={() => setPanel(null)} title="Detalhes" fixed>
         {panel?.kind === 'detail' && (
           <DetailSheet
             item={panel.item}
             fav={favorites.has(panel.item.id)}
             onToggleFavorite={toggleFavorite}
             storyNote={menu.cafe.storyNote}
+            label={catName(panel.item.subcategory ?? panel.item.category)}
           />
         )}
       </Sheet>

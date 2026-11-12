@@ -188,6 +188,7 @@ test.describe('cardápio no celular', () => {
     const close = await box(sheet.locator('.sheet__close'))
     const title = await box(sheet.locator('.detail__name'))
     expect(title.right).toBeLessThanOrEqual(close.x)
+    await sheet.getByRole('tab', { name: 'Ingredientes' }).click()
     await expect(sheet.locator('.ingredients li').first()).toBeVisible()
     // o reflexo do vidro não pode ficar por cima do texto (deixava o título desbotado)
     const onTop = await sheet.locator('.detail__name').evaluate((el) => {
@@ -217,6 +218,45 @@ test.describe('cardápio no celular', () => {
     await page.getByText('Nada, ver sugestões').click()
     await expect(page.locator('.source')).toContainText('Sugestão rápida')
     await expect(page.locator('.sug').first()).toBeVisible()
+  })
+
+  test('detalhe: tamanho fixo e tudo cabe sem rolar, nos piores casos de texto', async ({ page }) => {
+    // tradução, história, ingredientes e nome mais longos; e um item com preços e alérgeno
+    const ids = ['latte-macchiato', 'caramelo-macchiato-gelado', 'frappuccino-brigadeiro', 'morango-frappuccino-cold-foam-proteico', 'chocolate-classico']
+    const heights = new Set<number>()
+    for (const id of ids) {
+      await page.locator('.feed').evaluate((feed, id) => {
+        const el = feed.querySelector<HTMLElement>(`[data-item="${id}"]`)!
+        feed.scrollTo({ top: el.offsetTop })
+      }, id)
+      await page.locator(`[data-item="${id}"] .slide__row .capsule`).click()
+      const sheet = page.locator('.sheet-wrap--open .sheet')
+      await expect(sheet).toBeVisible()
+      await page.waitForTimeout(450)
+      const tabs = sheet.getByRole('tab')
+      await expect(tabs).toHaveCount(3)
+      for (let t = 0; t < 3; t++) {
+        await tabs.nth(t).click()
+        const over = await sheet.evaluate((el) => {
+          const list = [el, ...el.querySelectorAll<HTMLElement>('.detail__panel, .detail__panel *')]
+          return list.filter((n) => n.scrollHeight > n.clientHeight + 1 && getComputedStyle(n).overflowY !== 'visible').map((n) => n.className)
+        })
+        expect(over, `${id} aba ${t}`).toEqual([])
+        const fits = await sheet.evaluate((el) => {
+          const panel = el.querySelector<HTMLElement>('.detail__panel')!
+          const pr = panel.getBoundingClientRect()
+          return [...panel.querySelectorAll<HTMLElement>('*')].every((n) => n.getBoundingClientRect().bottom <= pr.bottom + 1)
+        })
+        expect(fits, `${id} aba ${t}: conteúdo passa do painel`).toBe(true)
+      }
+      const s = await box(sheet)
+      heights.add(Math.round(s.height))
+      const cta = await box(sheet.locator('.cta'))
+      expect(cta.bottom).toBeLessThanOrEqual(s.bottom)
+      await sheet.locator('.sheet__close').click()
+      await expect(page.locator('.sheet-wrap--open')).toHaveCount(0)
+    }
+    expect(heights.size, 'o painel deve ter o mesmo tamanho para todo produto').toBe(1)
   })
 
   test('na galeria, tocar num item abre os detalhes dele ali mesmo', async ({ page }) => {
