@@ -102,8 +102,10 @@ export async function recommend(input, menu) {
 
 /** Handler HTTP compartilhado pelo Vite (dev) e pelo servidor de produção. */
 export async function handleRecommend(req, res, menu) {
+  // A Vercel já entrega o corpo lido em req.body; no Vite e no Node puro, lemos o stream.
   let body = ''
-  for await (const chunk of req) body += chunk
+  if (req.body !== undefined) body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body)
+  else for await (const chunk of req) body += chunk
   res.setHeader('Content-Type', 'application/json')
   try {
     const out = await recommend(JSON.parse(body || '{}'), menu)

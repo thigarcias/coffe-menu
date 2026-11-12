@@ -9,13 +9,16 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "artifact": "vite build && node scripts/artifact.mjs",
-    "start": "node server/index.mjs"
+    "start": "node server/index.mjs",
+    "test:e2e": "playwright test --trace off",
+    "test:e2e:update": "playwright test --trace off --update-snapshots"
   },
   "dependencies": {
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

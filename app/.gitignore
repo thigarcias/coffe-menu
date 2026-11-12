@@ -27,3 +27,7 @@ artifact
 # segredos
 .env
 .env.local
+
+# testes
+test-results/
+playwright-report/

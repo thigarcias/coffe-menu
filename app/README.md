@@ -8,7 +8,23 @@ cp .env.example .env    # e coloque sua OPENAI_API_KEY
 npm run dev -- --host   # abre no celular pela rede local
 ```
 
-Para produção: `npm run build && npm start` (o servidor em `server/index.mjs` serve o build e a rota da IA).
+Para produção:
+- **Vercel:** a rota da IA é a função `api/recommend.mjs`. Configure só `OPENAI_API_KEY` em Settings → Environment Variables.
+- **Node próprio:** `npm run build && npm start` (o servidor em `server/index.mjs` serve o build e a rota da IA).
+
+## Testes (mobile first)
+
+```bash
+npm run test:e2e          # layout + capturas em 5 celulares (320px a 430px)
+npm run test:e2e:update   # aceita uma mudança visual feita de propósito
+```
+
+Os testes ficam em `e2e/layout.spec.ts` e rodam no Chromium com os tamanhos de iPhone SE, iPhone 15, iPhone 15 Pro Max, Pixel 7 e Galaxy S9+. Eles conferem:
+- o app preenche a tela, fica preso à janela (sem a faixa vazia do Safari) e nunca rola para o lado;
+- nenhum botão sai da tela, e a pílula da categoria cobre a categoria ativa, mesmo quando a fonte carrega depois;
+- a foto não invade o texto nem as categorias, o texto do dock não é cortado e os alvos de toque têm pelo menos 44px;
+- o detalhe, o quiz (com a IA simulada e com o plano B por regras) e a grade funcionam;
+- as capturas de referência em `e2e/__screenshots__/` não mudaram sem querer.
 
 ## IA (OpenAI)
 

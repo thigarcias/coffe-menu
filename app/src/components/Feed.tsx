@@ -90,14 +90,14 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
                 ))}
               </div>
               <h2 className="slide__name">{item.name}</h2>
+              {price && (
+                <span className="price">
+                  {price.label && <small>{price.label} </small>}
+                  {price.value}
+                </span>
+              )}
               <p className="slide__desc">{item.description}</p>
               <div className="slide__row">
-                {price && (
-                  <span className="price">
-                    {price.label && <small>{price.label}</small>}
-                    {price.value}
-                  </span>
-                )}
                 <button className="glass capsule" onClick={() => onDetails(item)}>
                   <Info size={16} /> Com o que se parece?
                 </button>

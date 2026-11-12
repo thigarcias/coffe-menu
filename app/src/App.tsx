@@ -119,7 +119,7 @@ export default function App() {
             setPanel({ kind: 'quiz' })
           }}
         >
-          <Sparkle /> Me ajuda a escolher
+          <Sparkle /> <span>Me ajuda a escolher</span>
         </button>
         <div className="glass dock__group">
           <button className="dock__btn" onClick={() => setPanel({ kind: 'list' })} aria-label="Quero provar">

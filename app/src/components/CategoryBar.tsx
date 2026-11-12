@@ -12,9 +12,22 @@ export function CategoryBar({ categories, active, onPick }: Props) {
   const track = useRef<HTMLDivElement>(null)
   const [thumb, setThumb] = useState({ x: 0, w: 0 })
 
+  // Mede a categoria ativa e mede de novo sempre que o tamanho dela mudar
+  // (ex.: a fonte da web carrega depois e o texto fica mais largo).
   useLayoutEffect(() => {
-    const el = track.current?.querySelector<HTMLElement>(`[data-cat="${active}"]`)
-    if (el) setThumb({ x: el.offsetLeft, w: el.offsetWidth })
+    const box = track.current
+    const el = box?.querySelector<HTMLElement>(`[data-cat="${active}"]`)
+    if (!box || !el) return
+    const measure = () => setThumb({ x: el.offsetLeft, w: el.offsetWidth })
+    measure()
+    const ro = new ResizeObserver(measure)
+    box.querySelectorAll<HTMLElement>('.cat').forEach((c) => ro.observe(c))
+    document.fonts?.ready.then(measure)
+    document.fonts?.addEventListener?.('loadingdone', measure)
+    return () => {
+      ro.disconnect()
+      document.fonts?.removeEventListener?.('loadingdone', measure)
+    }
   }, [active, categories])
 
   // Mantém a pílula ativa à vista enquanto o feed rola.
