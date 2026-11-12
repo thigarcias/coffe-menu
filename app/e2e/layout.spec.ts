@@ -423,9 +423,9 @@ test.describe('sacola e pedido', () => {
     await expect(page.locator('.sheet-wrap--open .recap')).toContainText('1× Misto Quente')
     await expect(page.locator('.sheet-wrap--open .ready')).toHaveCount(0)
 
-    await page.clock.fastForward(9_000)
+    await page.clock.fastForward(4_000)
     await expect(now).toHaveText('Preparando')
-    await page.clock.fastForward(12_000)
+    await page.clock.fastForward(5_000)
     await expect(page.locator('.sheet-wrap--open .ready h4')).toHaveText('Seu pedido está pronto, Thiago')
     await expect(page.locator('.sheet-wrap--open .step-row--done')).toHaveCount(3)
 
@@ -693,7 +693,7 @@ test.describe('visual', () => {
     await page.getByRole('button', { name: 'Continuar' }).click()
     await page.locator('#order-name').fill('Thiago')
     await page.getByRole('button', { name: /^Enviar pedido/ }).click()
-    await page.clock.fastForward(9_000)
+    await page.clock.fastForward(4_000)
     await page.waitForTimeout(300)
     await expect(page).toHaveScreenshot('pedido.png')
   })

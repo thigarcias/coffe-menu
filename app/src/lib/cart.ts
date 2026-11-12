@@ -34,8 +34,8 @@ const NAME_KEY = 'cm.name'
 const FAV_KEY = 'cm.favorites' // legado: migrado uma vez para a sacola
 
 /** Andamento simulado do pedido, em ms desde o envio (curto de propósito, para a demo). */
-export const PREPARING_AT = 8_000
-export const READY_AT = 20_000
+export const PREPARING_AT = 3_000
+export const READY_AT = 8_000
 
 // ---------- conjuntos de opções ----------
 

@@ -30,7 +30,7 @@ Plano da experiência de pedido do cliente. Decidido com o usuário em 12/11/202
 2. **Personalizar** (painel). Grupos na ordem do site: Tamanho, Café, Leite, Adicionais (com quantidade), "Sem chantilly" e Observação. O preço da linha atualiza ao vivo. Botão "Salvar · R$ 24,40".
 3. **Sacola** (botão do dock). Linhas com foto, nome, resumo das escolhas ("Grande · Leite de aveia · +1 dose"), observação, quantidade (− 1 +), editar e remover. Embaixo ficam o subtotal e o "Continuar".
 4. **Fechar.** Campo de nome (ou mesa, ou os dois, conforme `cafe.orderBy`). Se algum item tem alérgeno, aparece um aviso: "Contém lactose, glúten. Confirme com a equipe." Botão "Enviar pedido · R$ 52,70".
-5. **Acompanhar.** Tela do pedido com número (#A27), nome, itens e total, e uma linha do tempo: Recebido (na hora) → Preparando (~8 s) → Pronto (~20 s). Os tempos são curtos de propósito, para a demo. No "Pronto": "Seu pedido está pronto, Thiago" e "Pedir mais alguma coisa?".
+5. **Acompanhar.** Tela do pedido com número (#A27), nome, itens e total, e uma linha do tempo: Recebido (na hora) → Preparando (~3 s) → Pronto (~8 s). Os tempos são curtos de propósito, para a demo. No "Pronto": "Seu pedido está pronto, Thiago" e "Pedir mais alguma coisa?".
 
 ## Dados
 
