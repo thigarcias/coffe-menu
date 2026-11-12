@@ -132,24 +132,21 @@ test.describe('cardápio no celular', () => {
     const body = await box(page.locator('.slide__body').first())
     const dock = await box(page.locator('.dock'))
     expect(body.bottom).toBeLessThanOrEqual(dock.y)
-    const what = await box(page.locator('.whatbtn').first())
-    const add = await box(page.locator('.addbtn').first())
+    // um botão só no produto: "Eu quero"
+    await expect(page.locator('.slide').first().locator('.chipbtn')).toHaveCount(1)
+    const add = await box(page.locator('.wantbtn').first())
     expect(add.bottom).toBeLessThanOrEqual(body.y)
-    expect(what.bottom).toBeLessThanOrEqual(body.y)
-    // lado a lado, na mesma linha: "O que é?" à esquerda, "Adicionar" à direita
-    expect(Math.abs(what.cy - add.cy)).toBeLessThanOrEqual(2)
-    expect(what.right).toBeLessThanOrEqual(add.x + 1)
     // borda direita alinhada ao texto e ao dock (margem = gutter); o botão é a caixa de toque, o chip é o vidro
     const vp = page.viewportSize()!
     const gutter = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gutter')))
     const dockG = await box(page.locator('.dock__group').first())
-    const addPill = await box(page.locator('.addbtn .chipbtn__pill').first())
+    const addPill = await box(page.locator('.wantbtn .chipbtn__pill').first())
     expect(Math.abs(add.right - (vp.width - gutter))).toBeLessThanOrEqual(1)
     expect(Math.abs(add.right - dockG.right)).toBeLessThanOrEqual(1)
     expect(addPill.right).toBeLessThanOrEqual(vp.width - gutter + 0.5)
-    expect(what.x).toBeGreaterThanOrEqual(gutter)
+    expect(add.x).toBeGreaterThanOrEqual(gutter)
     // chip de vidro com 36–40px de altura; alvo de toque (botão) ≥ 44px
-    for (const sel of ['.whatbtn', '.addbtn']) {
+    for (const sel of ['.wantbtn']) {
       const b = page.locator(sel).first()
       const pill = b.locator('.chipbtn__pill')
       await expect(pill).toHaveClass(/glass/)
@@ -181,8 +178,7 @@ test.describe('cardápio no celular', () => {
       expect(info.size, sel).toBeGreaterThanOrEqual(13.5)
       await expect(b.locator('.chipbtn__lbl')).toBeVisible()
     }
-    await expect(page.locator('.whatbtn .chipbtn__lbl').first()).toHaveText('O que é?')
-    await expect(page.locator('.addbtn .chipbtn__lbl').first()).toHaveText('Adicionar')
+    await expect(page.locator('.wantbtn .chipbtn__lbl').first()).toHaveText('Eu quero')
   })
 
   test('os botões do produto ficam dentro da área da foto e não tocam o texto', async ({ page }) => {
@@ -192,10 +188,7 @@ test.describe('cardápio no celular', () => {
       const photo = await box(slide.locator('.pimg__box'))
       const body = await box(slide.locator('.slide__body'))
       const cats = await box(page.locator('.cats'))
-      const w = await box(slide.locator('.whatbtn')), a = await box(slide.locator('.addbtn'))
-      expect(Math.abs(w.cy - a.cy), `${id} mesma linha`).toBeLessThanOrEqual(2)
-      expect(w.right, `${id} ordem`).toBeLessThanOrEqual(a.x + 1)
-      for (const sel of ['.whatbtn', '.addbtn']) {
+      for (const sel of ['.wantbtn']) {
         const b = await box(slide.locator(sel))
         expect(b.right, `${id} ${sel}: gutter`).toBeLessThanOrEqual(page.viewportSize()!.width - 16 + 0.5)
         expect(b.y, `${id} ${sel}`).toBeGreaterThanOrEqual(photo.y)
@@ -257,7 +250,7 @@ test.describe('cardápio no celular', () => {
   test('a dica de deslizar não encosta no dock nem nos botões do produto', async ({ page }) => {
     const h = await box(page.locator('.swipe-hint'))
     expect(h.bottom).toBeLessThanOrEqual((await box(page.locator('.dock__group'))).y - 2)
-    expect(h.y).toBeGreaterThanOrEqual((await box(page.locator('.addbtn').first())).bottom)
+    expect(h.y).toBeGreaterThanOrEqual((await box(page.locator('.wantbtn').first())).bottom)
   })
 
   test('na grade, o dock some ao rolar para baixo e volta ao rolar para cima', async ({ page }) => {
@@ -293,7 +286,7 @@ test.describe('cardápio no celular', () => {
   })
 
   test('detalhe do produto abre dentro da tela e o X não cobre o título', async ({ page }) => {
-    await page.locator('.whatbtn').first().click()
+    await page.locator('.wantbtn').first().click()
     const sheet = page.locator('.sheet-wrap--open .sheet')
     await expect(sheet).toBeVisible()
     await page.waitForTimeout(500)
@@ -352,7 +345,7 @@ test.describe('cardápio no celular', () => {
         const el = feed.querySelector<HTMLElement>(`[data-item="${id}"]`)!
         feed.scrollTo({ top: el.offsetTop })
       }, id)
-      await page.locator(`[data-item="${id}"] .whatbtn`).click()
+      await page.locator(`[data-item="${id}"] .wantbtn`).click()
       const sheet = page.locator('.sheet-wrap--open .sheet')
       await expect(sheet).toBeVisible()
       await page.waitForTimeout(450)
@@ -428,7 +421,7 @@ test.describe('cardápio no celular', () => {
       const el = feed.querySelector<HTMLElement>(`[data-item="${id}"]`)!
       feed.scrollTo({ top: el.offsetTop })
     }, id)
-    await page.locator(`[data-item="${id}"] .whatbtn`).click()
+    await page.locator(`[data-item="${id}"] .wantbtn`).click()
     const sheet = page.locator('.sheet-wrap--open .sheet')
     await expect(sheet).toBeVisible()
     return sheet
@@ -489,13 +482,14 @@ test.describe('cardápio no celular', () => {
 
 const BRL = (v: string) => new RegExp(`R\\$\\s${v}`)
 
-/** Vai até o produto no feed e toca na sacola com "+". */
+/** Vai até o produto no feed, toca em "Eu quero" e adiciona pelo detalhe. */
 async function addFromFeed(page: Page, id: string) {
   await page.locator('.feed').evaluate((feed, id) => {
     const el = feed.querySelector<HTMLElement>(`[data-item="${id}"]`)!
     feed.scrollTo({ top: el.offsetTop })
   }, id)
-  await page.locator(`[data-item="${id}"] .addbtn`).click()
+  await page.locator(`[data-item="${id}"] .wantbtn`).click()
+  await page.locator('.sheet-wrap--open .sheet .cta').click()
 }
 
 const bagButton = (page: Page) => page.locator('.dock__bag')
@@ -521,7 +515,7 @@ test.describe('sacola e pedido', () => {
     await expect(toast).toContainText('Adicionado à sacola')
     await expect(toast.getByRole('button')).toHaveText(['Desfazer'])
     await expect(page.locator('.dock__bag .count')).toHaveText('1')
-    await expect(page.locator('[data-item="misto-quente"] .addbtn .count')).toHaveText('1')
+    await expect(page.locator('[data-item="misto-quente"] .wantbtn .count')).toHaveText('1')
     await expect(page.locator('.dock__total')).toHaveText(BRL('19,90'))
     // "Desfazer" tira o que acabou de entrar
     await toast.getByRole('button', { name: 'Desfazer' }).click()
@@ -656,7 +650,7 @@ test.describe('sacola e pedido', () => {
 
   test('adicionar pelo detalhe, pela grade e pelo quiz registra de onde veio', async ({ page }) => {
     // detalhe
-    await page.locator('.whatbtn').first().click()
+    await page.locator('.wantbtn').first().click()
     await page.waitForTimeout(450)
     await expect(sheetOpen(page).locator('.cta')).toHaveText(/Adicionar · R\$\s\d+,\d{2}/)
     await sheetOpen(page).locator('.cta').click()
@@ -802,7 +796,7 @@ test.describe('sacola e pedido: layout', () => {
     expect(t.right).toBeLessThanOrEqual(vp.width)
     expect(t.y).toBeGreaterThanOrEqual((await box(page.locator('.cats'))).bottom)
     // o botão de sacola do produto continua livre para outro toque
-    expect(t.bottom).toBeLessThanOrEqual((await box(page.locator('[data-item="cafe-latte"] .addbtn'))).y)
+    expect(t.bottom).toBeLessThanOrEqual((await box(page.locator('[data-item="cafe-latte"] .wantbtn'))).y)
     for (const b of await page.locator('.toast__btn').all()) expect((await box(b)).height).toBeGreaterThanOrEqual(44)
   })
 
@@ -812,7 +806,7 @@ test.describe('sacola e pedido: layout', () => {
     await expect(page.getByRole('button', { name: 'Ver tudo' }).locator('.dock__lbl')).toHaveText('Ver tudo')
     await expect(page.locator('.dock__help .dock__lbl')).toHaveText('Me ajuda')
     // feed
-    await expect(page.locator('.addbtn').first()).toContainText('Adicionar')
+    await expect(page.locator('.wantbtn').first()).toContainText('Eu quero')
     // com algo na sacola, o "Me ajuda" continua com o texto e a sacola mostra o total
     await addFromFeed(page, 'misto-quente')
     await expect(page.locator('.dock__help .dock__lbl')).toBeVisible()
@@ -830,7 +824,7 @@ test.describe('sacola e pedido: layout', () => {
   })
 
   test('botões de sacola do feed, da grade e do quiz têm pelo menos 44px', async ({ page }) => {
-    const feedBtn = await box(page.locator('.addbtn').first())
+    const feedBtn = await box(page.locator('.wantbtn').first())
     expect(feedBtn.width).toBeGreaterThanOrEqual(44)
     expect(feedBtn.height).toBeGreaterThanOrEqual(44)
     await page.getByRole('button', { name: 'Ver tudo' }).click()
@@ -850,7 +844,7 @@ test.describe('visual', () => {
     await expect(page).toHaveScreenshot('feed.png')
   })
   test('detalhe', async ({ page }) => {
-    await page.locator('.whatbtn').first().click()
+    await page.locator('.wantbtn').first().click()
     await page.waitForTimeout(500)
     await expect(page).toHaveScreenshot('detalhe.png')
   })

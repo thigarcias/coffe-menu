@@ -308,7 +308,6 @@ export default function App() {
         items={items}
         categoryName={catName}
         counts={counts}
-        onAdd={(item) => addToCart(item, 'feed')}
         onDetails={openDetails}
         onActive={onActive}
       />

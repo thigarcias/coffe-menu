@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import type { MenuItem } from '../types'
 import { nameSize, priceParts } from '../lib/format'
 import { track } from '../lib/track'
-import { BagPlus, Info } from './Icons'
+import { BagPlus } from './Icons'
 import { ProductImage } from './ProductImage'
 
 export interface FeedHandle {
@@ -14,14 +14,13 @@ interface Props {
   categoryName: (id: string) => string
   /** quantas unidades de cada item estão na sacola */
   counts: Map<string, number>
-  onAdd: (item: MenuItem) => void
   onDetails: (item: MenuItem) => void
   onActive: (item: MenuItem) => void
 }
 
 /** Feed vertical em tela cheia, um produto por tela, no estilo Reels. */
 export const Feed = forwardRef<FeedHandle, Props>(function Feed(
-  { items, categoryName, counts, onAdd, onDetails, onActive },
+  { items, categoryName, counts, onDetails, onActive },
   ref,
 ) {
   const box = useRef<HTMLDivElement>(null)
@@ -86,13 +85,11 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
 
             {/* ações sobre a foto, no canto inferior direito dela (estilo Reels) */}
             <div className="slide__actions">
-              <button className="chipbtn whatbtn" aria-label={`O que é ${item.name}?`} onClick={() => onDetails(item)}>
-                <span className="glass capsule chipbtn__pill"><Info size={18} /><span className="chipbtn__lbl">O que é?</span></span>
-              </button>
-              <button className="chipbtn addbtn" aria-label={`Adicionar ${item.name} à sacola`} onClick={() => onAdd(item)}>
+              {/* um botão só: abre o detalhe, onde a pessoa entende o produto e adiciona à sacola */}
+              <button className="chipbtn wantbtn" aria-label={`Eu quero ${item.name}`} onClick={() => onDetails(item)}>
                 <span className="glass capsule chipbtn__pill">
                   <BagPlus size={18} />
-                  <span className="chipbtn__lbl">Adicionar</span>
+                  <span className="chipbtn__lbl">Eu quero</span>
                   {n > 0 && <span className="count" aria-label={`${n} na sacola`}>{n}</span>}
                 </span>
               </button>
