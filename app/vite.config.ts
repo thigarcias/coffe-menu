@@ -10,7 +10,7 @@ function aiApi(): Plugin {
     name: 'ai-api',
     configureServer(server) {
       const env = loadEnv(server.config.mode, process.cwd(), '')
-      for (const k of ['OPENAI_API_KEY', 'OPENAI_MODEL', 'OPENAI_REASONING_EFFORT', 'OPENAI_TIMEOUT_MS']) {
+      for (const k of ['OPENAI_API_KEY']) {
         if (env[k] && !process.env[k]) process.env[k] = env[k]
       }
       server.middlewares.use('/api/recommend', (req, res, next) => {

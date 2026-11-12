@@ -12,7 +12,7 @@ Para produção: `npm run build && npm start` (o servidor em `server/index.mjs` 
 
 ## IA (OpenAI)
 
-- Toda a IA do app usa o modelo **`gpt-6-luna`** com `reasoning.effort: "high"`, pela Responses API. Isso é configurável no `.env` (`OPENAI_MODEL`, `OPENAI_REASONING_EFFORT`, `OPENAI_TIMEOUT_MS`).
+- Toda a IA do app usa o modelo **`gpt-6-luna`** com `reasoning.effort: "high"`, pela Responses API.. Os dois ficam fixos em `server/ai.mjs`, e a única variável de ambiente é `OPENAI_API_KEY`.
 - A chave fica **só no servidor**: o React chama `POST /api/recommend`, e o servidor (`server/ai.mjs`) fala com a OpenAI. O `.env` está no `.gitignore`.
 - A resposta vem em JSON estruturado (até 3 ids do cardápio, cada um com uma frase de motivo), e ids que não existem são descartados.
 - Sem servidor (por exemplo, no link estático do claude.ai) ou se a IA falhar, o quiz usa as regras de `src/lib/recommend.ts` e avisa "Sugestão rápida".

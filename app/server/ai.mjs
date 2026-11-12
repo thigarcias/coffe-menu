@@ -1,11 +1,16 @@
 // Recomendação com IA (OpenAI Responses API). Roda só no servidor: a chave nunca vai ao navegador.
 const API = 'https://api.openai.com/v1/responses'
 
+// Fixos no código por enquanto: toda a IA do app usa este modelo e este esforço.
+const MODEL = 'gpt-6-luna'
+const EFFORT = 'high'
+const TIMEOUT_MS = 60000
+
 export const config = () => ({
   key: process.env.OPENAI_API_KEY,
-  model: process.env.OPENAI_MODEL || 'gpt-6-luna',
-  effort: process.env.OPENAI_REASONING_EFFORT || 'high',
-  timeoutMs: Number(process.env.OPENAI_TIMEOUT_MS || 60000),
+  model: MODEL,
+  effort: EFFORT,
+  timeoutMs: TIMEOUT_MS,
 })
 
 const SCHEMA = {
