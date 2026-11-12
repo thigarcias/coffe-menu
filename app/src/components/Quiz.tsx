@@ -89,8 +89,9 @@ export function Quiz({ items, onPick, counts, onAdd }: Props) {
                     {fromPrice(item) && <span className="sug__meta">{fromPrice(item)}</span>}
                   </div>
                 </button>
-                <button className="glass circle circle--bag sug__add" aria-label={`Adicionar ${item.name} à sacola`} onClick={() => onAdd(item)}>
-                  <BagPlus size={22} />
+                <button className="sug__add" aria-label={`Adicionar ${item.name} à sacola`} onClick={() => onAdd(item)}>
+                  <span className="glass circle circle--bag"><BagPlus size={20} /></span>
+                  <span className="sug__addlbl">Adicionar</span>
                   {n > 0 && <span className="count" aria-label={`${n} na sacola`}>{n}</span>}
                 </button>
               </div>

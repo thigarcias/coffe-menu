@@ -161,10 +161,10 @@ export function CartSheet({ lines, byId, orderBy, order, stage, onQty, onRemove,
                 <span className="bagrow__price">{money(linePrice(item, l))}</span>
                 <div className="bagrow__act">
                   <button className="tool" onClick={() => onEdit(l.key)} aria-label={`Editar ${item.name}`}>
-                    <Pencil size={17} />
+                    <Pencil size={15} /> Editar
                   </button>
-                  <button className="tool tool--icon" onClick={() => onRemove(l.key)} aria-label={`Remover ${item.name}`}>
-                    <Trash size={17} />
+                  <button className="tool tool--warn" onClick={() => onRemove(l.key)} aria-label={`Remover ${item.name}`}>
+                    <Trash size={15} /> Remover
                   </button>
                   <div className="stepper">
                     <button className="step" aria-label={`Menos ${item.name}`} disabled={l.qty <= 1} onClick={() => onQty(l.key, -1)}>

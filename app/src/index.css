@@ -218,22 +218,27 @@ img { display: block; max-width: none; }
 .dock { transition: opacity .25s, transform .3s cubic-bezier(.2,.9,.25,1); }
 .dock--hidden { opacity: 0; transform: translateY(12px); pointer-events: none; }
 .dock__help { flex: 1; min-width: 0; justify-content: center; overflow: hidden; }
-.dock__help span { overflow: hidden; text-overflow: ellipsis; }
+/* sem espaço para uma linha só, o texto quebra em duas dentro do botão (nunca "Me ajuda a escolh…") */
+.dock__help span { white-space: normal; line-height: 1.12; text-align: left; }
 .dock__group { flex: none; }
 /* celulares estreitos (320–360px): dock mais compacto para caber sem cortar */
 @media (max-width: 360px) {
   .dock { gap: 8px; }
-  .capsule--lg { padding: 0 12px; font-size: 13.5px; gap: 5px; letter-spacing: -0.2px; }
+  .capsule--lg { padding: 0 12px; font-size: 13.5px; gap: 6px; letter-spacing: -0.2px; }
   .capsule--lg svg { width: 15px; height: 15px; }
-  .dock__group { padding: 0 4px; }
-  .dock__btn { width: 42px; height: 44px; }
+  .dock__group { padding: 0 3px; }
+  .dock__btn { width: 52px; }
 }
 .dock__help svg { color: var(--caramel); }
 .dock__group { display: flex; align-items: center; height: var(--dock-h); padding: 0 6px; border-radius: var(--r-capsule); }
 .dock__btn {
-  position: relative; width: 44px; height: 44px; border-radius: 50%;
-  display: grid; place-items: center; transition: transform .18s cubic-bezier(.3,.7,.4,1.4);
+  position: relative; width: 58px; height: 50px; border-radius: 22px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  transition: transform .18s cubic-bezier(.3,.7,.4,1.4);
 }
+/* texto de apoio embaixo de cada ícone do dock */
+.dock__lbl { font-size: 10.5px; font-weight: 600; line-height: 1.1; color: var(--ink-2); white-space: nowrap; letter-spacing: -0.1px; }
+.dock__btn .count { top: 1px; right: 9px; }
 .count {
   position: absolute; top: 4px; right: 3px; min-width: 17px; height: 17px; padding: 0 4px;
   border-radius: 9px; background: var(--fav); color: #fff;
@@ -483,17 +488,25 @@ img { display: block; max-width: none; }
 /* ---------- sacola: botões de adicionar, aviso, dock ---------- */
 .circle--bag { position: relative; width: 44px; height: 44px; }
 .circle .count { top: -4px; right: -4px; border: 2px solid var(--bg); box-sizing: content-box; }
-.slide__row .circle { width: 44px; height: 44px; }
+.addbtn {
+  position: relative; margin-left: auto; flex: none;
+  display: inline-flex; align-items: center; gap: 6px; height: 44px; padding: 0 16px 0 14px;
+  border-radius: var(--r-capsule); font-size: 14px; font-weight: 700; white-space: nowrap;
+  transition: transform .18s cubic-bezier(.3,.7,.4,1.4);
+}
+.addbtn:active { transform: scale(.94); }
+.addbtn .count { top: -4px; right: -4px; border: 2px solid var(--bg); box-sizing: content-box; }
+.slide__row .capsule { height: 44px; }
+/* 320–360px: os dois botões da linha encolhem um pouco para caber lado a lado */
+@media (max-width: 360px) {
+  .slide__row { gap: 6px; }
+  .slide__row .capsule { padding: 0 11px; font-size: 13px; gap: 5px; letter-spacing: -0.2px; }
+  .addbtn { padding: 0 12px 0 10px; font-size: 13px; gap: 5px; }
+}
 
-/* dock com algo na sacola: "Me ajuda" vira só o ícone e a sacola ganha o total (ou o status do pedido) */
-.dock--bag { justify-content: space-between; }
-.dock--bag .dock__help { flex: none; width: var(--dock-h); padding: 0; }
-.dock--bag .dock__help span { display: none; }
-.dock--bag .dock__bag { display: flex; align-items: center; width: auto; padding: 0 14px 0 12px; gap: 6px; border-radius: 22px; }
-.dock--bag .dock__help svg { width: 22px; height: 22px; }
-.dock--bag .dock__bag .count { top: 2px; right: auto; left: 24px; }
-.dock__total { font-size: 14px; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.dock__status { color: var(--sage); }
+/* com algo na sacola, o rótulo da sacola vira o total (ou o andamento do pedido) */
+.dock__total { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+.dock__status { color: var(--sage); font-weight: 700; }
 
 .toast {
   position: absolute; z-index: 60; left: var(--gutter); right: var(--gutter); margin: 0 auto; max-width: 420px;
@@ -513,10 +526,26 @@ img { display: block; max-width: none; }
 /* grade e quiz: botão de sacola em cima do cartão */
 .card { position: relative; }
 .card__open { display: grid; gap: 3px; min-width: 0; width: 100%; text-align: left; }
-.card__add { position: absolute; top: 8px; right: 8px; }
+.card__add {
+  /* 44px de alvo de toque; a pílula visível tem 38px */
+  position: relative; margin-top: 5px; width: 100%; height: 44px;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  border-radius: 19px; font-size: 13.5px; font-weight: 700; color: var(--ink);
+  background: linear-gradient(var(--tint), var(--tint)) center / 100% 38px no-repeat;
+  transition: transform .18s cubic-bezier(.3,.7,.4,1.4);
+}
+.card__add:active { transform: scale(.96); }
+.card__add .count { top: -6px; right: -2px; border: 2px solid var(--bg); box-sizing: content-box; }
 .sug { align-items: center; gap: 8px; padding-right: 10px; }
 .sug__main { display: flex; gap: 12px; flex: 1; min-width: 0; text-align: left; }
-.sug__add { margin-left: auto; width: 44px; height: 44px; }
+.sug__add {
+  position: relative; margin-left: auto; flex: none; min-width: 60px; min-height: 58px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+}
+.sug__add .circle { width: 40px; height: 40px; }
+.sug__add:active .circle { transform: scale(.92); }
+.sug__addlbl { font-size: 11px; font-weight: 700; color: var(--ink-2); }
+.sug__add .count { top: -2px; right: 6px; border: 2px solid var(--surface); box-sizing: content-box; }
 
 /* ---------- painéis com rodapé fixo (sacola, personalização, pedido) ---------- */
 .sheet--col { display: flex; flex-direction: column; overflow: hidden; padding-bottom: 16px; }
@@ -567,7 +596,20 @@ img { display: block; max-width: none; }
 }
 .step:active:not(:disabled), .tool:active { transform: scale(.92); }
 .step:disabled { opacity: .35; cursor: default; }
-.tool--icon { color: var(--warn); }
+.tool {
+  width: auto; padding: 0 12px; gap: 5px; display: inline-flex; align-items: center;
+  border-radius: var(--r-capsule); background: var(--tint); font-size: 13px; font-weight: 600; color: var(--ink-2);
+  /* 44px de alvo de toque; a pílula visível tem 34px */
+  height: 44px; position: relative; margin-right: 6px;
+  background: linear-gradient(var(--tint), var(--tint)) center / 100% 34px no-repeat;
+}
+.tool--warn { color: var(--warn); }
+/* 320–360px: só o texto, para "Editar", "Remover" e a quantidade caberem numa linha */
+@media (max-width: 360px) {
+  .tool { padding: 0 9px; font-size: 12.5px; margin-right: 3px; }
+  .bagrow .stepper__n { min-width: 20px; }
+  .tool svg { display: none; }
+}
 
 .empty { display: grid; justify-items: center; gap: 10px; text-align: center; padding: 22px 8px; color: var(--ink-3); }
 .empty p { margin: 0; max-width: 240px; }

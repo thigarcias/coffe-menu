@@ -307,7 +307,7 @@ export default function App() {
         </div>
       )}
 
-      <footer className={`dock ${panel ? 'dock--hidden' : ''} ${count || order ? 'dock--bag' : ''}`}>
+      <footer className={`dock ${panel ? 'dock--hidden' : ''}`}>
         <button
           className="glass capsule capsule--lg dock__help"
           aria-label="Me ajuda a escolher"
@@ -322,11 +322,13 @@ export default function App() {
           <button className="dock__btn dock__bag" onClick={openBag} aria-label={bagLabel}>
             <Bag />
             {count > 0 && <span className="count">{count}</span>}
-            {count > 0 && <span className="dock__total">{money(total)}</span>}
-            {showStatus && <span className="dock__total dock__status">{STAGES[stage]}{stage < 2 ? '…' : '!'}</span>}
+            <span className={`dock__lbl ${count ? 'dock__total' : showStatus ? 'dock__status' : ''}`}>
+              {count ? money(total) : showStatus ? `${STAGES[stage]}${stage < 2 ? '…' : '!'}` : 'Sacola'}
+            </span>
           </button>
           <button className="dock__btn" onClick={switchMode} aria-label={mode === 'feed' ? 'Ver tudo' : 'Ver em tela cheia'}>
             {mode === 'feed' ? <Grid /> : <Reels />}
+            <span className="dock__lbl">{mode === 'feed' ? 'Ver tudo' : 'Tela cheia'}</span>
           </button>
         </div>
       </footer>

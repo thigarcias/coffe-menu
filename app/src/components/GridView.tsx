@@ -46,8 +46,8 @@ export function GridView({ categories, items, counts, onOpen, onAdd, filter, onC
                       <span className="card__name">{item.name}</span>
                       <span className="card__price">{fromPrice(item)}</span>
                     </button>
-                    <button className="glass circle circle--bag card__add" aria-label={`Adicionar ${item.name} à sacola`} onClick={() => onAdd(item)}>
-                      <BagPlus size={22} />
+                    <button className="card__add" aria-label={`Adicionar ${item.name} à sacola`} onClick={() => onAdd(item)}>
+                      <BagPlus size={17} /> Adicionar
                       {n > 0 && <span className="count" aria-label={`${n} na sacola`}>{n}</span>}
                     </button>
                   </div>

@@ -103,8 +103,8 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
                 <button className="glass capsule" onClick={() => onDetails(item)}>
                   <Info size={16} /> Com o que se parece?
                 </button>
-                <button className="glass circle circle--bag" aria-label={`Adicionar ${item.name} à sacola`} onClick={() => onAdd(item)}>
-                  <BagPlus size={22} />
+                <button className="glass addbtn" aria-label={`Adicionar ${item.name} à sacola`} onClick={() => onAdd(item)}>
+                  <BagPlus size={18} /> <span>Adicionar</span>
                   {n > 0 && <span className="count" aria-label={`${n} na sacola`}>{n}</span>}
                 </button>
               </div>

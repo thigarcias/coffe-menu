@@ -28,6 +28,8 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 - O `.app` fica **preso à janela** (`position: fixed; inset: 0`) e com `overflow: clip`. Isso evita a faixa vazia sob a barra do Safari no iPhone e impede o app de rolar para o lado. Não troque por `100dvh`/`100vh`.
 - O slide do feed é uma **grade**: `[espaço do topo][foto 1fr][texto auto][espaço do dock]`. A foto ocupa só o espaço livre e nunca invade o texto. Use `subgrid`, não porcentagens fixas.
 - Alvos de toque com pelo menos 44px.
+- **Todo botão de ícone tem texto de apoio visível** ("Adicionar", "Sacola", "Ver tudo", "Editar", "Remover"). Só o X de fechar e o − / + de quantidade ficam sem texto. Pedido do usuário: o app ficou enxuto demais e não dava para saber o que cada ícone fazia.
+- **Capturas com mudança pequena não são regravadas** pelo `--update-snapshots` (a tolerância é de 2%). Depois de uma mudança visual, apague as PNGs de `e2e/__screenshots__/` e gere de novo, ou a captura fica velha.
 
 ### Design
 - **Soft de cafeteria gourmet + Liquid Glass claro.** Os tokens ficam no `:root` de `app/src/index.css`: leite de aveia (`--bg`), espresso (`--ink`), sálvia (`--sage`), névoa de matcha (`--matcha`), rosa-chá (`--blush`), caramelo (`--caramel`). Use os tokens; não espalhe cores soltas.
@@ -55,7 +57,7 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 ```bash
 npm run dev -- --host     # app + rota da IA (precisa de OPENAI_API_KEY no .env)
 npm run build             # typecheck + build
-npm run test:e2e          # 225 testes em 5 celulares (layout + capturas)
+npm run test:e2e          # 230 testes em 5 celulares (layout + capturas)
 npm run test:e2e:update   # aceita uma mudança visual feita de propósito
 npm run artifact          # gera app/artifact/ para publicar como Artifact do claude.ai
 ```
