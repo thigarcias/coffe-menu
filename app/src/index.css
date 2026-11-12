@@ -138,7 +138,7 @@ img { display: block; max-width: none; }
 .feed::-webkit-scrollbar { display: none; }
 .slide {
   --top-space: calc(max(12px, env(safe-area-inset-top)) + 96px);
-  --dock-space: calc(var(--dock-h) + max(16px, env(safe-area-inset-bottom)) + 18px);
+  --dock-space: calc(var(--dock-h) + max(16px, env(safe-area-inset-bottom)) + 34px); /* inclui a faixa da dica "deslize" */
   position: relative; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden;
   display: grid; grid-template-columns: minmax(0, 1fr);
   grid-template-rows: var(--top-space) minmax(0, 1fr) auto var(--dock-space);
@@ -375,3 +375,20 @@ img { display: block; max-width: none; }
 .thinking span:nth-child(2) { animation-delay: .15s; background: var(--caramel); }
 .thinking span:nth-child(3) { animation-delay: .3s; background: var(--fav); }
 @keyframes pulse { 0%, 100% { opacity: .25; transform: scale(.8); } 50% { opacity: 1; transform: scale(1); } }
+
+/* ---------- dica "deslize" ---------- */
+.swipe-hint {
+  position: absolute; z-index: 24; left: 50%;
+  bottom: calc(max(16px, env(safe-area-inset-bottom)) + var(--dock-h) + 6px);
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  font-size: 10.5px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--ink-3); pointer-events: none;
+  animation: hint-in .6s ease-out .8s both;
+}
+.swipe-hint svg { margin-top: -2px; animation: nudge 1.8s ease-in-out 1.4s infinite; }
+@keyframes hint-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+@media (prefers-reduced-motion: reduce) {
+  .swipe-hint, .swipe-hint svg { animation: none; }
+}

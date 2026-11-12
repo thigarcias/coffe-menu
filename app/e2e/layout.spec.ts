@@ -39,6 +39,25 @@ async function expectThumbOnActive(page: Page) {
 test.describe('cardápio no celular', () => {
   test.beforeEach(async ({ page }) => open(page))
 
+  test('categorias gerais no topo', async ({ page }) => {
+    await expect(page.locator('.cat')).toHaveText(['Novidades', 'Cafés', 'Gelados', 'Bebidas', 'Salgados', 'Doces'])
+    await page.getByRole('button', { name: 'Salgados' }).click()
+    await expect(page.locator('.cat--on')).toHaveText('Salgados')
+  })
+
+  test('dica de deslizar aparece no começo, fica acima do dock e some depois de deslizar', async ({ page }) => {
+    const hint = page.locator('.swipe-hint')
+    await expect(hint).toBeVisible()
+    const h = await box(hint)
+    expect(h.bottom).toBeLessThanOrEqual((await box(page.locator('.dock'))).y)
+    expect(h.y).toBeGreaterThanOrEqual((await box(page.locator('.slide__body').first())).bottom - 1)
+    await page.locator('.feed').evaluate((el) => el.scrollBy(0, el.clientHeight))
+    await expect(hint).toHaveCount(0)
+    await page.reload()
+    await page.locator('[data-item]').first().waitFor()
+    await expect(page.locator('.swipe-hint')).toHaveCount(0)
+  })
+
   test('o app preenche a tela inteira, sem faixa vazia', async ({ page }) => {
     const vp = page.viewportSize()!
     const app = await box(page.locator('.app'))
@@ -81,7 +100,7 @@ test.describe('cardápio no celular', () => {
   test('o app nunca rola para o lado, nem ao abrir a grade ou pular de categoria', async ({ page }) => {
     const sideScroll = () => page.locator('.app').evaluate((el) => el.scrollLeft + Math.max(0, el.scrollWidth - el.clientWidth))
     expect(await sideScroll()).toBe(0)
-    await page.locator('.cat').nth(6).click()
+    await page.locator('.cat').nth(5).click()
     expect(await sideScroll()).toBe(0)
     await page.getByRole('button', { name: 'Ver tudo' }).click()
     await page.waitForTimeout(300)
@@ -92,8 +111,8 @@ test.describe('cardápio no celular', () => {
 
   test('a pílula da categoria acompanha a categoria ativa', async ({ page }) => {
     await expectThumbOnActive(page)
-    await page.locator('.cat').nth(4).click()
-    await expect(page.locator('.cat').nth(4)).toHaveClass(/cat--on/)
+    await page.locator('.cat').nth(3).click()
+    await expect(page.locator('.cat').nth(3)).toHaveClass(/cat--on/)
     await expectThumbOnActive(page)
   })
 

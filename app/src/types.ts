@@ -17,6 +17,8 @@ export interface MenuItem {
   id: string
   name: string
   category: string
+  /** subcategoria original do cardápio (ex.: Cold Brew), usada como rótulo do produto */
+  subcategory?: string
   description: string
   prices: Price[]
   badges?: string[]
@@ -36,6 +38,7 @@ export interface Category {
 export interface Menu {
   cafe: { name: string; source?: string; storyNote?: string }
   categories: Category[]
+  subcategories?: (Category & { group: string })[]
   items: MenuItem[]
   extras?: { name: string; price: number | null }[]
 }

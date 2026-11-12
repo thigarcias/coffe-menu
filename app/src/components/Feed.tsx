@@ -73,8 +73,6 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
   return (
     <div className="feed" ref={box}>
       {items.map((item, i) => {
-        const prev = items[i - 1]
-        const firstOfCat = !prev || prev.category !== item.category
         const price = priceParts(item)
         const fav = favorites.has(item.id)
         return (
@@ -84,7 +82,7 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
 
             <div className="slide__body">
               <div className="slide__meta">
-                {firstOfCat && <span className="slide__cat">{categoryName(item.category)}</span>}
+                <span className="slide__cat">{categoryName(item.subcategory ?? item.category)}</span>
                 {item.badges?.map((b) => (
                   <span key={b} className="badge">{b}</span>
                 ))}

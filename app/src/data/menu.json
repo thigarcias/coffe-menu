@@ -6,76 +6,35 @@
   },
   "categories": [
     {
-      "id": "destaques",
-      "name": "Destaques e Novidades",
-      "image": "menu/cat-destaques.jpg"
-    },
-    {
-      "id": "espressos",
-      "name": "Espressos",
-      "image": "menu/cat-espressos.jpg"
+      "id": "novidades",
+      "name": "Novidades"
     },
     {
       "id": "cafes",
-      "name": "Cafés",
-      "image": "menu/cat-cafes.jpg"
+      "name": "Cafés"
     },
     {
-      "id": "refreshers",
-      "name": "Refreshers",
-      "image": "menu/cat-refreshers.jpg"
+      "id": "gelados",
+      "name": "Gelados"
     },
     {
-      "id": "chocolates",
-      "name": "Chocolates",
-      "image": "menu/cat-chocolates.jpg"
-    },
-    {
-      "id": "cafe-gelado",
-      "name": "Café Gelado",
-      "image": "menu/cat-cafe-gelado.jpg"
-    },
-    {
-      "id": "cold-brew",
-      "name": "Cold Brew",
-      "image": "menu/cat-cold-brew.jpg"
-    },
-    {
-      "id": "frappuccinos",
-      "name": "Frappuccinos",
-      "image": "menu/cat-frappuccinos.jpg"
-    },
-    {
-      "id": "cha",
-      "name": "Chá",
-      "image": "menu/cat-cha.jpg"
-    },
-    {
-      "id": "bebidas-com-cha",
-      "name": "Bebidas com Chá",
-      "image": "menu/cat-bebidas-com-cha.jpg"
+      "id": "bebidas",
+      "name": "Bebidas"
     },
     {
       "id": "salgados",
-      "name": "Salgados",
-      "image": null
-    },
-    {
-      "id": "sanduiches",
-      "name": "Sanduíches",
-      "image": null
+      "name": "Salgados"
     },
     {
       "id": "doces",
-      "name": "Doces",
-      "image": "menu/cat-doces.jpg"
+      "name": "Doces"
     }
   ],
   "items": [
     {
       "id": "matcha-latte-gelado-proteico",
       "name": "Matcha Latte Gelado Proteico",
-      "category": "destaques",
+      "category": "novidades",
       "description": "Matcha latte gelado com 26 g de proteína.",
       "prices": [
         {
@@ -116,12 +75,13 @@
         "Proteína",
         "Gelo"
       ],
-      "story": "O matcha vem do Japão, onde folhas de chá cultivadas à sombra são moídas em pó fino e fazem parte da cerimônia do chá há séculos. Batido com leite e gelo, o pó verde ganhou fama mundo afora como bebida cremosa."
+      "story": "O matcha vem do Japão, onde folhas de chá cultivadas à sombra são moídas em pó fino e fazem parte da cerimônia do chá há séculos. Batido com leite e gelo, o pó verde ganhou fama mundo afora como bebida cremosa.",
+      "subcategory": "destaques"
     },
     {
       "id": "baunilha-sem-acucar-latte-proteico",
       "name": "Baunilha Sem Açúcar Latte Proteico",
-      "category": "destaques",
+      "category": "novidades",
       "description": "Latte de baunilha sem açúcar com 31 g de proteína.",
       "prices": [
         {
@@ -162,12 +122,13 @@
         "Xarope de baunilha sem açúcar",
         "Proteína"
       ],
-      "story": "A baunilha é uma orquídea nativa do México, e os povos totonacas já a usavam muito antes dos europeus. Hoje a maior parte vem de Madagascar. Aqui ela perfuma o latte sem açúcar, num estilo de bebida pensado para quem treina."
+      "story": "A baunilha é uma orquídea nativa do México, e os povos totonacas já a usavam muito antes dos europeus. Hoje a maior parte vem de Madagascar. Aqui ela perfuma o latte sem açúcar, num estilo de bebida pensado para quem treina.",
+      "subcategory": "destaques"
     },
     {
       "id": "morango-matcha-strate-frappuccino",
       "name": "Morango Matcha Strate Frappuccino®",
-      "category": "destaques",
+      "category": "novidades",
       "description": "Frappuccino® da linha Strate, servido em camadas de morango e matcha.",
       "prices": [
         {
@@ -205,12 +166,13 @@
         "Gelo",
         "Chantilly"
       ],
-      "story": "O morango com matcha virou combinação queridinha em cafés japoneses: o doce da fruta suaviza o amargor do chá verde. Em camadas, a bebida mostra os dois mundos lado a lado, vermelho embaixo e verde por cima, antes de você misturar."
+      "story": "O morango com matcha virou combinação queridinha em cafés japoneses: o doce da fruta suaviza o amargor do chá verde. Em camadas, a bebida mostra os dois mundos lado a lado, vermelho embaixo e verde por cima, antes de você misturar.",
+      "subcategory": "destaques"
     },
     {
       "id": "caramelo-salgado-mocha-strate-frappuccino",
       "name": "Caramelo Salgado Mocha Strate Frappuccino®",
-      "category": "destaques",
+      "category": "novidades",
       "description": "Frappuccino® da linha Strate, em camadas, com cobertura de caramelo.",
       "prices": [
         {
@@ -249,12 +211,13 @@
         "Calda de caramelo",
         "Sal"
       ],
-      "story": "O caramelo salgado é uma invenção bretã: na Bretanha, na França, onde o sal era barato, a manteiga salgada entrou no caramelo e ficou famosa. Misturado ao mocha, ele equilibra o chocolate com um contraste doce e salgado."
+      "story": "O caramelo salgado é uma invenção bretã: na Bretanha, na França, onde o sal era barato, a manteiga salgada entrou no caramelo e ficou famosa. Misturado ao mocha, ele equilibra o chocolate com um contraste doce e salgado.",
+      "subcategory": "destaques"
     },
     {
       "id": "brown-sugar-strate-frappuccino",
       "name": "Brown Sugar Strate Frappuccino®",
-      "category": "destaques",
+      "category": "novidades",
       "description": "Frappuccino® da linha Strate, em camadas, finalizado com um traço de canela.",
       "prices": [
         {
@@ -292,12 +255,13 @@
         "Gelo",
         "Canela"
       ],
-      "story": "O açúcar mascavo é o açúcar da cana pouco refinado, com melaço e sabor que lembra rapadura, um velho conhecido da cozinha brasileira. A canela, vinda de uma casca de árvore do Sri Lanka, fecha a camada com perfume de especiaria."
+      "story": "O açúcar mascavo é o açúcar da cana pouco refinado, com melaço e sabor que lembra rapadura, um velho conhecido da cozinha brasileira. A canela, vinda de uma casca de árvore do Sri Lanka, fecha a camada com perfume de especiaria.",
+      "subcategory": "destaques"
     },
     {
       "id": "ube-coco-frappuccino",
       "name": "Ube Coco Frappuccino®",
-      "category": "destaques",
+      "category": "novidades",
       "description": "Textura cremosa, sensação tropical. Novo Frappuccino® de ube e coco.",
       "prices": [
         {
@@ -337,12 +301,13 @@
         "Gelo",
         "Chantilly"
       ],
-      "story": "O ube é um inhame roxo das Filipinas, base de doces como o halaya e de sobremesas de cor violeta intensa. Já o coco é símbolo dos trópicos. Juntos, formam uma dupla cremosa que une a doçaria filipina ao clima praiano."
+      "story": "O ube é um inhame roxo das Filipinas, base de doces como o halaya e de sobremesas de cor violeta intensa. Já o coco é símbolo dos trópicos. Juntos, formam uma dupla cremosa que une a doçaria filipina ao clima praiano.",
+      "subcategory": "destaques"
     },
     {
       "id": "ube-coco-latte",
       "name": "Ube Coco Latte",
-      "category": "destaques",
+      "category": "novidades",
       "description": "Textura cremosa, sensação tropical. Novo latte de ube e coco.",
       "prices": [
         {
@@ -380,12 +345,13 @@
         "Leite de coco",
         "Leite vaporizado"
       ],
-      "story": "Nas Filipinas, o ube roxo aparece em sorvetes, bolos e pães, e o coco está em quase toda receita doce da região. O latte junta os dois numa bebida cremosa de cor lilás, que chama atenção antes mesmo do primeiro gole."
+      "story": "Nas Filipinas, o ube roxo aparece em sorvetes, bolos e pães, e o coco está em quase toda receita doce da região. O latte junta os dois numa bebida cremosa de cor lilás, que chama atenção antes mesmo do primeiro gole.",
+      "subcategory": "destaques"
     },
     {
       "id": "morango-frappuccino-cold-foam-proteico",
       "name": "Morango Frappuccino® com Cold Foam Proteico",
-      "category": "destaques",
+      "category": "novidades",
       "description": "Cold Foam Proteico: espuma de leite gelada que adiciona +19 g de proteína ao copo. Aqui sobre o Morango Frappuccino®.",
       "prices": [
         {
@@ -425,12 +391,13 @@
         "Chantilly",
         "Cold Foam proteico"
       ],
-      "story": "A técnica do cold foam, uma espuma feita de leite frio, nasceu no mundo do café gelado como alternativa ao chantilly. A espuma leve flutua sobre a bebida e vai se misturando conforme você bebe, junto com o sabor de morango."
+      "story": "A técnica do cold foam, uma espuma feita de leite frio, nasceu no mundo do café gelado como alternativa ao chantilly. A espuma leve flutua sobre a bebida e vai se misturando conforme você bebe, junto com o sabor de morango.",
+      "subcategory": "destaques"
     },
     {
       "id": "mocha-frappuccino-cold-foam-proteico",
       "name": "Mocha Frappuccino® com Cold Foam Proteico",
-      "category": "destaques",
+      "category": "novidades",
       "description": "Cold Foam Proteico: espuma de leite gelada que adiciona +19 g de proteína ao copo. Aqui sobre o Mocha Frappuccino®.",
       "prices": [
         {
@@ -470,12 +437,13 @@
         "Gelo",
         "Cold Foam proteico"
       ],
-      "story": "O nome mocha vem do porto de Mocha, no Iêmen, por onde passou muito café durante séculos. Com o tempo, o termo passou a indicar café com chocolate. A espuma gelada no topo é um toque moderno sobre essa receita antiga."
+      "story": "O nome mocha vem do porto de Mocha, no Iêmen, por onde passou muito café durante séculos. Com o tempo, o termo passou a indicar café com chocolate. A espuma gelada no topo é um toque moderno sobre essa receita antiga.",
+      "subcategory": "destaques"
     },
     {
       "id": "matcha-latte-cold-foam-proteico",
       "name": "Matcha Latte com Cold Foam Proteico",
-      "category": "destaques",
+      "category": "novidades",
       "description": "Cold Foam Proteico: espuma de leite gelada que adiciona +19 g de proteína ao copo. Aqui sobre o Matcha Latte.",
       "prices": [
         {
@@ -514,12 +482,13 @@
         "Gelo",
         "Cold Foam proteico"
       ],
-      "story": "No Japão, o matcha tradicional é batido com água quente e um batedor de bambu, o chasen, até formar uma leve espuma. Esta versão troca o ritual por uma espuma de leite gelada, que cobre o chá verde e suaviza o amargor."
+      "story": "No Japão, o matcha tradicional é batido com água quente e um batedor de bambu, o chasen, até formar uma leve espuma. Esta versão troca o ritual por uma espuma de leite gelada, que cobre o chá verde e suaviza o amargor.",
+      "subcategory": "destaques"
     },
     {
       "id": "baunilha-latte-cold-foam-proteico",
       "name": "Baunilha Latte com Cold Foam Proteico",
-      "category": "destaques",
+      "category": "novidades",
       "description": "Cold Foam Proteico: espuma de leite gelada que adiciona +19 g de proteína ao copo. Aqui sobre o Baunilha Latte.",
       "prices": [
         {
@@ -559,12 +528,13 @@
         "Gelo",
         "Cold Foam proteico"
       ],
-      "story": "O latte nasceu na Itália, onde caffè e latte significa simplesmente café e leite, uma mistura tradicional do café da manhã em casa. A versão com cold foam traz o clima das cafeterias americanas para esse clássico italiano."
+      "story": "O latte nasceu na Itália, onde caffè e latte significa simplesmente café e leite, uma mistura tradicional do café da manhã em casa. A versão com cold foam traz o clima das cafeterias americanas para esse clássico italiano.",
+      "subcategory": "destaques"
     },
     {
       "id": "cold-brew-chocolate-cold-foam",
       "name": "Cold Brew com Chocolate Cold Foam",
-      "category": "destaques",
+      "category": "novidades",
       "description": "Cold Foam Proteico: espuma de leite gelada que adiciona +19 g de proteína ao copo. Cold Brew coberto com Chocolate Cold Foam.",
       "prices": [
         {
@@ -604,12 +574,13 @@
         "Chocolate",
         "Cold Foam proteico"
       ],
-      "story": "O cold brew é feito por extração a frio: o café moído fica de molho em água fria por muitas horas, o que dá uma bebida mais suave e menos ácida. A espuma de chocolate faz a cobertura, como um toque de sobremesa."
+      "story": "O cold brew é feito por extração a frio: o café moído fica de molho em água fria por muitas horas, o que dá uma bebida mais suave e menos ácida. A espuma de chocolate faz a cobertura, como um toque de sobremesa.",
+      "subcategory": "destaques"
     },
     {
       "id": "espresso",
       "name": "Espresso",
-      "category": "espressos",
+      "category": "cafes",
       "description": "Nosso espresso, com grão Brasil Blend ou Espresso Roast à sua escolha.",
       "prices": [
         {
@@ -640,12 +611,13 @@
         "Água filtrada",
         "Crema"
       ],
-      "story": "Espresso quer dizer rápido, ou feito na hora, em italiano. A máquina que usa pressão para extrair o café em segundos ganhou forma na Itália do início do século XX e deu origem a quase todas as bebidas de café das cafeterias."
+      "story": "Espresso quer dizer rápido, ou feito na hora, em italiano. A máquina que usa pressão para extrair o café em segundos ganhou forma na Itália do início do século XX e deu origem a quase todas as bebidas de café das cafeterias.",
+      "subcategory": "espressos"
     },
     {
       "id": "espresso-panna",
       "name": "Espresso Panna",
-      "category": "espressos",
+      "category": "cafes",
       "description": "Espresso com chantilly de baunilha.",
       "prices": [
         {
@@ -676,12 +648,13 @@
         "Chantilly",
         "Baunilha"
       ],
-      "story": "Panna é nata ou creme em italiano, e con panna indica café coberto por creme batido. A versão vienense, o Einspänner, é parente: café forte com chantilly. O frio do creme contra o espresso quente é todo o encanto."
+      "story": "Panna é nata ou creme em italiano, e con panna indica café coberto por creme batido. A versão vienense, o Einspänner, é parente: café forte com chantilly. O frio do creme contra o espresso quente é todo o encanto.",
+      "subcategory": "espressos"
     },
     {
       "id": "espresso-collection-avela",
       "name": "Espresso Collection Avelã",
-      "category": "espressos",
+      "category": "cafes",
       "description": "Espresso com leite e um toque de avelã, finalizado com chantilly e calda de chocolate.",
       "prices": [
         {
@@ -709,12 +682,13 @@
         "Chantilly",
         "Calda de chocolate"
       ],
-      "story": "A avelã é a estrela do Piemonte, na Itália, onde nasceu o gianduia. Conta-se que, no início do século XIX, com o cacau escasso, confeiteiros de Turim misturaram avelã moída ao chocolate. Daí a dupla avelã e chocolate."
+      "story": "A avelã é a estrela do Piemonte, na Itália, onde nasceu o gianduia. Conta-se que, no início do século XIX, com o cacau escasso, confeiteiros de Turim misturaram avelã moída ao chocolate. Daí a dupla avelã e chocolate.",
+      "subcategory": "espressos"
     },
     {
       "id": "espresso-collection-brigadeiro",
       "name": "Espresso Collection Brigadeiro",
-      "category": "espressos",
+      "category": "cafes",
       "description": "Espresso com leite, finalizado com chantilly de brigadeiro e chocolate granulado.",
       "prices": [
         {
@@ -741,7 +715,8 @@
         "Chantilly de brigadeiro",
         "Chocolate granulado"
       ],
-      "story": "Conta-se que o brigadeiro surgiu nos anos 1940, no Rio de Janeiro, com o nome do brigadeiro Eduardo Gomes, candidato à presidência. Sem leite fresco na época, o doce usava leite condensado. Virou o doce das festas brasileiras."
+      "story": "Conta-se que o brigadeiro surgiu nos anos 1940, no Rio de Janeiro, com o nome do brigadeiro Eduardo Gomes, candidato à presidência. Sem leite fresco na época, o doce usava leite condensado. Virou o doce das festas brasileiras.",
+      "subcategory": "espressos"
     },
     {
       "id": "media",
@@ -786,7 +761,8 @@
         "Leite quente",
         "Filtro de papel"
       ],
-      "story": "A média é figura carimbada das padarias brasileiras: metade café, metade leite, quase sempre com pão na chapa. É o café com leite do dia a dia, mais cheio de leite do que o pingado, ideal para quem prefere um gole mais suave."
+      "story": "A média é figura carimbada das padarias brasileiras: metade café, metade leite, quase sempre com pão na chapa. É o café com leite do dia a dia, mais cheio de leite do que o pingado, ideal para quem prefere um gole mais suave.",
+      "subcategory": "cafes"
     },
     {
       "id": "pingado",
@@ -826,7 +802,8 @@
         "Leite quente",
         "Filtro de papel"
       ],
-      "story": "O nome é literal: é o café com uns pingos de leite. Nas padarias brasileiras, pedir um pingado é pedir o café de sempre, só que com um pouquinho de leite para tirar o amargo."
+      "story": "O nome é literal: é o café com uns pingos de leite. Nas padarias brasileiras, pedir um pingado é pedir o café de sempre, só que com um pouquinho de leite para tirar o amargo.",
+      "subcategory": "cafes"
     },
     {
       "id": "cafezinho-coado",
@@ -867,7 +844,8 @@
         "Água quente",
         "Filtro de papel"
       ],
-      "story": "O coador de pano, depois substituído pelo filtro de papel, é um ritual brasileiro. O filtro de papel foi inventado em 1908 pela alemã Melitta Bentz, que furou uma lata e usou papel de caderno para evitar borra na xícara."
+      "story": "O coador de pano, depois substituído pelo filtro de papel, é um ritual brasileiro. O filtro de papel foi inventado em 1908 pela alemã Melitta Bentz, que furou uma lata e usou papel de caderno para evitar borra na xícara.",
+      "subcategory": "cafes"
     },
     {
       "id": "cafe-americano",
@@ -908,7 +886,8 @@
         "Água quente",
         "Crema"
       ],
-      "story": "Conta-se que o americano surgiu quando soldados dos EUA na Itália, na Segunda Guerra, acharam o espresso forte demais e puseram água quente. É a versão popular, e o nome pegou."
+      "story": "Conta-se que o americano surgiu quando soldados dos EUA na Itália, na Segunda Guerra, acharam o espresso forte demais e puseram água quente. É a versão popular, e o nome pegou.",
+      "subcategory": "cafes"
     },
     {
       "id": "cafe-em-prensa-francesa",
@@ -944,7 +923,8 @@
         "Água quente",
         "Óleos naturais do grão"
       ],
-      "story": "A prensa francesa, com êmbolo e filtro de metal, tomou a forma atual em meados do século XX, a partir de patentes francesas e italianas. Como o café fica em infusão, sai encorpado, com os óleos que o filtro de papel costuma reter."
+      "story": "A prensa francesa, com êmbolo e filtro de metal, tomou a forma atual em meados do século XX, a partir de patentes francesas e italianas. Como o café fica em infusão, sai encorpado, com os óleos que o filtro de papel costuma reter.",
+      "subcategory": "cafes"
     },
     {
       "id": "cafe-mocha",
@@ -988,7 +968,8 @@
         "Leite vaporizado",
         "Chantilly"
       ],
-      "story": "O nome vem do porto de Mocha, no Iêmen, que foi um grande centro de comércio de café entre os séculos XV e XVIII. O grão de lá tinha notas achocolatadas, e a bebida ganhou chocolate de verdade com o tempo."
+      "story": "O nome vem do porto de Mocha, no Iêmen, que foi um grande centro de comércio de café entre os séculos XV e XVIII. O grão de lá tinha notas achocolatadas, e a bebida ganhou chocolate de verdade com o tempo.",
+      "subcategory": "cafes"
     },
     {
       "id": "flat-white",
@@ -1031,7 +1012,8 @@
         "Leite vaporizado",
         "Microespuma"
       ],
-      "story": "O flat white é reivindicado por Austrália e Nova Zelândia, que disputam a autoria desde os anos 1980. O nome vem da superfície lisa, sem a montanha de espuma do cappuccino. O ristretto é um espresso mais curto e intenso."
+      "story": "O flat white é reivindicado por Austrália e Nova Zelândia, que disputam a autoria desde os anos 1980. O nome vem da superfície lisa, sem a montanha de espuma do cappuccino. O ristretto é um espresso mais curto e intenso.",
+      "subcategory": "cafes"
     },
     {
       "id": "baunilha-latte",
@@ -1074,7 +1056,8 @@
         "Leite vaporizado",
         "Essência de baunilha"
       ],
-      "story": "A baunilha foi levada do México para a Europa pelos espanhóis no século XVI. Como a orquídea só frutifica com polinização manual, tornou-se uma das especiarias mais caras do mundo. Um toque dela já vira conforto no latte."
+      "story": "A baunilha foi levada do México para a Europa pelos espanhóis no século XVI. Como a orquídea só frutifica com polinização manual, tornou-se uma das especiarias mais caras do mundo. Um toque dela já vira conforto no latte.",
+      "subcategory": "cafes"
     },
     {
       "id": "cafe-latte",
@@ -1117,7 +1100,8 @@
         "Leite vaporizado",
         "Espuma de leite"
       ],
-      "story": "Na Itália, pedir só latte rende um copo de leite. O café com leite da manhã é o caffè latte, bebido em casa e quase nunca no bar depois do almoço. A fama internacional veio com as cafeterias da costa oeste dos Estados Unidos."
+      "story": "Na Itália, pedir só latte rende um copo de leite. O café com leite da manhã é o caffè latte, bebido em casa e quase nunca no bar depois do almoço. A fama internacional veio com as cafeterias da costa oeste dos Estados Unidos.",
+      "subcategory": "cafes"
     },
     {
       "id": "brigadeiro-latte",
@@ -1162,7 +1146,8 @@
         "Chantilly de brigadeiro",
         "Chocolate granulado"
       ],
-      "story": "O brigadeiro é brasileiro até a alma: leite condensado, chocolate e manteiga. O granulado, aquelas bolinhas por cima, fez dele o doce de todo aniversário do país. Aqui ele vira calda dentro de um latte."
+      "story": "O brigadeiro é brasileiro até a alma: leite condensado, chocolate e manteiga. O granulado, aquelas bolinhas por cima, fez dele o doce de todo aniversário do país. Aqui ele vira calda dentro de um latte.",
+      "subcategory": "cafes"
     },
     {
       "id": "doce-de-leite-latte",
@@ -1207,7 +1192,8 @@
         "Chantilly",
         "Calda de caramelo"
       ],
-      "story": "O doce de leite é paixão sul-americana, com disputa de origem entre Argentina, Uruguai e Brasil. Conta-se que foi criado por acaso, quando um leite com açúcar esquecido no fogo virou creme. Em Minas, é doce de casa."
+      "story": "O doce de leite é paixão sul-americana, com disputa de origem entre Argentina, Uruguai e Brasil. Conta-se que foi criado por acaso, quando um leite com açúcar esquecido no fogo virou creme. Em Minas, é doce de casa.",
+      "subcategory": "cafes"
     },
     {
       "id": "latte-macchiato",
@@ -1250,7 +1236,8 @@
         "Espuma de leite",
         "Espresso"
       ],
-      "story": "Macchiato significa manchado em italiano. No latte macchiato, é o leite que é manchado pelo café, que entra por cima e forma camadas. No espresso macchiato, é o contrário: o café é manchado por uma gota de leite."
+      "story": "Macchiato significa manchado em italiano. No latte macchiato, é o leite que é manchado pelo café, que entra por cima e forma camadas. No espresso macchiato, é o contrário: o café é manchado por uma gota de leite.",
+      "subcategory": "cafes"
     },
     {
       "id": "caramelo-macchiato",
@@ -1294,7 +1281,8 @@
         "Xarope de baunilha",
         "Calda de caramelo"
       ],
-      "story": "Macchiato quer dizer manchado em italiano, referência à marca que o café deixa no leite. Aqui as camadas se formam com a baunilha embaixo e o caramelo por cima, uma criação de cafeteria mais americana do que italiana."
+      "story": "Macchiato quer dizer manchado em italiano, referência à marca que o café deixa no leite. Aqui as camadas se formam com a baunilha embaixo e o caramelo por cima, uma criação de cafeteria mais americana do que italiana.",
+      "subcategory": "cafes"
     },
     {
       "id": "cappuccino-tradicional",
@@ -1337,7 +1325,8 @@
         "Leite vaporizado",
         "Espuma de leite"
       ],
-      "story": "Conta-se que o nome vem dos frades capuchinhos, cujo hábito marrom lembra a cor da bebida; a versão mais aceita liga o nome ao capuz, o capuccio. A espuma de leite de hoje se firmou na Itália no século XX."
+      "story": "Conta-se que o nome vem dos frades capuchinhos, cujo hábito marrom lembra a cor da bebida; a versão mais aceita liga o nome ao capuz, o capuccio. A espuma de leite de hoje se firmou na Itália no século XX.",
+      "subcategory": "cafes"
     },
     {
       "id": "cappuccino-brigadeiro",
@@ -1381,7 +1370,8 @@
         "Calda de brigadeiro",
         "Granulado de chocolate belga ao leite"
       ],
-      "story": "O chocolate belga é famoso pela qualidade do cacau e pelo cuidado na produção. Em forma de granulado sobre o cappuccino, lembra o doce de festa brasileiro e dá uma crocância na espuma."
+      "story": "O chocolate belga é famoso pela qualidade do cacau e pelo cuidado na produção. Em forma de granulado sobre o cappuccino, lembra o doce de festa brasileiro e dá uma crocância na espuma.",
+      "subcategory": "cafes"
     },
     {
       "id": "cappuccino-canela",
@@ -1425,7 +1415,8 @@
         "Xarope de canela",
         "Canela em pó"
       ],
-      "story": "A canela vem da casca de uma árvore nativa do Sri Lanka e já foi mais valiosa que ouro na Europa medieval. Hoje é o toque tradicional de cima do cappuccino, que aquece a bebida só pelo aroma."
+      "story": "A canela vem da casca de uma árvore nativa do Sri Lanka e já foi mais valiosa que ouro na Europa medieval. Hoje é o toque tradicional de cima do cappuccino, que aquece a bebida só pelo aroma.",
+      "subcategory": "cafes"
     },
     {
       "id": "cappuccino-chocolate",
@@ -1470,7 +1461,8 @@
         "Cobertura de chocolate",
         "Chocolate em pó"
       ],
-      "story": "O cacau é nativo da América: maias e astecas o bebiam amargo, às vezes com pimenta. Só na Europa o chocolate virou doce. A bebida junta os dois mundos, café italiano e cacau americano."
+      "story": "O cacau é nativo da América: maias e astecas o bebiam amargo, às vezes com pimenta. Só na Europa o chocolate virou doce. A bebida junta os dois mundos, café italiano e cacau americano.",
+      "subcategory": "cafes"
     },
     {
       "id": "cappuccino-doce-de-leite",
@@ -1513,12 +1505,13 @@
         "Leite vaporizado",
         "Calda de doce de leite"
       ],
-      "story": "O doce de leite tem sotaque diferente em cada lugar: dulce de leche no Rio da Prata, doce de leite em pasta em Minas, cajeta no México. Cada um é versão do mesmo encontro de leite e açúcar cozidos devagar."
+      "story": "O doce de leite tem sotaque diferente em cada lugar: dulce de leche no Rio da Prata, doce de leite em pasta em Minas, cajeta no México. Cada um é versão do mesmo encontro de leite e açúcar cozidos devagar.",
+      "subcategory": "cafes"
     },
     {
       "id": "refresher",
       "name": "Refresher",
-      "category": "refreshers",
+      "category": "bebidas",
       "description": "Morango e Açaí, Pitaya e Manga ou Frutas Vermelhas. Preparado com extrato de café verde: refrescante, de baixa caloria, rico em vitamina C. Adicione uma dose extra ou limonada.",
       "prices": [
         {
@@ -1555,12 +1548,13 @@
         "Pedaços de fruta",
         "Gelo"
       ],
-      "story": "Bebidas geladas com fruta e um toque de cafeína vinda do café verde, o grão antes de ser torrado, ganharam espaço nos verões do Hemisfério Norte. O café verde é o mesmo grão, só que sem torra, por isso quase não tem gosto de café."
+      "story": "Bebidas geladas com fruta e um toque de cafeína vinda do café verde, o grão antes de ser torrado, ganharam espaço nos verões do Hemisfério Norte. O café verde é o mesmo grão, só que sem torra, por isso quase não tem gosto de café.",
+      "subcategory": "refreshers"
     },
     {
       "id": "pink-dragon-violet-drink",
       "name": "Pink Drink, Dragon Drink ou Violet Drink",
-      "category": "refreshers",
+      "category": "bebidas",
       "description": "Nossos Refreshers com a adição de leite de coco e castanha-de-caju, batidos com gelo na coqueteleira. Não contém glúten.",
       "prices": [
         {
@@ -1599,12 +1593,13 @@
         "Leite de castanha-de-caju",
         "Gelo"
       ],
-      "story": "A pitaya, ou fruta-do-dragão, é um cacto nativo das Américas Central e do Sul e hoje é cultivada no Vietnã e em outros países asiáticos. A cor rosa intensa e as sementinhas pretas explicam o nome. O leite de coco dá o toque tropical."
+      "story": "A pitaya, ou fruta-do-dragão, é um cacto nativo das Américas Central e do Sul e hoje é cultivada no Vietnã e em outros países asiáticos. A cor rosa intensa e as sementinhas pretas explicam o nome. O leite de coco dá o toque tropical.",
+      "subcategory": "refreshers"
     },
     {
       "id": "chocolate-classico",
       "name": "Chocolate Clássico",
-      "category": "chocolates",
+      "category": "bebidas",
       "description": "Calda de chocolate, baunilha e leite cremoso, finalizado com chantilly e cobertura de chocolate. Também disponível na versão gelada.",
       "prices": [
         {
@@ -1644,12 +1639,13 @@
         "Chantilly",
         "Cobertura de chocolate"
       ],
-      "story": "Entre os maias e astecas, o chocolate era uma bebida amarga, espumosa e picante, servida em cerimônias. Foi na Europa, com açúcar e leite, que ele virou a bebida doce e cremosa que conhecemos, bem diferente da original."
+      "story": "Entre os maias e astecas, o chocolate era uma bebida amarga, espumosa e picante, servida em cerimônias. Foi na Europa, com açúcar e leite, que ele virou a bebida doce e cremosa que conhecemos, bem diferente da original.",
+      "subcategory": "chocolates"
     },
     {
       "id": "chocolate-branco",
       "name": "Chocolate Branco",
-      "category": "chocolates",
+      "category": "bebidas",
       "description": "Calda de chocolate branco e leite cremoso, finalizado com chantilly. Também disponível na versão gelada.",
       "prices": [
         {
@@ -1687,12 +1683,13 @@
         "Leite vaporizado",
         "Chantilly"
       ],
-      "story": "O chocolate branco leva só manteiga de cacau, açúcar e leite, sem cacau em pó. Conta-se que a Nestlé criou a primeira receita na Suíça, nos anos 1930, a versão mais repetida sobre sua origem."
+      "story": "O chocolate branco leva só manteiga de cacau, açúcar e leite, sem cacau em pó. Conta-se que a Nestlé criou a primeira receita na Suíça, nos anos 1930, a versão mais repetida sobre sua origem.",
+      "subcategory": "chocolates"
     },
     {
       "id": "cafe-americano-gelado",
       "name": "Café Americano Gelado",
-      "category": "cafe-gelado",
+      "category": "gelados",
       "description": "Espresso suavizado com água quente. Café gelado servido com pedras de gelo.",
       "prices": [
         {
@@ -1728,12 +1725,13 @@
         "Água",
         "Gelo"
       ],
-      "story": "O café gelado tem história própria: há registros de café frio no Mediterrâneo e na Argélia do século XIX. O americano gelado é a versão mais simples, só espresso e água sobre gelo, leve e refrescante."
+      "story": "O café gelado tem história própria: há registros de café frio no Mediterrâneo e na Argélia do século XIX. O americano gelado é a versão mais simples, só espresso e água sobre gelo, leve e refrescante.",
+      "subcategory": "cafe-gelado"
     },
     {
       "id": "cafe-latte-gelado",
       "name": "Café Latte Gelado",
-      "category": "cafe-gelado",
+      "category": "gelados",
       "description": "Espresso e leite frio. Café gelado servido com pedras de gelo.",
       "prices": [
         {
@@ -1771,12 +1769,13 @@
         "Leite frio",
         "Gelo"
       ],
-      "story": "Na Itália, o caffè freddo é tradição de verão, e há bebidas geladas de café típicas do sul do país. O latte gelado leva a ideia para o café com leite: combina em qualquer temperatura."
+      "story": "Na Itália, o caffè freddo é tradição de verão, e há bebidas geladas de café típicas do sul do país. O latte gelado leva a ideia para o café com leite: combina em qualquer temperatura.",
+      "subcategory": "cafe-gelado"
     },
     {
       "id": "caramelo-macchiato-gelado",
       "name": "Caramelo Macchiato Gelado",
-      "category": "cafe-gelado",
+      "category": "gelados",
       "description": "Leite frio, um toque de baunilha, dose de espresso e cobertura de caramelo. Café gelado servido com pedras de gelo.",
       "prices": [
         {
@@ -1816,12 +1815,13 @@
         "Calda de caramelo",
         "Gelo"
       ],
-      "story": "O caramelo nasceu de açúcar derretido até dourar, técnica que se espalhou pela Europa e pela Ásia. Em camadas sobre o leite gelado, o espresso escorre devagar e mancha, como o nome macchiato, que significa manchado em italiano, indica."
+      "story": "O caramelo nasceu de açúcar derretido até dourar, técnica que se espalhou pela Europa e pela Ásia. Em camadas sobre o leite gelado, o espresso escorre devagar e mancha, como o nome macchiato, que significa manchado em italiano, indica.",
+      "subcategory": "cafe-gelado"
     },
     {
       "id": "doce-de-leite-latte-gelado",
       "name": "Doce de Leite Latte Gelado",
-      "category": "cafe-gelado",
+      "category": "gelados",
       "description": "Leite frio, espresso, calda de doce de leite, finalizado com chantilly e calda de caramelo. Café gelado servido com pedras de gelo.",
       "prices": [
         {
@@ -1862,12 +1862,13 @@
         "Calda de caramelo",
         "Gelo"
       ],
-      "story": "O doce de leite é presença forte na cozinha do Brasil, da Argentina e do Uruguai. O alfajor, a pamonha doce e a sobremesa mineira de colher já o usam há gerações. Gelado, vira uma bebida de lanche de tarde."
+      "story": "O doce de leite é presença forte na cozinha do Brasil, da Argentina e do Uruguai. O alfajor, a pamonha doce e a sobremesa mineira de colher já o usam há gerações. Gelado, vira uma bebida de lanche de tarde.",
+      "subcategory": "cafe-gelado"
     },
     {
       "id": "cafe-mocha-gelado",
       "name": "Café Mocha ou Mocha Branco Gelado",
-      "category": "cafe-gelado",
+      "category": "gelados",
       "description": "Calda de chocolate amargo ou chocolate branco, espresso, leite frio e um toque de chantilly. Café gelado servido com pedras de gelo.",
       "prices": [
         {
@@ -1907,12 +1908,13 @@
         "Chantilly",
         "Gelo"
       ],
-      "story": "O mocha, café com chocolate, ganha no gelado cara de sorveteria. Lembra o affogato italiano, em que sorvete é regado com espresso quente: a mesma fusão de doce e amargo, só que em copo."
+      "story": "O mocha, café com chocolate, ganha no gelado cara de sorveteria. Lembra o affogato italiano, em que sorvete é regado com espresso quente: a mesma fusão de doce e amargo, só que em copo.",
+      "subcategory": "cafe-gelado"
     },
     {
       "id": "latte-macchiato-gelado",
       "name": "Latte Macchiato Gelado",
-      "category": "cafe-gelado",
+      "category": "gelados",
       "description": "Leite frio e dose de espresso. Café gelado servido com pedras de gelo.",
       "prices": [
         {
@@ -1950,12 +1952,13 @@
         "Espresso",
         "Gelo"
       ],
-      "story": "O latte macchiato nasceu para mostrar camadas: leite embaixo, café por cima, formando um degradê. No copo transparente com gelo, o efeito visual fica ainda mais bonito, e você decide quando misturar."
+      "story": "O latte macchiato nasceu para mostrar camadas: leite embaixo, café por cima, formando um degradê. No copo transparente com gelo, o efeito visual fica ainda mais bonito, e você decide quando misturar.",
+      "subcategory": "cafe-gelado"
     },
     {
       "id": "shaken-espresso-gelado",
       "name": "Shaken Espresso Gelado",
-      "category": "cafe-gelado",
+      "category": "gelados",
       "description": "Doses de espresso batidas com essência clássica, leite e gelo na coqueteleira. Café gelado servido com pedras de gelo.",
       "prices": [
         {
@@ -1994,12 +1997,13 @@
         "Leite",
         "Gelo"
       ],
-      "story": "Agitar o café na coqueteleira com gelo resfria na hora e cria uma espuma leve, técnica que lembra a do frappé grego, inventado em 1957, em Tessalônica, quando um funcionário da Nescafé misturou café solúvel com água fria em um shaker."
+      "story": "Agitar o café na coqueteleira com gelo resfria na hora e cria uma espuma leve, técnica que lembra a do frappé grego, inventado em 1957, em Tessalônica, quando um funcionário da Nescafé misturou café solúvel com água fria em um shaker.",
+      "subcategory": "cafe-gelado"
     },
     {
       "id": "cold-brew",
       "name": "Cold Brew",
-      "category": "cold-brew",
+      "category": "gelados",
       "description": "Café preparado artesanalmente nas lojas: grãos moídos, infusão em água fria por 20 horas e finalizado com gelo.",
       "prices": [
         {
@@ -2035,12 +2039,13 @@
         "Água fria",
         "Gelo"
       ],
-      "story": "A extração a frio é antiga: no Japão, o café estilo Kyoto pinga gota a gota de uma torre de vidro, por horas. O cold brew usa a mesma ideia: ficando cerca de 20 horas em água fria, o café sai suave, com menos acidez e amargor."
+      "story": "A extração a frio é antiga: no Japão, o café estilo Kyoto pinga gota a gota de uma torre de vidro, por horas. O cold brew usa a mesma ideia: ficando cerca de 20 horas em água fria, o café sai suave, com menos acidez e amargor.",
+      "subcategory": "cold-brew"
     },
     {
       "id": "cold-brew-baunilha",
       "name": "Cold Brew Baunilha",
-      "category": "cold-brew",
+      "category": "gelados",
       "description": "Cold Brew com baunilha, café preparado com infusão em água fria por 20 horas.",
       "prices": [
         {
@@ -2076,12 +2081,13 @@
         "Xarope de baunilha",
         "Gelo"
       ],
-      "story": "A baunilha é uma das especiarias mais caras do mundo, porque cada flor de orquídea precisa ser polinizada à mão. Com o cold brew suave, ela realça as notas doces do café."
+      "story": "A baunilha é uma das especiarias mais caras do mundo, porque cada flor de orquídea precisa ser polinizada à mão. Com o cold brew suave, ela realça as notas doces do café.",
+      "subcategory": "cold-brew"
     },
     {
       "id": "cold-brew-leite",
       "name": "Cold Brew Leite",
-      "category": "cold-brew",
+      "category": "gelados",
       "description": "Cold Brew com leite, café preparado com infusão em água fria por 20 horas.",
       "prices": [
         {
@@ -2119,12 +2125,13 @@
         "Leite",
         "Gelo"
       ],
-      "story": "O café com leite gelado é um clássico caseiro em muitos lugares, como no Vietnã, onde o café forte vai com leite condensado e gelo. O cold brew com leite segue essa ideia, cremoso e pouco ácido."
+      "story": "O café com leite gelado é um clássico caseiro em muitos lugares, como no Vietnã, onde o café forte vai com leite condensado e gelo. O cold brew com leite segue essa ideia, cremoso e pouco ácido.",
+      "subcategory": "cold-brew"
     },
     {
       "id": "frappuccino-avela",
       "name": "Frappuccino® de Avelã",
-      "category": "frappuccinos",
+      "category": "gelados",
       "description": "Café, leite e essência de avelã, batidos com gelo e finalizados com chantilly. Opção com ou sem café.",
       "prices": [
         {
@@ -2164,12 +2171,13 @@
         "Gelo",
         "Chantilly"
       ],
-      "story": "O Frappuccino nasceu na The Coffee Connection, em Boston, e chegou à Starbucks em 1994, quando a empresa comprou a rede. O nome mistura frappé e cappuccino. A avelã faz dupla clássica com café e chocolate."
+      "story": "O Frappuccino nasceu na The Coffee Connection, em Boston, e chegou à Starbucks em 1994, quando a empresa comprou a rede. O nome mistura frappé e cappuccino. A avelã faz dupla clássica com café e chocolate.",
+      "subcategory": "frappuccinos"
     },
     {
       "id": "frappuccino-brigadeiro",
       "name": "Frappuccino® de Brigadeiro",
-      "category": "frappuccinos",
+      "category": "gelados",
       "description": "Café, leite, calda de brigadeiro e choco chip, batidos com gelo e finalizados com chantilly, calda de brigadeiro e granulado de chocolate belga ao leite. Opção com ou sem café.",
       "prices": [
         {
@@ -2211,12 +2219,13 @@
         "Chantilly",
         "Granulado de chocolate belga ao leite"
       ],
-      "story": "O Frappuccino é um frappé, gelo batido com café, que veio do estilo gelado de Boston. O brigadeiro, doce brasileiro de leite condensado e chocolate, é o ingrediente local que dá a ele sotaque de festa de aniversário."
+      "story": "O Frappuccino é um frappé, gelo batido com café, que veio do estilo gelado de Boston. O brigadeiro, doce brasileiro de leite condensado e chocolate, é o ingrediente local que dá a ele sotaque de festa de aniversário.",
+      "subcategory": "frappuccinos"
     },
     {
       "id": "frappuccino-doce-de-leite",
       "name": "Frappuccino® de Doce de Leite",
-      "category": "frappuccinos",
+      "category": "gelados",
       "description": "Café, leite e calda de doce de leite finalizados com chantilly e cobertura de caramelo. Opção com ou sem café.",
       "prices": [
         {
@@ -2257,12 +2266,13 @@
         "Chantilly",
         "Calda de caramelo"
       ],
-      "story": "O doce de leite é herdeiro da tradição ibérica de cozinhar leite e açúcar por horas. Na América do Sul, virou item de cozinha, e no copo gelado e batido ele aparece numa das releituras mais cremosas do café."
+      "story": "O doce de leite é herdeiro da tradição ibérica de cozinhar leite e açúcar por horas. Na América do Sul, virou item de cozinha, e no copo gelado e batido ele aparece numa das releituras mais cremosas do café.",
+      "subcategory": "frappuccinos"
     },
     {
       "id": "frappuccino-choco-chip",
       "name": "Frappuccino® Choco Chip",
-      "category": "frappuccinos",
+      "category": "gelados",
       "description": "Leite, chocolate e choco chip batidos com gelo e finalizados com chantilly e cobertura de chocolate. Opção com ou sem café.",
       "prices": [
         {
@@ -2303,12 +2313,13 @@
         "Chantilly",
         "Cobertura de chocolate"
       ],
-      "story": "O chocolate chip é quase uma invenção americana: a história mais conhecida diz que, nos anos 1930, Ruth Wakefield, do Toll House Inn, em Massachusetts, picou chocolate numa massa de cookie, e ele não derreteu por completo."
+      "story": "O chocolate chip é quase uma invenção americana: a história mais conhecida diz que, nos anos 1930, Ruth Wakefield, do Toll House Inn, em Massachusetts, picou chocolate numa massa de cookie, e ele não derreteu por completo.",
+      "subcategory": "frappuccinos"
     },
     {
       "id": "caramelo-frappuccino",
       "name": "Frappuccino® de Caramelo",
-      "category": "frappuccinos",
+      "category": "gelados",
       "description": "Café, leite e essência de caramelo batidos com gelo e finalizados com chantilly e cobertura de caramelo. Opção com ou sem café.",
       "prices": [
         {
@@ -2349,12 +2360,13 @@
         "Chantilly",
         "Cobertura de caramelo"
       ],
-      "story": "O caramelo aparece na confeitaria desde que o homem aprendeu a queimar açúcar. Ele tem um ponto exato: se passar, amarga. O Frappuccino de caramelo é uma versão geladinha e cremosa dessa receita."
+      "story": "O caramelo aparece na confeitaria desde que o homem aprendeu a queimar açúcar. Ele tem um ponto exato: se passar, amarga. O Frappuccino de caramelo é uma versão geladinha e cremosa dessa receita.",
+      "subcategory": "frappuccinos"
     },
     {
       "id": "frappuccino-mocha",
       "name": "Frappuccino® Mocha ou Mocha Branco",
-      "category": "frappuccinos",
+      "category": "gelados",
       "description": "Deliciosa combinação de café, leite e chocolate ou chocolate branco, batidos com gelo e finalizados com chantilly.",
       "prices": [
         {
@@ -2394,12 +2406,13 @@
         "Gelo",
         "Chantilly"
       ],
-      "story": "O mocha tem o nome do porto de Mocha, no Iêmen, de onde saíam sacas de café para o mundo. Hoje o termo indica café com chocolate, e a versão branca troca o cacau escuro por manteiga de cacau, açúcar e leite."
+      "story": "O mocha tem o nome do porto de Mocha, no Iêmen, de onde saíam sacas de café para o mundo. Hoje o termo indica café com chocolate, e a versão branca troca o cacau escuro por manteiga de cacau, açúcar e leite.",
+      "subcategory": "frappuccinos"
     },
     {
       "id": "frappuccino-chai",
       "name": "Frappuccino® Chai",
-      "category": "frappuccinos",
+      "category": "gelados",
       "description": "Combinação de leite e Chai (chá preto e especiarias) batidos com gelo e finalizados com chantilly e canela em pó. Sem café.",
       "prices": [
         {
@@ -2439,12 +2452,13 @@
         "Chantilly",
         "Canela em pó"
       ],
-      "story": "Chai significa chá em hindi. O masala chai, chá preto fervido com leite, açúcar e especiarias, é a bebida de rua da Índia e ganhou força no século XX, quando o consumo de chá foi muito incentivado no país."
+      "story": "Chai significa chá em hindi. O masala chai, chá preto fervido com leite, açúcar e especiarias, é a bebida de rua da Índia e ganhou força no século XX, quando o consumo de chá foi muito incentivado no país.",
+      "subcategory": "frappuccinos"
     },
     {
       "id": "frappuccino-matcha",
       "name": "Frappuccino® Matcha",
-      "category": "frappuccinos",
+      "category": "gelados",
       "description": "Chá verde matcha, leite e essência adocicada batidos com gelo e finalizados com chantilly. Sem café.",
       "prices": [
         {
@@ -2484,12 +2498,13 @@
         "Gelo",
         "Chantilly"
       ],
-      "story": "O matcha vem de folhas de chá sombreadas antes da colheita, o que as deixa mais verdes e ricas em aminoácidos. Foi levado da China ao Japão por monges budistas, como o monge Eisai, no século XII."
+      "story": "O matcha vem de folhas de chá sombreadas antes da colheita, o que as deixa mais verdes e ricas em aminoácidos. Foi levado da China ao Japão por monges budistas, como o monge Eisai, no século XII.",
+      "subcategory": "frappuccinos"
     },
     {
       "id": "super-morango-frappuccino",
       "name": "Frappuccino® Super Morango",
-      "category": "frappuccinos",
+      "category": "gelados",
       "description": "Leite e calda de morango batidos com gelo e finalizados com chantilly. Sem café.",
       "prices": [
         {
@@ -2528,12 +2543,13 @@
         "Gelo",
         "Chantilly"
       ],
-      "story": "O morango cultivado de hoje é um cruzamento feito na França do século XVIII, entre espécies da América do Norte e do Chile. Daí vem a fruta grande e perfumada que a bebida celebra."
+      "story": "O morango cultivado de hoje é um cruzamento feito na França do século XVIII, entre espécies da América do Norte e do Chile. Daí vem a fruta grande e perfumada que a bebida celebra.",
+      "subcategory": "frappuccinos"
     },
     {
       "id": "frappuccino-baunilha",
       "name": "Frappuccino® Baunilha",
-      "category": "frappuccinos",
+      "category": "gelados",
       "description": "Versão clássica, com baunilha e leite batidos com gelo e finalizados com chantilly. Sem café.",
       "prices": [
         {
@@ -2572,12 +2588,13 @@
         "Gelo",
         "Chantilly"
       ],
-      "story": "A baunilha é o sabor que costuma servir de referência para tudo: sorvete de baunilha, milkshake de baunilha. O Frappuccino de baunilha é uma bebida de sorveteria em formato de cafeteria, sem café."
+      "story": "A baunilha é o sabor que costuma servir de referência para tudo: sorvete de baunilha, milkshake de baunilha. O Frappuccino de baunilha é uma bebida de sorveteria em formato de cafeteria, sem café.",
+      "subcategory": "frappuccinos"
     },
     {
       "id": "frappuccino-chocolate",
       "name": "Frappuccino® Chocolate ou Chocolate Branco",
-      "category": "frappuccinos",
+      "category": "gelados",
       "description": "Leite, chocolate ou chocolate branco, batidos com gelo, finalizados com chantilly e cobertura de chocolate, na versão tradicional. Sem café.",
       "prices": [
         {
@@ -2617,12 +2634,13 @@
         "Chantilly",
         "Cobertura de chocolate"
       ],
-      "story": "O milkshake, que inspirou bebidas como esta, nasceu nos Estados Unidos do início do século XX, primeiro como uma bebida alcoólica com ovo e depois, nos anos 1920, na versão com sorvete e xarope de chocolate."
+      "story": "O milkshake, que inspirou bebidas como esta, nasceu nos Estados Unidos do início do século XX, primeiro como uma bebida alcoólica com ovo e depois, nos anos 1920, na versão com sorvete e xarope de chocolate.",
+      "subcategory": "frappuccinos"
     },
     {
       "id": "infusao-chai",
       "name": "Infusão Chai",
-      "category": "cha",
+      "category": "bebidas",
       "description": "Infusão de chá preto, canela, cravo, anis, cardamomo, pimenta-preta e gengibre. Quente ou frio.",
       "prices": [
         {
@@ -2662,12 +2680,13 @@
         "Pimenta-preta",
         "Gengibre"
       ],
-      "story": "O masala chai indiano mistura chá preto com especiarias que cada família ajusta ao seu jeito. A mistura é o chá com leite e açúcar consagrado nas ruas, vendido por chaiwallahs. Aqui vem a infusão, sem leite."
+      "story": "O masala chai indiano mistura chá preto com especiarias que cada família ajusta ao seu jeito. A mistura é o chá com leite e açúcar consagrado nas ruas, vendido por chaiwallahs. Aqui vem a infusão, sem leite.",
+      "subcategory": "cha"
     },
     {
       "id": "cha-verde",
       "name": "Chá Verde",
-      "category": "cha",
+      "category": "bebidas",
       "description": "Chá verde. Quente ou frio.",
       "prices": [
         {
@@ -2703,12 +2722,13 @@
         "Água quente",
         "Gelo (versão fria)"
       ],
-      "story": "Conta-se que o chá foi descoberto na China, quando o imperador Shennong, por volta de 2700 a.C., viu folhas caírem na água fervente. É lenda, mas mostra uma tradição milenar. O chá verde não é oxidado, o que preserva a cor."
+      "story": "Conta-se que o chá foi descoberto na China, quando o imperador Shennong, por volta de 2700 a.C., viu folhas caírem na água fervente. É lenda, mas mostra uma tradição milenar. O chá verde não é oxidado, o que preserva a cor.",
+      "subcategory": "cha"
     },
     {
       "id": "cha-preto",
       "name": "Chá Preto",
-      "category": "cha",
+      "category": "bebidas",
       "description": "Chá preto. Quente ou frio.",
       "prices": [
         {
@@ -2744,12 +2764,13 @@
         "Água quente",
         "Gelo (versão fria)"
       ],
-      "story": "O chá preto é oxidado, o que escurece as folhas e dá sabor encorpado. No Ocidente virou o chá padrão, sobretudo na Inglaterra, onde o chá da tarde é costume desde o século XIX."
+      "story": "O chá preto é oxidado, o que escurece as folhas e dá sabor encorpado. No Ocidente virou o chá padrão, sobretudo na Inglaterra, onde o chá da tarde é costume desde o século XIX.",
+      "subcategory": "cha"
     },
     {
       "id": "cha-gelado-limonada-verde-preto",
       "name": "Chá Gelado com Limonada (Verde ou Preto)",
-      "category": "bebidas-com-cha",
+      "category": "bebidas",
       "description": "Chá gelado com limonada, versão verde ou preta.",
       "prices": [
         {
@@ -2785,12 +2806,13 @@
         "Limonada",
         "Gelo"
       ],
-      "story": "Segundo a história mais repetida, o chá gelado ficou famoso na Feira Mundial de St. Louis, em 1904, quando um vendedor serviu a bebida com gelo num dia de calor. A limonada dá o toque cítrico."
+      "story": "Segundo a história mais repetida, o chá gelado ficou famoso na Feira Mundial de St. Louis, em 1904, quando um vendedor serviu a bebida com gelo num dia de calor. A limonada dá o toque cítrico.",
+      "subcategory": "bebidas-com-cha"
     },
     {
       "id": "cha-gelado-limonada-chai",
       "name": "Chá Gelado com Limonada (Chai)",
-      "category": "bebidas-com-cha",
+      "category": "bebidas",
       "description": "Chá gelado com limonada, versão chai.",
       "prices": [
         {
@@ -2826,12 +2848,13 @@
         "Limonada",
         "Gelo"
       ],
-      "story": "O chai da Índia nasceu quente e cheio de especiarias. Gelado e com limão, vira uma bebida inesperada: canela e gengibre aquecem, a limonada refresca. É uma mistura de cozinhas de dois cantos do mundo."
+      "story": "O chai da Índia nasceu quente e cheio de especiarias. Gelado e com limão, vira uma bebida inesperada: canela e gengibre aquecem, a limonada refresca. É uma mistura de cozinhas de dois cantos do mundo.",
+      "subcategory": "bebidas-com-cha"
     },
     {
       "id": "chai-latte",
       "name": "Chai Latte",
-      "category": "bebidas-com-cha",
+      "category": "bebidas",
       "description": "Feito com leite vaporizado, concentrado de chai e água quente. Quente ou gelado.",
       "prices": [
         {
@@ -2869,12 +2892,13 @@
         "Leite vaporizado",
         "Água quente"
       ],
-      "story": "O chai latte é uma releitura ocidental do masala chai: o chá especiado da Índia, servido com leite vaporizado como num latte. O formato é criação das cafeterias americanas do final do século XX."
+      "story": "O chai latte é uma releitura ocidental do masala chai: o chá especiado da Índia, servido com leite vaporizado como num latte. O formato é criação das cafeterias americanas do final do século XX.",
+      "subcategory": "bebidas-com-cha"
     },
     {
       "id": "matcha-latte",
       "name": "Matcha Latte",
-      "category": "bebidas-com-cha",
+      "category": "bebidas",
       "description": "Matcha, leite e essência clássica, levemente adocicado.",
       "prices": [
         {
@@ -2912,7 +2936,8 @@
         "Leite",
         "Essência clássica"
       ],
-      "story": "No Japão, o matcha é parte da cerimônia do chá, o chanoyu, que valoriza a calma e o gesto. Em versão com leite, virou uma bebida de cafeteria, mais doce e suave que o chá puro, e a cor verde vibrante é a marca."
+      "story": "No Japão, o matcha é parte da cerimônia do chá, o chanoyu, que valoriza a calma e o gesto. Em versão com leite, virou uma bebida de cafeteria, mais doce e suave que o chá puro, e a cor verde vibrante é a marca.",
+      "subcategory": "bebidas-com-cha"
     },
     {
       "id": "croissant",
@@ -2943,7 +2968,8 @@
         "Presunto e queijo",
         "Frango ou peito de peru com cream cheese"
       ],
-      "story": "O croissant é associado à França, mas a versão mais contada diz que veio do kipferl austríaco, pão em meia-lua que chegou a Paris no século XIX com uma padaria vienense. A massa folhada de manteiga é a marca registrada."
+      "story": "O croissant é associado à França, mas a versão mais contada diz que veio do kipferl austríaco, pão em meia-lua que chegou a Paris no século XIX com uma padaria vienense. A massa folhada de manteiga é a marca registrada.",
+      "subcategory": "salgados"
     },
     {
       "id": "pao-de-queijo",
@@ -2977,7 +3003,8 @@
         "Óleo",
         "Sal"
       ],
-      "story": "O pão de queijo é de Minas Gerais, onde o polvilho da mandioca, aproveitado desde o período colonial, se juntou ao queijo da fazenda. Ele não leva farinha de trigo e é naturalmente sem glúten, o que explica a textura elástica."
+      "story": "O pão de queijo é de Minas Gerais, onde o polvilho da mandioca, aproveitado desde o período colonial, se juntou ao queijo da fazenda. Ele não leva farinha de trigo e é naturalmente sem glúten, o que explica a textura elástica.",
+      "subcategory": "salgados"
     },
     {
       "id": "minipao-de-queijo",
@@ -3011,7 +3038,8 @@
         "Óleo",
         "Sal"
       ],
-      "story": "Em Minas, o pão de queijo é parte do café da tarde, da cozinha de fogão a lenha e do lanche da estrada. Em tamanho mini, ele ganha papel de petisco: a ideia é beliscar, dividir e pedir mais uma rodada."
+      "story": "Em Minas, o pão de queijo é parte do café da tarde, da cozinha de fogão a lenha e do lanche da estrada. Em tamanho mini, ele ganha papel de petisco: a ideia é beliscar, dividir e pedir mais uma rodada.",
+      "subcategory": "salgados"
     },
     {
       "id": "torrada-petropolis",
@@ -3042,7 +3070,8 @@
         "Manteiga",
         "Tostagem leve"
       ],
-      "story": "Brioche é um pão francês enriquecido com ovos e manteiga, típico da Normandia. Há quem conte que o termo vem de um verbo antigo, brier, que quer dizer amassar. Torrada com manteiga é o café da manhã mais simples e reconfortante."
+      "story": "Brioche é um pão francês enriquecido com ovos e manteiga, típico da Normandia. Há quem conte que o termo vem de um verbo antigo, brier, que quer dizer amassar. Torrada com manteiga é o café da manhã mais simples e reconfortante.",
+      "subcategory": "salgados"
     },
     {
       "id": "coxinha-frango-requeijao",
@@ -3074,7 +3103,8 @@
         "Requeijão cremoso",
         "Farinha de rosca"
       ],
-      "story": "Conta-se que a coxinha nasceu no interior de São Paulo, no século XIX, na casa de uma família real, quando um filho pequeno só aceitava comer coxa de frango, e a cozinheira a empanou. A forma lembra uma coxa."
+      "story": "Conta-se que a coxinha nasceu no interior de São Paulo, no século XIX, na casa de uma família real, quando um filho pequeno só aceitava comer coxa de frango, e a cozinheira a empanou. A forma lembra uma coxa.",
+      "subcategory": "salgados"
     },
     {
       "id": "minicoxinha-frango-requeijao",
@@ -3106,7 +3136,8 @@
         "Requeijão",
         "Farinha de rosca"
       ],
-      "story": "O salgadinho de festa, em que cada coxinha cabe numa mão, é parte do cenário de aniversários e botecos brasileiros. A minicoxinha é a versão para dividir, com uma massa que fica crocante por fora e macia por dentro."
+      "story": "O salgadinho de festa, em que cada coxinha cabe numa mão, é parte do cenário de aniversários e botecos brasileiros. A minicoxinha é a versão para dividir, com uma massa que fica crocante por fora e macia por dentro.",
+      "subcategory": "salgados"
     },
     {
       "id": "empada-palmito",
@@ -3139,7 +3170,8 @@
         "Palmito",
         "Azeitona verde"
       ],
-      "story": "A empada tem origem em tortas portuguesas, com massa amanteigada que se desfaz. O palmito, extraído de palmeiras como a pupunha e a juçara, está na cozinha brasileira há séculos e é recheio clássico de salgadinho."
+      "story": "A empada tem origem em tortas portuguesas, com massa amanteigada que se desfaz. O palmito, extraído de palmeiras como a pupunha e a juçara, está na cozinha brasileira há séculos e é recheio clássico de salgadinho.",
+      "subcategory": "salgados"
     },
     {
       "id": "empada-frango-requeijao",
@@ -3172,12 +3204,13 @@
         "Frango desfiado",
         "Requeijão"
       ],
-      "story": "A empada vem de Portugal, onde existem empadas de galinha desde pelo menos o século XVII. No Brasil, ganhou tamanho individual e recheios variados. O requeijão, de tradição mineira, deixa o frango mais cremoso."
+      "story": "A empada vem de Portugal, onde existem empadas de galinha desde pelo menos o século XVII. No Brasil, ganhou tamanho individual e recheios variados. O requeijão, de tradição mineira, deixa o frango mais cremoso.",
+      "subcategory": "salgados"
     },
     {
       "id": "queijo-quente",
       "name": "Queijo Quente",
-      "category": "sanduiches",
+      "category": "salgados",
       "description": "Pão de forma, mussarela, requeijão e manteiga.",
       "prices": [
         {
@@ -3206,12 +3239,13 @@
         "Requeijão",
         "Manteiga"
       ],
-      "story": "O queijo quente é o parente brasileiro do grilled cheese americano, que se popularizou nos anos 1920 com o pão de forma fatiado. A chapa e a manteiga criam a crosta dourada, e o queijo derrete no meio."
+      "story": "O queijo quente é o parente brasileiro do grilled cheese americano, que se popularizou nos anos 1920 com o pão de forma fatiado. A chapa e a manteiga criam a crosta dourada, e o queijo derrete no meio.",
+      "subcategory": "sanduiches"
     },
     {
       "id": "misto-quente",
       "name": "Misto Quente",
-      "category": "sanduiches",
+      "category": "salgados",
       "description": "Pão de forma, presunto, mussarela, requeijão e manteiga.",
       "prices": [
         {
@@ -3241,12 +3275,13 @@
         "Requeijão",
         "Manteiga"
       ],
-      "story": "O misto quente é um clássico das padarias do Brasil, o primo do croque-monsieur francês. A ideia de prensar pão, queijo e presunto na chapa é uma das formas mais simples e universais de fazer um sanduíche quente."
+      "story": "O misto quente é um clássico das padarias do Brasil, o primo do croque-monsieur francês. A ideia de prensar pão, queijo e presunto na chapa é uma das formas mais simples e universais de fazer um sanduíche quente.",
+      "subcategory": "sanduiches"
     },
     {
       "id": "croque-monsieur",
       "name": "Croque-Monsieur",
-      "category": "sanduiches",
+      "category": "salgados",
       "description": "Sanduíche de presunto com queijo prato, molho bechamel e parmesão no pão de forma.",
       "prices": [
         {
@@ -3274,12 +3309,13 @@
         "Molho bechamel",
         "Parmesão"
       ],
-      "story": "Croque-monsieur quer dizer, mais ou menos, crocante, senhor. A versão mais conhecida o liga a um café de Paris, por volta de 1910. O molho bechamel e o queijo gratinado são a marca."
+      "story": "Croque-monsieur quer dizer, mais ou menos, crocante, senhor. A versão mais conhecida o liga a um café de Paris, por volta de 1910. O molho bechamel e o queijo gratinado são a marca.",
+      "subcategory": "sanduiches"
     },
     {
       "id": "croissant-roll",
       "name": "Croissant Roll",
-      "category": "sanduiches",
+      "category": "salgados",
       "description": "Ovos mexidos acompanhados de fatias deliciosas de bacon e queijo, servidos em um roll de croissant.",
       "prices": [
         {
@@ -3308,12 +3344,13 @@
         "Bacon",
         "Queijo"
       ],
-      "story": "Ovos com bacon são a dupla do café da manhã nos países de língua inglesa. O croissant roll junta esse prato com a massa folhada francesa, um sanduíche de café da manhã para comer com a mão."
+      "story": "Ovos com bacon são a dupla do café da manhã nos países de língua inglesa. O croissant roll junta esse prato com a massa folhada francesa, um sanduíche de café da manhã para comer com a mão.",
+      "subcategory": "sanduiches"
     },
     {
       "id": "sanduiche-proteico-keto",
       "name": "Sanduíche Proteico Keto",
-      "category": "sanduiches",
+      "category": "salgados",
       "description": "Pedaços de frango levemente temperados acompanhados de fatias de presunto e queijo e servidos em uma massa proteica à base de ovos (26 g de proteína).",
       "prices": [
         {
@@ -3343,12 +3380,13 @@
         "Presunto",
         "Queijo"
       ],
-      "story": "A dieta cetogênica, ou keto, foi criada nos anos 1920 como tratamento médico para epilepsia, e só depois virou moda. A ideia é cortar carboidratos, por isso a massa de ovos substitui o pão."
+      "story": "A dieta cetogênica, ou keto, foi criada nos anos 1920 como tratamento médico para epilepsia, e só depois virou moda. A ideia é cortar carboidratos, por isso a massa de ovos substitui o pão.",
+      "subcategory": "sanduiches"
     },
     {
       "id": "ciabatta-frango-pesto",
       "name": "Ciabatta de Frango com Pesto",
-      "category": "sanduiches",
+      "category": "salgados",
       "description": "Pedaços de frango levemente temperados, fatias de mussarela e molho pesto servidos em um pão ciabatta macio por dentro e crocante por fora.",
       "prices": [
         {
@@ -3377,12 +3415,13 @@
         "Mussarela",
         "Molho pesto"
       ],
-      "story": "A ciabatta foi criada em 1982 por Arnaldo Cavallari, padeiro do Vêneto, na Itália, para responder à baguete francesa. O nome significa chinelo. O pesto é de Gênova, de manjericão, pinoli, parmesão e azeite."
+      "story": "A ciabatta foi criada em 1982 por Arnaldo Cavallari, padeiro do Vêneto, na Itália, para responder à baguete francesa. O nome significa chinelo. O pesto é de Gênova, de manjericão, pinoli, parmesão e azeite.",
+      "subcategory": "sanduiches"
     },
     {
       "id": "ciabatta-frango-mostarda",
       "name": "Ciabatta de Frango com Mostarda",
-      "category": "sanduiches",
+      "category": "salgados",
       "description": "Pedaços de frango levemente temperados, fatias de mussarela e mostarda com toque de mel servidos em um pão ciabatta macio por dentro e crocante por fora.",
       "prices": [
         {
@@ -3411,7 +3450,8 @@
         "Mussarela",
         "Mostarda com mel"
       ],
-      "story": "A mostarda com mel é um molho que mistura picante e doce, comum em sanduíches da Europa e dos EUA. A ciabatta, com sua casca crocante e miolo macio e cheio de buracos, foi criada na Itália em 1982."
+      "story": "A mostarda com mel é um molho que mistura picante e doce, comum em sanduíches da Europa e dos EUA. A ciabatta, com sua casca crocante e miolo macio e cheio de buracos, foi criada na Itália em 1982.",
+      "subcategory": "sanduiches"
     },
     {
       "id": "bolo-red-velvet",
@@ -3449,7 +3489,8 @@
         "Açúcar",
         "Manteiga"
       ],
-      "story": "O red velvet é receita americana, popular no Sul dos EUA. A versão mais conhecida liga o tom avermelhado à reação do cacau com ingredientes ácidos, como buttermilk e vinagre. Depois veio o corante."
+      "story": "O red velvet é receita americana, popular no Sul dos EUA. A versão mais conhecida liga o tom avermelhado à reação do cacau com ingredientes ácidos, como buttermilk e vinagre. Depois veio o corante.",
+      "subcategory": "doces"
     },
     {
       "id": "brownie",
@@ -3484,7 +3525,8 @@
         "Farinha",
         "Lascas de chocolate ao leite"
       ],
-      "story": "Conta-se que o brownie surgiu em Chicago, por volta de 1893, quando a organizadora Bertha Palmer pediu um doce de chocolate pequeno para comer com a mão. A versão mais conhecida, mas sem confirmação."
+      "story": "Conta-se que o brownie surgiu em Chicago, por volta de 1893, quando a organizadora Bertha Palmer pediu um doce de chocolate pequeno para comer com a mão. A versão mais conhecida, mas sem confirmação.",
+      "subcategory": "doces"
     },
     {
       "id": "cinnamon-roll",
@@ -3519,7 +3561,8 @@
         "Canela",
         "Glaceado de açúcar"
       ],
-      "story": "O cinnamon roll é um clássico da Suécia, onde o kanelbulle tem até dia nacional, em 4 de outubro. A canela chegou do Oriente à Europa e virou o perfume do café da tarde nórdico."
+      "story": "O cinnamon roll é um clássico da Suécia, onde o kanelbulle tem até dia nacional, em 4 de outubro. A canela chegou do Oriente à Europa e virou o perfume do café da tarde nórdico.",
+      "subcategory": "doces"
     },
     {
       "id": "muffin-blueberry",
@@ -3552,7 +3595,8 @@
         "Raspas de limão",
         "Açúcar"
       ],
-      "story": "O blueberry, ou mirtilo, é uma fruta nativa da América do Norte, parte da alimentação dos povos nativos antes da chegada dos europeus. O muffin americano, de massa pequena, ganhou espaço nos cafés da manhã dos EUA."
+      "story": "O blueberry, ou mirtilo, é uma fruta nativa da América do Norte, parte da alimentação dos povos nativos antes da chegada dos europeus. O muffin americano, de massa pequena, ganhou espaço nos cafés da manhã dos EUA.",
+      "subcategory": "doces"
     },
     {
       "id": "muffin-chocolate",
@@ -3585,7 +3629,8 @@
         "Gotas de chocolate ao leite",
         "Açúcar"
       ],
-      "story": "Muffin é palavra inglesa, mas o muffin americano, assado em forminha e mais bolo do que pão, é outro bicho. Virou item básico de qualquer café por ser prático e portátil, e o chocolate é sua versão mais querida."
+      "story": "Muffin é palavra inglesa, mas o muffin americano, assado em forminha e mais bolo do que pão, é outro bicho. Virou item básico de qualquer café por ser prático e portátil, e o chocolate é sua versão mais querida.",
+      "subcategory": "doces"
     },
     {
       "id": "cuca-de-maca",
@@ -3618,7 +3663,8 @@
         "Maçã",
         "Farofa de açúcar e manteiga"
       ],
-      "story": "A cuca chegou ao Brasil com imigrantes alemães no Sul, onde é feita a partir do kuchen, o bolo alemão. A farofa doce por cima, chamada de streusel, é a marca, e a maçã é recheio tradicional."
+      "story": "A cuca chegou ao Brasil com imigrantes alemães no Sul, onde é feita a partir do kuchen, o bolo alemão. A farofa doce por cima, chamada de streusel, é a marca, e a maçã é recheio tradicional.",
+      "subcategory": "doces"
     },
     {
       "id": "donut-chocoberry",
@@ -3649,7 +3695,8 @@
         "Geleia de morango",
         "Cobertura de chocolate branco"
       ],
-      "story": "Segundo a história popular, a forma de anel do donut vem do capitão americano Hanson Gregory, no século XIX, que teria furado o meio para fritar por igual. O recheio de geleia é a variante clássica."
+      "story": "Segundo a história popular, a forma de anel do donut vem do capitão americano Hanson Gregory, no século XIX, que teria furado o meio para fritar por igual. O recheio de geleia é a variante clássica.",
+      "subcategory": "doces"
     },
     {
       "id": "donut-chocolate",
@@ -3680,7 +3727,8 @@
         "Recheio de chocolate ao leite",
         "Cobertura de chocolate"
       ],
-      "story": "Os doughnuts chegaram aos EUA com colonos holandeses, os olykoeks, bolinhos fritos na gordura. Com o tempo se tornaram parte do café da manhã americano. A versão de chocolate é a mais clássica."
+      "story": "Os doughnuts chegaram aos EUA com colonos holandeses, os olykoeks, bolinhos fritos na gordura. Com o tempo se tornaram parte do café da manhã americano. A versão de chocolate é a mais clássica.",
+      "subcategory": "doces"
     },
     {
       "id": "donut-doce-de-leite",
@@ -3711,7 +3759,8 @@
         "Doce de leite",
         "Cobertura de chocolate branco"
       ],
-      "story": "O donut é americano e o doce de leite é sul-americano, uma mistura que só existe no Brasil. O doce de leite faz sucesso em muita sobremesa, e dentro do donut combina com a cobertura branca."
+      "story": "O donut é americano e o doce de leite é sul-americano, uma mistura que só existe no Brasil. O doce de leite faz sucesso em muita sobremesa, e dentro do donut combina com a cobertura branca.",
+      "subcategory": "doces"
     },
     {
       "id": "donut-cookies-n-cream",
@@ -3743,7 +3792,8 @@
         "Chocolate branco",
         "Cobertura de biscoito de chocolate"
       ],
-      "story": "Cookies and cream é sabor de sorvete americano, que muita gente liga a Nova York nos anos 1970, mas a origem exata é incerta. Pedaços de biscoito de chocolate no creme viraram sabor de sorvete, bolo e donut."
+      "story": "Cookies and cream é sabor de sorvete americano, que muita gente liga a Nova York nos anos 1970, mas a origem exata é incerta. Pedaços de biscoito de chocolate no creme viraram sabor de sorvete, bolo e donut.",
+      "subcategory": "doces"
     },
     {
       "id": "bolo-de-limao",
@@ -3776,7 +3826,8 @@
         "Suco e raspas de limão",
         "Cobertura de limão"
       ],
-      "story": "O loaf cake, bolo assado em forma retangular, vem da tradição inglesa do pound cake, que usava uma libra de cada ingrediente. O limão, vindo da Ásia e levado pelos árabes à Europa, dá o toque ácido."
+      "story": "O loaf cake, bolo assado em forma retangular, vem da tradição inglesa do pound cake, que usava uma libra de cada ingrediente. O limão, vindo da Ásia e levado pelos árabes à Europa, dá o toque ácido.",
+      "subcategory": "doces"
     },
     {
       "id": "cookie-de-baunilha",
@@ -3810,7 +3861,8 @@
         "Baunilha",
         "Gotas de chocolate"
       ],
-      "story": "A palavra cookie vem do holandês koekje, pequeno bolo. Segundo a história mais conhecida, os cookies com gotas de chocolate surgiram nos anos 1930, com Ruth Wakefield, em Massachusetts. A baunilha dá o perfume."
+      "story": "A palavra cookie vem do holandês koekje, pequeno bolo. Segundo a história mais conhecida, os cookies com gotas de chocolate surgiram nos anos 1930, com Ruth Wakefield, em Massachusetts. A baunilha dá o perfume.",
+      "subcategory": "doces"
     }
   ],
   "extras": [
@@ -3861,6 +3913,73 @@
     {
       "name": "Limonada nos Refreshers (peça ao barista)",
       "price": null
+    }
+  ],
+  "subcategories": [
+    {
+      "id": "destaques",
+      "name": "Destaques e Novidades",
+      "group": "novidades"
+    },
+    {
+      "id": "espressos",
+      "name": "Espressos",
+      "group": "cafes"
+    },
+    {
+      "id": "cafes",
+      "name": "Cafés",
+      "group": "cafes"
+    },
+    {
+      "id": "refreshers",
+      "name": "Refreshers",
+      "group": "bebidas"
+    },
+    {
+      "id": "chocolates",
+      "name": "Chocolates",
+      "group": "bebidas"
+    },
+    {
+      "id": "cafe-gelado",
+      "name": "Café Gelado",
+      "group": "gelados"
+    },
+    {
+      "id": "cold-brew",
+      "name": "Cold Brew",
+      "group": "gelados"
+    },
+    {
+      "id": "frappuccinos",
+      "name": "Frappuccinos",
+      "group": "gelados"
+    },
+    {
+      "id": "cha",
+      "name": "Chá",
+      "group": "bebidas"
+    },
+    {
+      "id": "bebidas-com-cha",
+      "name": "Bebidas com Chá",
+      "group": "bebidas"
+    },
+    {
+      "id": "salgados",
+      "name": "Salgados",
+      "group": "salgados"
+    },
+    {
+      "id": "sanduiches",
+      "name": "Sanduíches",
+      "group": "salgados"
+    },
+    {
+      "id": "doces",
+      "name": "Doces",
+      "group": "doces"
     }
   ]
 }

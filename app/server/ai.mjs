@@ -48,7 +48,7 @@ function menuForPrompt(menu) {
         `fome ${t.hunger}/3`,
       ].join(', ')
       const allergens = i.allergens?.length ? ` | contém: ${i.allergens.join(', ')}` : ''
-      return `- ${i.id} | ${i.name} | ${i.category} | ${i.description} | ${tags}${allergens}`
+      return `- ${i.id} | ${i.name} | ${i.category}${i.subcategory ? ` / ${i.subcategory}` : ''} | ${i.description} | ${tags}${allergens}`
     })
     .join('\n')
 }
