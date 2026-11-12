@@ -1,0 +1,3202 @@
+{
+  "cafe": {
+    "name": "Starbucks (referência)",
+    "source": "Cardápio oficial Starbucks Brasil, PDF, ofertas a partir de 30/06/2026"
+  },
+  "categories": [
+    {
+      "id": "destaques",
+      "name": "Destaques e Novidades",
+      "image": "menu/cat-destaques.jpg"
+    },
+    {
+      "id": "espressos",
+      "name": "Espressos",
+      "image": "menu/cat-espressos.jpg"
+    },
+    {
+      "id": "cafes",
+      "name": "Cafés",
+      "image": "menu/cat-cafes.jpg"
+    },
+    {
+      "id": "refreshers",
+      "name": "Refreshers",
+      "image": "menu/cat-refreshers.jpg"
+    },
+    {
+      "id": "chocolates",
+      "name": "Chocolates",
+      "image": "menu/cat-chocolates.jpg"
+    },
+    {
+      "id": "cafe-gelado",
+      "name": "Café Gelado",
+      "image": "menu/cat-cafe-gelado.jpg"
+    },
+    {
+      "id": "cold-brew",
+      "name": "Cold Brew",
+      "image": "menu/cat-cold-brew.jpg"
+    },
+    {
+      "id": "frappuccinos",
+      "name": "Frappuccinos",
+      "image": "menu/cat-frappuccinos.jpg"
+    },
+    {
+      "id": "cha",
+      "name": "Chá",
+      "image": "menu/cat-cha.jpg"
+    },
+    {
+      "id": "bebidas-com-cha",
+      "name": "Bebidas com Chá",
+      "image": "menu/cat-bebidas-com-cha.jpg"
+    },
+    {
+      "id": "salgados",
+      "name": "Salgados",
+      "image": null
+    },
+    {
+      "id": "sanduiches",
+      "name": "Sanduíches",
+      "image": null
+    },
+    {
+      "id": "doces",
+      "name": "Doces",
+      "image": "menu/cat-doces.jpg"
+    }
+  ],
+  "items": [
+    {
+      "id": "matcha-latte-gelado-proteico",
+      "name": "Matcha Latte Gelado Proteico",
+      "category": "destaques",
+      "description": "Matcha latte gelado com 26 g de proteína.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [
+        "proteína"
+      ],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/matcha-latte-gelado-proteico.jpg",
+      "lookalike": "É o matcha latte gelado, aquele chá verde em pó batido com leite, só que com um reforço de proteína. Lembra um suco verde cremoso e docinho, mas com cara de bebida de academia.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 1
+      }
+    },
+    {
+      "id": "baunilha-sem-acucar-latte-proteico",
+      "name": "Baunilha Sem Açúcar Latte Proteico",
+      "category": "destaques",
+      "description": "Latte de baunilha sem açúcar com 31 g de proteína.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [
+        "proteína"
+      ],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/baunilha-sem-acucar-latte-proteico.jpg",
+      "lookalike": "Pense num café com leite aromatizado de baunilha, só que sem açúcar e bem mais proteico. Fica parecido com um pingado cremoso, mas com cara de refeição leve.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 1,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 1
+      }
+    },
+    {
+      "id": "morango-matcha-strate-frappuccino",
+      "name": "Morango Matcha Strate Frappuccino®",
+      "category": "destaques",
+      "description": "Frappuccino® da linha Strate, servido em camadas de morango e matcha.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/morango-matcha-strate-frappuccino.jpg",
+      "lookalike": "Um Frappuccino é uma bebida gelada batida no liquidificador, meio vitamina, meio milk-shake. Esta vem em camadas de rosa e verde, com morango por cima e matcha embaixo.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 1
+      }
+    },
+    {
+      "id": "caramelo-salgado-mocha-strate-frappuccino",
+      "name": "Caramelo Salgado Mocha Strate Frappuccino®",
+      "category": "destaques",
+      "description": "Frappuccino® da linha Strate, em camadas, com cobertura de caramelo.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/caramelo-salgado-mocha-strate-frappuccino.jpg",
+      "lookalike": "Imagine um milk-shake gelado de chocolate com café, coberto de caramelo e chantilly. É sobremesa em copo, no estilo Frappuccino.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 1
+      }
+    },
+    {
+      "id": "brown-sugar-strate-frappuccino",
+      "name": "Brown Sugar Strate Frappuccino®",
+      "category": "destaques",
+      "description": "Frappuccino® da linha Strate, em camadas, finalizado com um traço de canela.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/brown-sugar-strate-frappuccino.jpg",
+      "lookalike": "Um Frappuccino, aquele café gelado batido e cremoso, com cara de açúcar mascavo e um toque de canela por cima. Lembra um café com leite gelado bem docinho e geladinho.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 2,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 1
+      }
+    },
+    {
+      "id": "ube-coco-frappuccino",
+      "name": "Ube Coco Frappuccino®",
+      "category": "destaques",
+      "description": "Textura cremosa, sensação tropical. Novo Frappuccino® de ube e coco.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [],
+      "image": "menu/ube-coco-frappuccino.jpg",
+      "lookalike": "Ube é um tubérculo roxo, parecido com uma batata-doce, usado em doces. A bebida junta o roxinho com o coco numa vitamina gelada e cremosa, em camadas.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": true,
+        "iced": true,
+        "caffeine": false,
+        "hunger": 1
+      }
+    },
+    {
+      "id": "ube-coco-latte",
+      "name": "Ube Coco Latte",
+      "category": "destaques",
+      "description": "Textura cremosa, sensação tropical. Novo latte de ube e coco.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [],
+      "image": "menu/ube-coco-latte.jpg",
+      "lookalike": "É um latte roxinho: leite quente cremoso com sabor de ube (um tubérculo roxo, primo da batata-doce) e coco. Pense num leite quente aromatizado, bem docinho.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": true,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 1
+      }
+    },
+    {
+      "id": "morango-frappuccino-cold-foam-proteico",
+      "name": "Morango Frappuccino® com Cold Foam Proteico",
+      "category": "destaques",
+      "description": "Cold Foam Proteico: espuma de leite gelada que adiciona +19 g de proteína ao copo. Aqui sobre o Morango Frappuccino®.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [
+        "proteína"
+      ],
+      "allergens": [],
+      "image": "menu/morango-frappuccino-cold-foam-proteico.jpg",
+      "lookalike": "Um Frappuccino de morango (vitamina gelada batida) com uma espuma branca por cima. A espuma é a parte proteica, parece o chantilly, mas mais leve.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": true,
+        "iced": true,
+        "caffeine": false,
+        "hunger": 1
+      }
+    },
+    {
+      "id": "mocha-frappuccino-cold-foam-proteico",
+      "name": "Mocha Frappuccino® com Cold Foam Proteico",
+      "category": "destaques",
+      "description": "Cold Foam Proteico: espuma de leite gelada que adiciona +19 g de proteína ao copo. Aqui sobre o Mocha Frappuccino®.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [
+        "proteína"
+      ],
+      "allergens": [],
+      "image": "menu/mocha-frappuccino-cold-foam-proteico.jpg",
+      "lookalike": "Um milk-shake gelado de café com chocolate, coberto por uma camada grossa de espuma de leite gelada e cheia de proteína.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 2,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 1
+      }
+    },
+    {
+      "id": "matcha-latte-cold-foam-proteico",
+      "name": "Matcha Latte com Cold Foam Proteico",
+      "category": "destaques",
+      "description": "Cold Foam Proteico: espuma de leite gelada que adiciona +19 g de proteína ao copo. Aqui sobre o Matcha Latte.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [
+        "proteína"
+      ],
+      "allergens": [],
+      "image": "menu/matcha-latte-cold-foam-proteico.jpg",
+      "lookalike": "O matcha latte gelado (chá verde em pó com leite), com uma nuvem de espuma de leite gelada e proteica por cima.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 1
+      }
+    },
+    {
+      "id": "baunilha-latte-cold-foam-proteico",
+      "name": "Baunilha Latte com Cold Foam Proteico",
+      "category": "destaques",
+      "description": "Cold Foam Proteico: espuma de leite gelada que adiciona +19 g de proteína ao copo. Aqui sobre o Baunilha Latte.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [
+        "proteína"
+      ],
+      "allergens": [],
+      "image": "menu/baunilha-latte-cold-foam-proteico.jpg",
+      "lookalike": "Um café com leite de baunilha gelado, coberto com espuma de leite gelada e proteica. Parece um capuccino gelado bem cremoso.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 2,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 1
+      }
+    },
+    {
+      "id": "cold-brew-chocolate-cold-foam",
+      "name": "Cold Brew com Chocolate Cold Foam",
+      "category": "destaques",
+      "description": "Cold Foam Proteico: espuma de leite gelada que adiciona +19 g de proteína ao copo. Cold Brew coberto com Chocolate Cold Foam.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [
+        "proteína"
+      ],
+      "allergens": [],
+      "image": "menu/cold-brew-chocolate-cold-foam.jpg",
+      "lookalike": "É um cafezão gelado e forte, feito em infusão fria, com uma espuma de leite achocolatada por cima. Lembra um café gelado coberto de mousse de chocolate.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 3,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 1
+      }
+    },
+    {
+      "id": "espresso",
+      "name": "Espresso",
+      "category": "espressos",
+      "description": "Nosso espresso, com grão Brasil Blend ou Espresso Roast à sua escolha.",
+      "prices": [
+        {
+          "size": "45 ml",
+          "ml": 45,
+          "price": null
+        },
+        {
+          "size": "90 ml",
+          "ml": 90,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-espressos.jpg",
+      "lookalike": "É o cafezinho forte e concentrado, em copo pequeno. Parece aquele cafezinho de padaria, só que mais encorpado e com uma camadinha de espuma por cima.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 3,
+        "milk": false,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "espresso-panna",
+      "name": "Espresso Panna",
+      "category": "espressos",
+      "description": "Espresso com chantilly de baunilha.",
+      "prices": [
+        {
+          "size": "45 ml",
+          "ml": 45,
+          "price": null
+        },
+        {
+          "size": "90 ml",
+          "ml": 90,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-espressos.jpg",
+      "lookalike": "É um espresso com uma colherada de chantilly por cima. Dá o gosto forte do cafezinho com um toque cremoso e docinho, tipo um café com sorvete sem o sorvete.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 3,
+        "milk": false,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "espresso-collection-avela",
+      "name": "Espresso Collection Avelã",
+      "category": "espressos",
+      "description": "Espresso com leite e um toque de avelã, finalizado com chantilly e calda de chocolate.",
+      "prices": [
+        {
+          "size": "45 ml",
+          "ml": 45,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/espresso-collection-avela.jpg",
+      "lookalike": "Pense num cafezinho com leite, coberto de chantilly e calda de chocolate, com gostinho de avelã (aquele sabor de creme de avelã). Parece um mochaccino pequeno.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 2,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "espresso-collection-brigadeiro",
+      "name": "Espresso Collection Brigadeiro",
+      "category": "espressos",
+      "description": "Espresso com leite, finalizado com chantilly de brigadeiro e chocolate granulado.",
+      "prices": [
+        {
+          "size": "45 ml",
+          "ml": 45,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/espresso-collection-brigadeiro.jpg",
+      "lookalike": "É um cafezinho com leite coberto com um chantilly de brigadeiro e granulado. Lembra um brigadeiro de colher servido sobre um café.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 2,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "media",
+      "name": "Média",
+      "category": "cafes",
+      "description": "Clássico café com leite, com meio copo de café e meio copo de leite. Preparado no método tradicional de filtro de papel com nosso grão Brasil Blend.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É o nosso café com leite de padaria: metade café, metade leite. Quem pede uma média na padaria vai se sentir em casa.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 2,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "pingado",
+      "name": "Pingado",
+      "category": "cafes",
+      "description": "Clássico café com leite, com café e uma pequena quantidade de leite. Preparado no método tradicional de filtro de papel com nosso grão Brasil Blend.",
+      "prices": [
+        {
+          "size": "Short",
+          "ml": 200,
+          "price": null
+        },
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "O pingado é um cafezão com só um pouquinho de leite. É o 'café com uma nuvem de leite' de padaria, mais forte do que a média.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 2,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cafezinho-coado",
+      "name": "Cafezinho Coado",
+      "category": "cafes",
+      "description": "Preparado no método tradicional: filtro de papel.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É o café de coador, aquele que sua avó faz, preto e sem leite. Mais suave e mais aguado que o espresso.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 2,
+        "milk": false,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cafe-americano",
+      "name": "Café Americano",
+      "category": "cafes",
+      "description": "Espresso suavizado com água quente.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É um espresso com água quente por cima, para render mais. Parece um café coado, só que com o sabor mais marcante do espresso.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 3,
+        "milk": false,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cafe-em-prensa-francesa",
+      "name": "Café em Prensa Francesa",
+      "category": "cafes",
+      "description": "A Prensa Francesa preserva os óleos e aromas naturais dos grãos, revelando um sabor inconfundível. Ideal para duas pessoas.",
+      "prices": [
+        {
+          "size": "300 ml",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "400 ml",
+          "ml": 400,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É um café feito numa jarrinha de vidro com um êmbolo, que serve duas pessoas. O gosto fica encorpado e bem cheiroso, tipo um coado mais potente.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 2,
+        "milk": false,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cafe-mocha",
+      "name": "Café Mocha ou Mocha Branco",
+      "category": "cafes",
+      "description": "Calda de chocolate amargo ou chocolate branco, espresso, leite vaporizado e um toque de chantilly.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É um café com leite misturado com calda de chocolate e chantilly. Pense num achocolatado quente com café dentro.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 2,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "flat-white",
+      "name": "Flat White",
+      "category": "cafes",
+      "description": "Um clássico feito de shots de ristretto com um toque aveludado de leite.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É um café com leite pequeno e bem forte, com leite cremoso e pouca espuma. Parece um pingado, só que mais intenso e sedoso.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 3,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "baunilha-latte",
+      "name": "Baunilha Latte",
+      "category": "cafes",
+      "description": "Leite vaporizado, espresso e essência de baunilha.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É um café com leite com um gostinho de baunilha. Dá um sabor doce e cheiroso, como um café com leite com essência de bolo.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 1,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cafe-latte",
+      "name": "Café Latte",
+      "category": "cafes",
+      "description": "Espresso, leite vaporizado e espuma de leite.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É o café com leite cremoso das cafeterias: espresso com bastante leite vaporizado e uma camada de espuma. Parece uma média, só que mais suave e espumosa.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 1,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "brigadeiro-latte",
+      "name": "Brigadeiro Latte",
+      "category": "cafes",
+      "description": "Espresso com leite vaporizado e calda de brigadeiro, finalizado com chantilly de brigadeiro e granulado de chocolate.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "Imagine um café com leite adoçado com brigadeiro, com chantilly e granulado por cima. É uma festa de aniversário numa xícara.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "doce-de-leite-latte",
+      "name": "Doce de Leite Latte",
+      "category": "cafes",
+      "description": "Leite vaporizado, espresso, calda de doce de leite, finalizado com chantilly e calda de caramelo.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É um café com leite adoçado com doce de leite, com chantilly e caramelo por cima. Tem gosto de pão doce com doce de leite.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "latte-macchiato",
+      "name": "Latte Macchiato",
+      "category": "cafes",
+      "description": "Leite vaporizado e dose de espresso. Disponível quente ou gelado.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É o contrário do café com leite: o leite vai primeiro e o espresso é pingado por cima, formando camadas. Parece um copo de leite com um fio de café, bem mais suave que um pingado.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 1,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "caramelo-macchiato",
+      "name": "Caramelo Macchiato",
+      "category": "cafes",
+      "description": "Leite vaporizado, um toque de baunilha, dose de espresso e cobertura de caramelo. Disponível quente ou gelado.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "Leite com baunilha, espresso por cima e fios de caramelo. Parece um café com leite de padaria, mas docinho de sobremesa.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cappuccino-tradicional",
+      "name": "Cappuccino Tradicional",
+      "category": "cafes",
+      "description": "Espresso com leite cremoso.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É um espresso com leite vaporizado e uma bela camada de espuma. Parece o cappuccino de padaria, mas sem o pó de achocolatado.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 2,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cappuccino-brigadeiro",
+      "name": "Cappuccino Brigadeiro",
+      "category": "cafes",
+      "description": "Espresso e leite cremoso com calda de brigadeiro e granulado de chocolate belga ao leite.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "Um cappuccino adoçado com brigadeiro e coberto de granulado de chocolate. Tem cara de cappuccino de festa junina.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cappuccino-canela",
+      "name": "Cappuccino Canela",
+      "category": "cafes",
+      "description": "Espresso, um toque de canela e leite cremoso, finalizados com pitadas de canela em pó.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É um cappuccino com cheirinho de canela, daqueles que lembram café com leite com um pão doce de canela.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 2,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cappuccino-chocolate",
+      "name": "Cappuccino Chocolate",
+      "category": "cafes",
+      "description": "Calda de chocolate, espresso e leite cremoso, com deliciosa cobertura de chocolate e chocolate em pó.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É um cappuccino com calda e pó de chocolate. Fica parecido com um café com leite achocolatado bem cremoso.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cappuccino-doce-de-leite",
+      "name": "Cappuccino Doce de Leite",
+      "category": "cafes",
+      "description": "Leite vaporizado com mais cremosidade, café espresso e calda de doce de leite.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafes.jpg",
+      "lookalike": "É um cappuccino cremoso adoçado com doce de leite. Lembra uma sobremesa com café.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "refresher",
+      "name": "Refresher",
+      "category": "refreshers",
+      "description": "Morango e Açaí, Pitaya e Manga ou Frutas Vermelhas. Preparado com extrato de café verde: refrescante, de baixa caloria, rico em vitamina C. Adicione uma dose extra ou limonada.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/refresher.jpg",
+      "lookalike": "É um suco gelado de frutas com um pouco de cafeína vinda do café verde (o grão antes de torrar). Lembra uma limonada colorida, leve e sem gosto de café.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 0,
+        "milk": false,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "pink-dragon-violet-drink",
+      "name": "Pink Drink, Dragon Drink ou Violet Drink",
+      "category": "refreshers",
+      "description": "Nossos Refreshers com a adição de leite de coco e castanha-de-caju, batidos com gelo na coqueteleira. Não contém glúten.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "castanha-de-caju"
+      ],
+      "image": "menu/cat-refreshers.jpg",
+      "lookalike": "É o refresher de frutas batido com leite de coco e castanha-de-caju, o que deixa a bebida cremosa e rosinha. Parece um suco com leite de coco, gelado e levemente doce.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 0,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "chocolate-classico",
+      "name": "Chocolate Clássico",
+      "category": "chocolates",
+      "description": "Calda de chocolate, baunilha e leite cremoso, finalizado com chantilly e cobertura de chocolate. Também disponível na versão gelada.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": 19.9
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": 21.9
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": 23.9
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/chocolate-classico.jpg",
+      "lookalike": "É um chocolate quente cremoso, com chantilly e calda por cima. Parece aquele chocolate quente de festa, mais encorpado do que o achocolatado com leite.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": true,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "chocolate-branco",
+      "name": "Chocolate Branco",
+      "category": "chocolates",
+      "description": "Calda de chocolate branco e leite cremoso, finalizado com chantilly. Também disponível na versão gelada.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": 18.9
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": 20.9
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": 22.9
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-chocolates.jpg",
+      "lookalike": "É um chocolate quente feito com chocolate branco, bem doce e leitoso. Tem gosto de leite condensado com chocolate branco, quentinho.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": true,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cafe-americano-gelado",
+      "name": "Café Americano Gelado",
+      "category": "cafe-gelado",
+      "description": "Espresso suavizado com água quente. Café gelado servido com pedras de gelo.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-cafe-gelado.jpg",
+      "lookalike": "É o café preto gelado: um espresso com água e gelo. Lembra um café coado gelado, só que mais forte.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 3,
+        "milk": false,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cafe-latte-gelado",
+      "name": "Café Latte Gelado",
+      "category": "cafe-gelado",
+      "description": "Espresso e leite frio. Café gelado servido com pedras de gelo.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafe-gelado.jpg",
+      "lookalike": "É um café com leite gelado, com muito leite e gelo. Parece uma média gelada, bem refrescante.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "caramelo-macchiato-gelado",
+      "name": "Caramelo Macchiato Gelado",
+      "category": "cafe-gelado",
+      "description": "Leite frio, um toque de baunilha, dose de espresso e cobertura de caramelo. Café gelado servido com pedras de gelo.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/caramelo-macchiato-gelado.jpg",
+      "lookalike": "É um copo de leite gelado com baunilha, café por cima e fios de caramelo. Parece um café com leite gelado com cara de sobremesa.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "doce-de-leite-latte-gelado",
+      "name": "Doce de Leite Latte Gelado",
+      "category": "cafe-gelado",
+      "description": "Leite frio, espresso, calda de doce de leite, finalizado com chantilly e calda de caramelo. Café gelado servido com pedras de gelo.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafe-gelado.jpg",
+      "lookalike": "É um café com leite gelado adoçado com doce de leite, com chantilly e caramelo por cima. Tem gosto de pudim de leite com café.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cafe-mocha-gelado",
+      "name": "Café Mocha ou Mocha Branco Gelado",
+      "category": "cafe-gelado",
+      "description": "Calda de chocolate amargo ou chocolate branco, espresso, leite frio e um toque de chantilly. Café gelado servido com pedras de gelo.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafe-gelado.jpg",
+      "lookalike": "É um café com leite gelado misturado com calda de chocolate e chantilly. Parece um achocolatado gelado com café dentro.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 2,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "latte-macchiato-gelado",
+      "name": "Latte Macchiato Gelado",
+      "category": "cafe-gelado",
+      "description": "Leite frio e dose de espresso. Café gelado servido com pedras de gelo.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafe-gelado.jpg",
+      "lookalike": "É um copo de leite gelado com um espresso pingado por cima, formando camadas. Mais suave que um café com leite gelado comum.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "shaken-espresso-gelado",
+      "name": "Shaken Espresso Gelado",
+      "category": "cafe-gelado",
+      "description": "Doses de espresso batidas com essência clássica, leite e gelo na coqueteleira. Café gelado servido com pedras de gelo.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-cafe-gelado.jpg",
+      "lookalike": "É um espresso sacudido na coqueteleira com gelo, leite e xarope. Fica gelado, espumoso e mais forte que um café com leite gelado.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 2,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cold-brew",
+      "name": "Cold Brew",
+      "category": "cold-brew",
+      "description": "Café preparado artesanalmente nas lojas: grãos moídos, infusão em água fria por 20 horas e finalizado com gelo.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cold-brew.jpg",
+      "lookalike": "É um café feito com água fria, em horas de espera, em vez de água quente. O resultado é um café gelado forte, mais suave e menos amargo que um espresso com gelo.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 2,
+        "milk": false,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cold-brew-baunilha",
+      "name": "Cold Brew Baunilha",
+      "category": "cold-brew",
+      "description": "Cold Brew com baunilha, café preparado com infusão em água fria por 20 horas.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-cold-brew.jpg",
+      "lookalike": "É o cold brew (café gelado de infusão fria) adoçado com baunilha. Fica um café gelado levemente doce e cheiroso, parecido com um cafezinho de baunilha.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 2,
+        "milk": false,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cold-brew-leite",
+      "name": "Cold Brew Leite",
+      "category": "cold-brew",
+      "description": "Cold Brew com leite, café preparado com infusão em água fria por 20 horas.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cold-brew-leite.jpg",
+      "lookalike": "É o cold brew com um pouco de leite, que escorre em desenhos pelo copo. Parece um café com leite gelado, mas mais suave e encorpado.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 2,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "frappuccino-avela",
+      "name": "Frappuccino® de Avelã",
+      "category": "frappuccinos",
+      "description": "Café, leite e essência de avelã, batidos com gelo e finalizados com chantilly. Opção com ou sem café.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-frappuccinos.jpg",
+      "lookalike": "É uma vitamina gelada de café com gostinho de avelã, coberta de chantilly. Parece um milk-shake de café.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "frappuccino-brigadeiro",
+      "name": "Frappuccino® de Brigadeiro",
+      "category": "frappuccinos",
+      "description": "Café, leite, calda de brigadeiro e choco chip, batidos com gelo e finalizados com chantilly, calda de brigadeiro e granulado de chocolate belga ao leite. Opção com ou sem café.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-frappuccinos.jpg",
+      "lookalike": "É um milk-shake gelado de brigadeiro com café, coberto de chantilly e granulado. Pura sobremesa.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "frappuccino-doce-de-leite",
+      "name": "Frappuccino® de Doce de Leite",
+      "category": "frappuccinos",
+      "description": "Café, leite e calda de doce de leite finalizados com chantilly e cobertura de caramelo. Opção com ou sem café.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-frappuccinos.jpg",
+      "lookalike": "É um milk-shake gelado de doce de leite com café, coberto de chantilly e caramelo. Lembra um sorvete de doce de leite derretido.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "frappuccino-choco-chip",
+      "name": "Frappuccino® Choco Chip",
+      "category": "frappuccinos",
+      "description": "Leite, chocolate e choco chip batidos com gelo e finalizados com chantilly e cobertura de chocolate. Opção com ou sem café.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-frappuccinos.jpg",
+      "lookalike": "É um milk-shake de chocolate com pedacinhos de chocolate, parecido com um sorvete de flocos derretido.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "caramelo-frappuccino",
+      "name": "Frappuccino® de Caramelo",
+      "category": "frappuccinos",
+      "description": "Café, leite e essência de caramelo batidos com gelo e finalizados com chantilly e cobertura de caramelo. Opção com ou sem café.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/caramelo-frappuccino.jpg",
+      "lookalike": "É um milk-shake gelado de caramelo com café e chantilly. Tem gosto de café com leite adoçado com caramelo, geladinho.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "frappuccino-mocha",
+      "name": "Frappuccino® Mocha ou Mocha Branco",
+      "category": "frappuccinos",
+      "description": "Deliciosa combinação de café, leite e chocolate ou chocolate branco, batidos com gelo e finalizados com chantilly.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-frappuccinos.jpg",
+      "lookalike": "É um achocolatado gelado batido com café e chantilly, versão em milk-shake do mochaccino.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 2,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "frappuccino-chai",
+      "name": "Frappuccino® Chai",
+      "category": "frappuccinos",
+      "description": "Combinação de leite e Chai (chá preto e especiarias) batidos com gelo e finalizados com chantilly e canela em pó. Sem café.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-frappuccinos.jpg",
+      "lookalike": "É um milk-shake de chai, aquele chá preto com canela e especiarias, coberto de chantilly e canela. Lembra um leite com canela gelado.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "frappuccino-matcha",
+      "name": "Frappuccino® Matcha",
+      "category": "frappuccinos",
+      "description": "Chá verde matcha, leite e essência adocicada batidos com gelo e finalizados com chantilly. Sem café.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-frappuccinos.jpg",
+      "lookalike": "É uma vitamina gelada de chá verde em pó, doce e cremosa. Lembra um sorvete de chá verde derretido.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "super-morango-frappuccino",
+      "name": "Frappuccino® Super Morango",
+      "category": "frappuccinos",
+      "description": "Leite e calda de morango batidos com gelo e finalizados com chantilly. Sem café.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/super-morango-frappuccino.jpg",
+      "lookalike": "É uma vitamina gelada de leite com calda de morango e chantilly. Tem gosto de milk-shake de morango.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": true,
+        "iced": true,
+        "caffeine": false,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "frappuccino-baunilha",
+      "name": "Frappuccino® Baunilha",
+      "category": "frappuccinos",
+      "description": "Versão clássica, com baunilha e leite batidos com gelo e finalizados com chantilly. Sem café.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-frappuccinos.jpg",
+      "lookalike": "É um milk-shake de baunilha, sem café, coberto de chantilly. Parece um sorvete de creme derretido.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": true,
+        "iced": true,
+        "caffeine": false,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "frappuccino-chocolate",
+      "name": "Frappuccino® Chocolate ou Chocolate Branco",
+      "category": "frappuccinos",
+      "description": "Leite, chocolate ou chocolate branco, batidos com gelo, finalizados com chantilly e cobertura de chocolate, na versão tradicional. Sem café.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-frappuccinos.jpg",
+      "lookalike": "É um milk-shake de chocolate (ou chocolate branco) com chantilly, sem café. Lembra um sorvete de chocolate derretido.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": true,
+        "iced": true,
+        "caffeine": false,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "infusao-chai",
+      "name": "Infusão Chai",
+      "category": "cha",
+      "description": "Infusão de chá preto, canela, cravo, anis, cardamomo, pimenta-preta e gengibre. Quente ou frio.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-cha.jpg",
+      "lookalike": "É um chá preto cheio de especiarias, como canela, cravo e gengibre, sem leite. Lembra aquele chá de canela e cravo de inverno, mas mais forte.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 1,
+        "milk": false,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cha-verde",
+      "name": "Chá Verde",
+      "category": "cha",
+      "description": "Chá verde. Quente ou frio.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-cha.jpg",
+      "lookalike": "É o chá verde clássico, suave e levemente amargo. Parecido com o chá verde de supermercado, só que preparado na hora.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 1,
+        "milk": false,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cha-preto",
+      "name": "Chá Preto",
+      "category": "cha",
+      "description": "Chá preto. Quente ou frio.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cha-preto.jpg",
+      "lookalike": "É o chá preto tradicional, mais forte e escuro que o chá verde. Parecido com o chá mate ou o chá preto de saquinho.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 1,
+        "milk": false,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cha-gelado-limonada-verde-preto",
+      "name": "Chá Gelado com Limonada (Verde ou Preto)",
+      "category": "bebidas-com-cha",
+      "description": "Chá gelado com limonada, versão verde ou preta.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-bebidas-com-cha.jpg",
+      "lookalike": "É um chá gelado misturado com limonada. Lembra um chá mate gelado com limão, bem refrescante e levemente azedinho.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 0,
+        "milk": false,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "cha-gelado-limonada-chai",
+      "name": "Chá Gelado com Limonada (Chai)",
+      "category": "bebidas-com-cha",
+      "description": "Chá gelado com limonada, versão chai.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-bebidas-com-cha.jpg",
+      "lookalike": "É um chá gelado de chai (chá preto com especiarias) misturado com limonada. Refresca como um chá com limão, só que com um toque de canela e cravo.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 0,
+        "milk": false,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "chai-latte",
+      "name": "Chai Latte",
+      "category": "bebidas-com-cha",
+      "description": "Feito com leite vaporizado, concentrado de chai e água quente. Quente ou gelado.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/cat-bebidas-com-cha.jpg",
+      "lookalike": "É um chá preto com especiarias misturado com muito leite quente. Parece um café com leite, mas de chá com canela e cravo.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 0,
+        "milk": true,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "matcha-latte",
+      "name": "Matcha Latte",
+      "category": "bebidas-com-cha",
+      "description": "Matcha, leite e essência clássica, levemente adocicado.",
+      "prices": [
+        {
+          "size": "Tall",
+          "ml": 300,
+          "price": null
+        },
+        {
+          "size": "Grande",
+          "ml": 400,
+          "price": null
+        },
+        {
+          "size": "Venti",
+          "ml": 500,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [
+        "lactose"
+      ],
+      "image": "menu/matcha-latte.jpg",
+      "lookalike": "É um chá verde em pó (matcha) batido com leite e um pouco de açúcar. Parece um café com leite, só que verdinho e com sabor de chá.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 1,
+        "milk": true,
+        "iced": true,
+        "caffeine": true,
+        "hunger": 0
+      }
+    },
+    {
+      "id": "croissant",
+      "name": "Croissant",
+      "category": "salgados",
+      "description": "Croissant de manteiga com camadas macias e uma crosta superior marrom-dourada. Recheado nas opções: presunto e queijo, frango ou peito de peru e cream cheese.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": 17.9
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": null,
+      "lookalike": "É um pãozinho folhado e amanteigado, parecido com um pão doce, mas recheado com presunto e queijo. Parece um misto quente em formato de lua.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "pao-de-queijo",
+      "name": "Pão de Queijo",
+      "category": "salgados",
+      "description": "Receita original que leva apenas seis ingredientes naturais, rigorosamente selecionados, e muito mais queijo, produzido e curado especialmente para nosso pão de queijo. Tradicional ou multigrãos.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": 11.9
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": null,
+      "lookalike": "É o pão de queijo mineiro, quentinho, crocante por fora e macio por dentro. Combina com o café.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "minipao-de-queijo",
+      "name": "Minipão de Queijo",
+      "category": "salgados",
+      "description": "Nosso tradicional Pão de Queijo em pequenas porções para compartilhar. 10 unidades.",
+      "prices": [
+        {
+          "size": "10 unidades",
+          "ml": null,
+          "price": 22.9
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": null,
+      "lookalike": "São bolinhas pequenas de pão de queijo para dividir com a mesa. É o mesmo pão de queijo, só que em tamanho de petisco.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "torrada-petropolis",
+      "name": "Torrada Petrópolis",
+      "category": "salgados",
+      "description": "Preparada com uma fatia de pão artesanal tipo brioche levemente tostada com manteiga.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": 13.9
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": null,
+      "lookalike": "É uma fatia de pão macio tostada na manteiga. Parece pão na chapa, só que feito com pão mais macio.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 1
+      }
+    },
+    {
+      "id": "coxinha-frango-requeijao",
+      "name": "Coxinha de Frango com Requeijão",
+      "category": "salgados",
+      "description": "Coxinha com recheio de frango com requeijão cremoso e massa crocante.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": 16.9
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": null,
+      "lookalike": "É a coxinha de padaria, recheada com frango e requeijão cremoso. Crocante por fora e macia por dentro.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "minicoxinha-frango-requeijao",
+      "name": "Minicoxinha de Frango com Requeijão",
+      "category": "salgados",
+      "description": "Porção com 5 unidades de minicoxinha de frango desfiado e requeijão para compartilhar.",
+      "prices": [
+        {
+          "size": "5 unidades",
+          "ml": null,
+          "price": 21.9
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": null,
+      "lookalike": "São coxinhas pequenas de frango com requeijão, em porção para dividir. Parece aquelas coxinhas de festa.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "empada-palmito",
+      "name": "Empada de Palmito",
+      "category": "salgados",
+      "description": "Empada de palmito com azeitona verde.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": 16.9
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [],
+      "image": null,
+      "lookalike": "É uma empadinha com massa quebradiça, recheada com palmito e azeitona. A clássica empada de festa.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "empada-frango-requeijao",
+      "name": "Empada de Frango com Requeijão",
+      "category": "salgados",
+      "description": "Empada de frango com requeijão.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": 16.9
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [],
+      "image": null,
+      "lookalike": "É uma empadinha com massa que desmancha, recheada com frango e requeijão. Parece a empadinha de padaria.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "queijo-quente",
+      "name": "Queijo Quente",
+      "category": "sanduiches",
+      "description": "Pão de forma, mussarela, requeijão e manteiga.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [],
+      "image": null,
+      "lookalike": "É o queijo quente de lanchonete, com pão de forma tostado, queijo derretido e requeijão.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 3
+      }
+    },
+    {
+      "id": "misto-quente",
+      "name": "Misto Quente",
+      "category": "sanduiches",
+      "description": "Pão de forma, presunto, mussarela, requeijão e manteiga.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [],
+      "image": null,
+      "lookalike": "É o misto quente de padaria: pão de forma tostado com presunto e queijo derretido, com requeijão.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 3
+      }
+    },
+    {
+      "id": "croque-monsieur",
+      "name": "Croque-Monsieur",
+      "category": "sanduiches",
+      "description": "Sanduíche de presunto com queijo prato, molho bechamel e parmesão no pão de forma.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": null,
+      "lookalike": "É um misto quente chique, com molho branco cremoso e parmesão gratinado por cima. Parece um misto quente com molho de lasanha.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": true,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 3
+      }
+    },
+    {
+      "id": "croissant-roll",
+      "name": "Croissant Roll",
+      "category": "sanduiches",
+      "description": "Ovos mexidos acompanhados de fatias deliciosas de bacon e queijo, servidos em um roll de croissant.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [],
+      "image": null,
+      "lookalike": "É um pão folhado enrolado, recheado de ovo mexido, bacon e queijo. Parece um pão com ovo e bacon, mas bem mais amanteigado.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 3
+      }
+    },
+    {
+      "id": "sanduiche-proteico-keto",
+      "name": "Sanduíche Proteico Keto",
+      "category": "sanduiches",
+      "description": "Pedaços de frango levemente temperados acompanhados de fatias de presunto e queijo e servidos em uma massa proteica à base de ovos (26 g de proteína).",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo",
+        "proteína"
+      ],
+      "allergens": [],
+      "image": null,
+      "lookalike": "É um sanduíche de frango, presunto e queijo, em uma massa feita à base de ovos, em vez de pão. Parece um sanduíche natural, só que sem pão.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 3
+      }
+    },
+    {
+      "id": "ciabatta-frango-pesto",
+      "name": "Ciabatta de Frango com Pesto",
+      "category": "sanduiches",
+      "description": "Pedaços de frango levemente temperados, fatias de mussarela e molho pesto servidos em um pão ciabatta macio por dentro e crocante por fora.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [],
+      "image": null,
+      "lookalike": "É um sanduíche de frango desfiado com queijo e pesto, em um pão crocante por fora. Parece um sanduíche natural quente, com molho de manjericão.",
+      "tags": {
+        "sweet": 0,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 3
+      }
+    },
+    {
+      "id": "ciabatta-frango-mostarda",
+      "name": "Ciabatta de Frango com Mostarda",
+      "category": "sanduiches",
+      "description": "Pedaços de frango levemente temperados, fatias de mussarela e mostarda com toque de mel servidos em um pão ciabatta macio por dentro e crocante por fora.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [],
+      "image": null,
+      "lookalike": "É um sanduíche de frango com queijo e molho de mostarda e mel, no pão ciabatta crocante. Parece um lanche de frango com molho agridoce.",
+      "tags": {
+        "sweet": 1,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 3
+      }
+    },
+    {
+      "id": "bolo-red-velvet",
+      "name": "Bolo Red Velvet",
+      "category": "doces",
+      "description": "Bolo com uma massa avermelhada à base de cacau, recheado com um saboroso cream cheese doce em camadas.",
+      "prices": [
+        {
+          "size": "Fatia",
+          "ml": null,
+          "price": null
+        },
+        {
+          "size": "Inteiro",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-doces.jpg",
+      "lookalike": "É um bolo vermelhão de cacau com camadas de creme branco de cream cheese. Parece um bolo de aniversário bem fofo, só que vermelho.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "brownie",
+      "name": "Brownie",
+      "category": "doces",
+      "description": "Brownie com uma deliciosa massa de chocolate meio amargo com café Starbucks, finalizado com lascas de chocolate ao leite.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-doces.jpg",
+      "lookalike": "É aquele bolinho de chocolate denso e úmido, parecido com um brigadeiro assado. Vem com lascas de chocolate por cima.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 1,
+        "milk": false,
+        "iced": false,
+        "caffeine": true,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "cinnamon-roll",
+      "name": "Cinnamon Roll",
+      "category": "doces",
+      "description": "Roll de massa macia e amanteigada, recheada com canela e finalizada com um delicioso glaceado de açúcar.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [],
+      "image": "menu/cat-doces.jpg",
+      "lookalike": "É um pão doce enrolado em espiral, com canela e cobertura de açúcar. Parece um rocambole de pão doce.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "muffin-blueberry",
+      "name": "Muffin de Blueberry",
+      "category": "doces",
+      "description": "Muffin macio com mirtilos doces e suculentos e um toque de limão, finalizado com uma cobertura crocante de açúcar.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-doces.jpg",
+      "lookalike": "É um bolinho individual com frutinhas azedinhas (mirtilo). Parece um bolinho de fubá, só que com fruta e crosta de açúcar.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "muffin-chocolate",
+      "name": "Muffin de Chocolate",
+      "category": "doces",
+      "description": "Muffin com uma massa supermacia de chocolate e deliciosas gotas de chocolate ao leite.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-doces.jpg",
+      "lookalike": "É um bolinho de chocolate com gotas de chocolate dentro, parecido com um bolo de caneca de chocolate.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "cuca-de-maca",
+      "name": "Cuca de Maçã",
+      "category": "doces",
+      "description": "A clássica massa de bolo doce e macio coberta com maçãs e uma farofa crocante.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [],
+      "image": "menu/cat-doces.jpg",
+      "lookalike": "É um bolo macio com maçã e uma farofinha doce por cima. Parece um bolo de maçã com cobertura de farofa de açúcar.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "donut-chocoberry",
+      "name": "Ring Donut Chocoberry",
+      "category": "doces",
+      "description": "Donut tradicional recheado com uma deliciosa geleia de morango e finalizado com uma cobertura de chocolate branco.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-doces.jpg",
+      "lookalike": "É uma rosquinha frita com geleia de morango dentro e cobertura de chocolate branco. É tipo um sonho com geleia de morango.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "donut-chocolate",
+      "name": "Ring Donut Chocolate",
+      "category": "doces",
+      "description": "Donut tradicional recheado com chocolate ao leite e finalizado com uma cobertura de chocolate.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-doces.jpg",
+      "lookalike": "É uma rosquinha frita recheada e coberta de chocolate. Parece um sonho de chocolate.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "donut-doce-de-leite",
+      "name": "Ring Donut Doce de Leite",
+      "category": "doces",
+      "description": "Donut tradicional recheado com doce de leite e finalizado com uma cobertura de chocolate branco.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-doces.jpg",
+      "lookalike": "É uma rosquinha frita recheada com doce de leite e coberta com chocolate branco. Lembra um sonho de doce de leite.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "donut-cookies-n-cream",
+      "name": "Ring Donut Cookies 'n' Cream",
+      "category": "doces",
+      "description": "Donut tradicional recheado com creme e finalizado com chocolate branco e cobertura de cookies.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [],
+      "allergens": [],
+      "image": "menu/cat-doces.jpg",
+      "lookalike": "É uma rosquinha frita recheada de creme, com chocolate branco e farelo de biscoito de chocolate. Parece um sonho de creme com pedacinhos de bolacha.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "bolo-de-limao",
+      "name": "Bolo de Limão",
+      "category": "doces",
+      "description": "Fatia de bolo de limão, estilo loaf cake, com cobertura leve de limão.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [],
+      "image": "menu/cat-doces.jpg",
+      "lookalike": "É uma fatia de bolo de limão com cobertura de limão. Parece um bolo de limão de vó, macio e azedinho.",
+      "tags": {
+        "sweet": 2,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 2
+      }
+    },
+    {
+      "id": "cookie-de-baunilha",
+      "name": "Cookie de Baunilha",
+      "category": "doces",
+      "description": "Cookie de baunilha com gotas de chocolate.",
+      "prices": [
+        {
+          "size": "Unidade",
+          "ml": null,
+          "price": null
+        }
+      ],
+      "badges": [
+        "novo"
+      ],
+      "allergens": [],
+      "image": "menu/cat-doces.jpg",
+      "lookalike": "É um biscoitão macio de baunilha com gotas de chocolate. Parece um cookie de padaria.",
+      "tags": {
+        "sweet": 3,
+        "bitter": 0,
+        "milk": false,
+        "iced": false,
+        "caffeine": false,
+        "hunger": 1
+      }
+    }
+  ],
+  "extras": [
+    {
+      "name": "Cobertura: chocolate, chantilly ou caramelo",
+      "price": null
+    },
+    {
+      "name": "Essência sem açúcar: baunilha",
+      "price": null
+    },
+    {
+      "name": "Essência: menta, avelã, baunilha, canela ou caramelo",
+      "price": null
+    },
+    {
+      "name": "Dose adicional de espresso ou Refreshers",
+      "price": null
+    },
+    {
+      "name": "Leite integral",
+      "price": null
+    },
+    {
+      "name": "Leite zero lactose",
+      "price": null
+    },
+    {
+      "name": "Leite desnatado",
+      "price": null
+    },
+    {
+      "name": "Bebida vegetal: leite de amêndoas",
+      "price": null
+    },
+    {
+      "name": "Bebida vegetal: leite de coco com caju",
+      "price": null
+    },
+    {
+      "name": "Bebida vegetal: leite de aveia",
+      "price": null
+    },
+    {
+      "name": "Cold Foam (espuma de leite desnatado, verificar disponibilidade)",
+      "price": 5.9
+    },
+    {
+      "name": "Limonada nos Refreshers (peça ao barista)",
+      "price": null
+    }
+  ]
+}
