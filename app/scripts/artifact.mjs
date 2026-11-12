@@ -8,7 +8,7 @@ const html = readFileSync(new URL('index.html', dist), 'utf8')
 
 const css = [...html.matchAll(/<link rel="stylesheet"[^>]*href="\.\/(assets\/[^"]+\.css)"[^>]*>/g)]
 const js = [...html.matchAll(/<script type="module"[^>]*src="\.\/(assets\/[^"]+\.js)"[^>]*><\/script>/g)]
-const fonts = [...html.matchAll(/<link [^>]*fonts\.(googleapis|gstatic)[^>]*>/g)].map((m) => m[0])
+const fonts = [...html.matchAll(/<link\s[^>]*fonts\.(googleapis|gstatic)[^>]*>/gs)].map((m) => m[0].replace(/\s+/g, ' '))
 
 const read = (p) => readFileSync(new URL(p, dist), 'utf8')
 const jsCode = js.map((m) => read(m[1])).join('\n').replaceAll('</script', '<\\/script')
