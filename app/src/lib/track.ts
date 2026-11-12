@@ -1,0 +1,34 @@
+/**
+ * Registro de eventos de interesse do cliente.
+ * No protótipo fica no localStorage; é a base do painel do dono
+ * (o que foi visto, por quanto tempo, o que foi favoritado e sugerido).
+ */
+export type TrackEvent =
+  | { type: 'view'; itemId: string; ms: number }
+  | { type: 'open_details'; itemId: string }
+  | { type: 'favorite'; itemId: string; on: boolean }
+  | { type: 'category'; categoryId: string }
+  | { type: 'quiz_open' }
+  | { type: 'quiz_result'; answers: Record<string, string | string[]>; itemIds: string[] }
+  | { type: 'view_mode'; mode: 'feed' | 'grid' }
+
+const KEY = 'cm.events'
+const SESSION = Math.random().toString(36).slice(2, 10)
+
+export function track(e: TrackEvent) {
+  try {
+    const all = JSON.parse(localStorage.getItem(KEY) ?? '[]')
+    all.push({ ...e, at: Date.now(), session: SESSION })
+    localStorage.setItem(KEY, JSON.stringify(all.slice(-5000)))
+  } catch {
+    /* sem storage: segue sem registrar */
+  }
+}
+
+export function readEvents(): (TrackEvent & { at: number; session: string })[] {
+  try {
+    return JSON.parse(localStorage.getItem(KEY) ?? '[]')
+  } catch {
+    return []
+  }
+}
