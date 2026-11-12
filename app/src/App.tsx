@@ -134,7 +134,12 @@ export default function App() {
 
       <Sheet open={panel?.kind === 'detail'} onClose={() => setPanel(null)} title="Detalhes">
         {panel?.kind === 'detail' && (
-          <DetailSheet item={panel.item} fav={favorites.has(panel.item.id)} onToggleFavorite={toggleFavorite} />
+          <DetailSheet
+            item={panel.item}
+            fav={favorites.has(panel.item.id)}
+            onToggleFavorite={toggleFavorite}
+            storyNote={menu.cafe.storyNote}
+          />
         )}
       </Sheet>
       <Sheet open={panel?.kind === 'quiz'} onClose={() => setPanel(null)} title="Me ajuda a escolher">

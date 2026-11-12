@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { MenuItem } from '../types'
-import { recommend, type Avoid, type QuizAnswers, type Suggestion, type Taste, type Want } from '../lib/recommend'
+import type { Avoid, QuizAnswers, Taste, Want } from '../lib/recommend'
+import { suggest, type PickResult } from '../lib/ai'
 import { fromPrice } from '../lib/format'
 import { track } from '../lib/track'
 
@@ -32,12 +33,16 @@ export function Quiz({ items, onPick }: Props) {
   const [want, setWant] = useState<Want | null>(null)
   const [taste, setTaste] = useState<Taste | null>(null)
   const [avoid, setAvoid] = useState<Avoid[]>([])
-  const [result, setResult] = useState<Suggestion[] | null>(null)
+  const [text, setText] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState<PickResult | null>(null)
 
-  const finish = (a: QuizAnswers) => {
-    const r = recommend(items, a)
+  const finish = async (a: QuizAnswers) => {
+    setLoading(true)
+    const r = await suggest(items, a, text)
+    setLoading(false)
     setResult(r)
-    track({ type: 'quiz_result', answers: { ...a }, itemIds: r.map((s) => s.item.id) })
+    track({ type: 'quiz_result', answers: { ...a, text, source: r.source }, itemIds: r.picks.map((p) => p.item.id) })
   }
 
   const restart = () => {
@@ -45,25 +50,37 @@ export function Quiz({ items, onPick }: Props) {
     setWant(null)
     setTaste(null)
     setAvoid([])
+    setText('')
     setResult(null)
+  }
+
+  if (loading) {
+    return (
+      <div className="quiz quiz--loading">
+        <div className="thinking" aria-hidden><span /><span /><span /></div>
+        <h3 className="quiz__title">Pensando no seu pedido…</h3>
+        <p className="quiz__note">A IA está olhando o cardápio inteiro por você.</p>
+      </div>
+    )
   }
 
   if (result) {
     return (
       <div className="quiz">
         <h3 className="quiz__title">Achamos a sua cara</h3>
-        {!result.length && <p className="quiz__empty">Nada bateu com tudo isso. Tenta tirar uma restrição?</p>}
+        <span className={`source source--${result.source}`}>
+          {result.source === 'ia' ? 'Sugerido pela IA' : 'Sugestão rápida (IA indisponível aqui)'}
+        </span>
+        {!result.picks.length && <p className="quiz__empty">Nada bateu com tudo isso. Tenta tirar uma restrição?</p>}
         <div className="sugs">
-          {result.map(({ item, reasons }, i) => (
+          {result.picks.map(({ item, why }, i) => (
             <button key={item.id} className="sug" onClick={() => onPick(item)}>
               <div className="sug__img">{item.image && <img src={item.image} alt="" />}</div>
               <div className="sug__txt">
                 <span className="sug__rank">{i === 0 ? 'Melhor escolha' : `Opção ${i + 1}`}</span>
                 <strong>{item.name}</strong>
-                <span className="sug__look">{item.lookalike}</span>
-                <span className="sug__meta">
-                  {[fromPrice(item), ...reasons].filter(Boolean).join(' · ')}
-                </span>
+                <span className="sug__look">{why}</span>
+                {fromPrice(item) && <span className="sug__meta">{fromPrice(item)}</span>}
               </div>
             </button>
           ))}
@@ -145,7 +162,18 @@ export function Quiz({ items, onPick }: Props) {
               )
             })}
           </div>
-          <p className="quiz__note">Sua resposta não fica salva.</p>
+          <label className="free" htmlFor="quiz-text">
+            <span className="label">Quer contar mais? (opcional)</span>
+            <textarea
+              id="quiz-text"
+              rows={2}
+              maxLength={200}
+              placeholder="Ex.: algo leve, não muito doce, para acompanhar um pão de queijo"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+          </label>
+          <p className="quiz__note">Suas respostas não ficam salvas.</p>
           <button className="cta" onClick={() => finish({ want: want!, taste: taste!, avoid })}>
             {avoid.length ? 'Ver sugestões' : 'Nada, ver sugestões'}
           </button>

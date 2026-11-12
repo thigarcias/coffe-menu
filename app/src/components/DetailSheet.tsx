@@ -6,20 +6,30 @@ interface Props {
   item: MenuItem
   fav: boolean
   onToggleFavorite: (id: string) => void
+  storyNote?: string
 }
 
-export function DetailSheet({ item, fav, onToggleFavorite }: Props) {
+export function DetailSheet({ item, fav, onToggleFavorite, storyNote }: Props) {
   const prices = item.prices.filter((p) => p.price != null)
   return (
     <div className="detail">
       <h3 className="detail__name">{item.name}</h3>
 
       <div className="lookalike">
-        <span className="lookalike__label">Com o que se parece</span>
+        <span className="label">Com o que se parece</span>
         <p>{item.lookalike}</p>
       </div>
 
-      <p className="detail__desc">{item.description}</p>
+      {!!item.ingredients?.length && (
+        <section className="detail__sec">
+          <span className="label">Ingredientes</span>
+          <ul className="ingredients">
+            {item.ingredients.map((ing) => (
+              <li key={ing}>{ing}</li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {!!prices.length && (
         <div className="sizes">
@@ -33,8 +43,14 @@ export function DetailSheet({ item, fav, onToggleFavorite }: Props) {
         </div>
       )}
 
-      {!!item.allergens?.length && (
-        <p className="allergens">Contém: {item.allergens.join(', ')}</p>
+      {!!item.allergens?.length && <p className="allergens">Contém: {item.allergens.join(', ')}</p>}
+
+      {item.story && (
+        <section className="detail__sec story">
+          <span className="label">De onde vem</span>
+          <p>{item.story}</p>
+          {storyNote && <small className="story__note">{storyNote}</small>}
+        </section>
       )}
 
       <button className={`cta ${fav ? 'cta--ghost' : ''}`} onClick={() => onToggleFavorite(item.id)}>

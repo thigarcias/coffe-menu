@@ -9,7 +9,7 @@ export type TrackEvent =
   | { type: 'favorite'; itemId: string; on: boolean }
   | { type: 'category'; categoryId: string }
   | { type: 'quiz_open' }
-  | { type: 'quiz_result'; answers: Record<string, string | string[]>; itemIds: string[] }
+  | { type: 'quiz_result'; answers: Record<string, string | string[] | undefined>; itemIds: string[] }
   | { type: 'view_mode'; mode: 'feed' | 'grid' }
 
 const KEY = 'cm.events'

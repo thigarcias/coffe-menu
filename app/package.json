@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "artifact": "vite build && node scripts/artifact.mjs"
+    "artifact": "vite build && node scripts/artifact.mjs",
+    "start": "node server/index.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",

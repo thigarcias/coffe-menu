@@ -23,6 +23,8 @@ export interface MenuItem {
   allergens?: string[]
   image: string | null
   lookalike: string
+  ingredients?: string[]
+  story?: string
   tags: ItemTags
 }
 
@@ -32,7 +34,7 @@ export interface Category {
 }
 
 export interface Menu {
-  cafe: { name: string; source?: string }
+  cafe: { name: string; source?: string; storyNote?: string }
   categories: Category[]
   items: MenuItem[]
   extras?: { name: string; price: number | null }[]

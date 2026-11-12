@@ -1,7 +1,8 @@
 {
   "cafe": {
     "name": "Starbucks (referência)",
-    "source": "Cardápio oficial Starbucks Brasil, PDF, ofertas a partir de 30/06/2026"
+    "source": "Cardápio oficial Starbucks Brasil, PDF, ofertas a partir de 30/06/2026",
+    "storyNote": "Histórias baseadas em conhecimento geral sobre as bebidas e ingredientes; não são informação oficial da Starbucks."
   },
   "categories": [
     {
@@ -108,7 +109,14 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Matcha",
+        "Leite",
+        "Proteína",
+        "Gelo"
+      ],
+      "story": "O matcha vem do Japão, onde folhas de chá cultivadas à sombra são moídas em pó fino e fazem parte da cerimônia do chá há séculos. Batido com leite e gelo, o pó verde ganhou fama mundo afora como bebida cremosa."
     },
     {
       "id": "baunilha-sem-acucar-latte-proteico",
@@ -147,7 +155,14 @@
         "iced": false,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite vaporizado",
+        "Xarope de baunilha sem açúcar",
+        "Proteína"
+      ],
+      "story": "A baunilha é uma orquídea nativa do México, e os povos totonacas já a usavam muito antes dos europeus. Hoje a maior parte vem de Madagascar. Aqui ela perfuma o latte sem açúcar, num estilo de bebida pensado para quem treina."
     },
     {
       "id": "morango-matcha-strate-frappuccino",
@@ -182,7 +197,15 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Morango",
+        "Matcha",
+        "Leite",
+        "Gelo",
+        "Chantilly"
+      ],
+      "story": "O morango com matcha virou combinação queridinha em cafés japoneses: o doce da fruta suaviza o amargor do chá verde. Em camadas, a bebida mostra os dois mundos lado a lado, vermelho embaixo e verde por cima, antes de você misturar."
     },
     {
       "id": "caramelo-salgado-mocha-strate-frappuccino",
@@ -217,7 +240,16 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Café",
+        "Chocolate",
+        "Leite",
+        "Gelo",
+        "Calda de caramelo",
+        "Sal"
+      ],
+      "story": "O caramelo salgado é uma invenção bretã: na Bretanha, na França, onde o sal era barato, a manteiga salgada entrou no caramelo e ficou famosa. Misturado ao mocha, ele equilibra o chocolate com um contraste doce e salgado."
     },
     {
       "id": "brown-sugar-strate-frappuccino",
@@ -252,7 +284,15 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Café",
+        "Leite",
+        "Açúcar mascavo",
+        "Gelo",
+        "Canela"
+      ],
+      "story": "O açúcar mascavo é o açúcar da cana pouco refinado, com melaço e sabor que lembra rapadura, um velho conhecido da cozinha brasileira. A canela, vinda de uma casca de árvore do Sri Lanka, fecha a camada com perfume de especiaria."
     },
     {
       "id": "ube-coco-frappuccino",
@@ -289,7 +329,15 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Ube",
+        "Leite de coco",
+        "Leite",
+        "Gelo",
+        "Chantilly"
+      ],
+      "story": "O ube é um inhame roxo das Filipinas, base de doces como o halaya e de sobremesas de cor violeta intensa. Já o coco é símbolo dos trópicos. Juntos, formam uma dupla cremosa que une a doçaria filipina ao clima praiano."
     },
     {
       "id": "ube-coco-latte",
@@ -326,7 +374,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Ube",
+        "Leite de coco",
+        "Leite vaporizado"
+      ],
+      "story": "Nas Filipinas, o ube roxo aparece em sorvetes, bolos e pães, e o coco está em quase toda receita doce da região. O latte junta os dois numa bebida cremosa de cor lilás, que chama atenção antes mesmo do primeiro gole."
     },
     {
       "id": "morango-frappuccino-cold-foam-proteico",
@@ -363,7 +417,15 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Morango",
+        "Leite",
+        "Gelo",
+        "Chantilly",
+        "Cold Foam proteico"
+      ],
+      "story": "A técnica do cold foam, uma espuma feita de leite frio, nasceu no mundo do café gelado como alternativa ao chantilly. A espuma leve flutua sobre a bebida e vai se misturando conforme você bebe, junto com o sabor de morango."
     },
     {
       "id": "mocha-frappuccino-cold-foam-proteico",
@@ -400,7 +462,15 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Café",
+        "Chocolate",
+        "Leite",
+        "Gelo",
+        "Cold Foam proteico"
+      ],
+      "story": "O nome mocha vem do porto de Mocha, no Iêmen, por onde passou muito café durante séculos. Com o tempo, o termo passou a indicar café com chocolate. A espuma gelada no topo é um toque moderno sobre essa receita antiga."
     },
     {
       "id": "matcha-latte-cold-foam-proteico",
@@ -437,7 +507,14 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Matcha",
+        "Leite",
+        "Gelo",
+        "Cold Foam proteico"
+      ],
+      "story": "No Japão, o matcha tradicional é batido com água quente e um batedor de bambu, o chasen, até formar uma leve espuma. Esta versão troca o ritual por uma espuma de leite gelada, que cobre o chá verde e suaviza o amargor."
     },
     {
       "id": "baunilha-latte-cold-foam-proteico",
@@ -474,7 +551,15 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite",
+        "Xarope de baunilha",
+        "Gelo",
+        "Cold Foam proteico"
+      ],
+      "story": "O latte nasceu na Itália, onde caffè e latte significa simplesmente café e leite, uma mistura tradicional do café da manhã em casa. A versão com cold foam traz o clima das cafeterias americanas para esse clássico italiano."
     },
     {
       "id": "cold-brew-chocolate-cold-foam",
@@ -511,7 +596,15 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Cold Brew",
+        "Gelo",
+        "Leite",
+        "Chocolate",
+        "Cold Foam proteico"
+      ],
+      "story": "O cold brew é feito por extração a frio: o café moído fica de molho em água fria por muitas horas, o que dá uma bebida mais suave e menos ácida. A espuma de chocolate faz a cobertura, como um toque de sobremesa."
     },
     {
       "id": "espresso",
@@ -541,7 +634,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Grão Brasil Blend ou Espresso Roast",
+        "Água filtrada",
+        "Crema"
+      ],
+      "story": "Espresso quer dizer rápido, ou feito na hora, em italiano. A máquina que usa pressão para extrair o café em segundos ganhou forma na Itália do início do século XX e deu origem a quase todas as bebidas de café das cafeterias."
     },
     {
       "id": "espresso-panna",
@@ -571,7 +670,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Chantilly",
+        "Baunilha"
+      ],
+      "story": "Panna é nata ou creme em italiano, e con panna indica café coberto por creme batido. A versão vienense, o Einspänner, é parente: café forte com chantilly. O frio do creme contra o espresso quente é todo o encanto."
     },
     {
       "id": "espresso-collection-avela",
@@ -596,7 +701,15 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite",
+        "Essência de avelã",
+        "Chantilly",
+        "Calda de chocolate"
+      ],
+      "story": "A avelã é a estrela do Piemonte, na Itália, onde nasceu o gianduia. Conta-se que, no início do século XIX, com o cacau escasso, confeiteiros de Turim misturaram avelã moída ao chocolate. Daí a dupla avelã e chocolate."
     },
     {
       "id": "espresso-collection-brigadeiro",
@@ -621,7 +734,14 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite",
+        "Chantilly de brigadeiro",
+        "Chocolate granulado"
+      ],
+      "story": "Conta-se que o brigadeiro surgiu nos anos 1940, no Rio de Janeiro, com o nome do brigadeiro Eduardo Gomes, candidato à presidência. Sem leite fresco na época, o doce usava leite condensado. Virou o doce das festas brasileiras."
     },
     {
       "id": "media",
@@ -660,7 +780,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Café coado Brasil Blend",
+        "Leite quente",
+        "Filtro de papel"
+      ],
+      "story": "A média é figura carimbada das padarias brasileiras: metade café, metade leite, quase sempre com pão na chapa. É o café com leite do dia a dia, mais cheio de leite do que o pingado, ideal para quem prefere um gole mais suave."
     },
     {
       "id": "pingado",
@@ -694,7 +820,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Café coado Brasil Blend",
+        "Leite quente",
+        "Filtro de papel"
+      ],
+      "story": "O nome é literal: é o café com uns pingos de leite. Nas padarias brasileiras, pedir um pingado é pedir o café de sempre, só que com um pouquinho de leite para tirar o amargo."
     },
     {
       "id": "cafezinho-coado",
@@ -729,7 +861,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Café moído Brasil Blend",
+        "Água quente",
+        "Filtro de papel"
+      ],
+      "story": "O coador de pano, depois substituído pelo filtro de papel, é um ritual brasileiro. O filtro de papel foi inventado em 1908 pela alemã Melitta Bentz, que furou uma lata e usou papel de caderno para evitar borra na xícara."
     },
     {
       "id": "cafe-americano",
@@ -764,7 +902,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Água quente",
+        "Crema"
+      ],
+      "story": "Conta-se que o americano surgiu quando soldados dos EUA na Itália, na Segunda Guerra, acharam o espresso forte demais e puseram água quente. É a versão popular, e o nome pegou."
     },
     {
       "id": "cafe-em-prensa-francesa",
@@ -794,7 +938,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Café moído grosso",
+        "Água quente",
+        "Óleos naturais do grão"
+      ],
+      "story": "A prensa francesa, com êmbolo e filtro de metal, tomou a forma atual em meados do século XX, a partir de patentes francesas e italianas. Como o café fica em infusão, sai encorpado, com os óleos que o filtro de papel costuma reter."
     },
     {
       "id": "cafe-mocha",
@@ -831,7 +981,14 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Calda de chocolate",
+        "Leite vaporizado",
+        "Chantilly"
+      ],
+      "story": "O nome vem do porto de Mocha, no Iêmen, que foi um grande centro de comércio de café entre os séculos XV e XVIII. O grão de lá tinha notas achocolatadas, e a bebida ganhou chocolate de verdade com o tempo."
     },
     {
       "id": "flat-white",
@@ -868,7 +1025,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Ristretto",
+        "Leite vaporizado",
+        "Microespuma"
+      ],
+      "story": "O flat white é reivindicado por Austrália e Nova Zelândia, que disputam a autoria desde os anos 1980. O nome vem da superfície lisa, sem a montanha de espuma do cappuccino. O ristretto é um espresso mais curto e intenso."
     },
     {
       "id": "baunilha-latte",
@@ -905,7 +1068,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite vaporizado",
+        "Essência de baunilha"
+      ],
+      "story": "A baunilha foi levada do México para a Europa pelos espanhóis no século XVI. Como a orquídea só frutifica com polinização manual, tornou-se uma das especiarias mais caras do mundo. Um toque dela já vira conforto no latte."
     },
     {
       "id": "cafe-latte",
@@ -942,7 +1111,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite vaporizado",
+        "Espuma de leite"
+      ],
+      "story": "Na Itália, pedir só latte rende um copo de leite. O café com leite da manhã é o caffè latte, bebido em casa e quase nunca no bar depois do almoço. A fama internacional veio com as cafeterias da costa oeste dos Estados Unidos."
     },
     {
       "id": "brigadeiro-latte",
@@ -979,7 +1154,15 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite vaporizado",
+        "Calda de brigadeiro",
+        "Chantilly de brigadeiro",
+        "Chocolate granulado"
+      ],
+      "story": "O brigadeiro é brasileiro até a alma: leite condensado, chocolate e manteiga. O granulado, aquelas bolinhas por cima, fez dele o doce de todo aniversário do país. Aqui ele vira calda dentro de um latte."
     },
     {
       "id": "doce-de-leite-latte",
@@ -1016,7 +1199,15 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite vaporizado",
+        "Calda de doce de leite",
+        "Chantilly",
+        "Calda de caramelo"
+      ],
+      "story": "O doce de leite é paixão sul-americana, com disputa de origem entre Argentina, Uruguai e Brasil. Conta-se que foi criado por acaso, quando um leite com açúcar esquecido no fogo virou creme. Em Minas, é doce de casa."
     },
     {
       "id": "latte-macchiato",
@@ -1053,7 +1244,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Leite vaporizado",
+        "Espuma de leite",
+        "Espresso"
+      ],
+      "story": "Macchiato significa manchado em italiano. No latte macchiato, é o leite que é manchado pelo café, que entra por cima e forma camadas. No espresso macchiato, é o contrário: o café é manchado por uma gota de leite."
     },
     {
       "id": "caramelo-macchiato",
@@ -1090,7 +1287,14 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite vaporizado",
+        "Xarope de baunilha",
+        "Calda de caramelo"
+      ],
+      "story": "Macchiato quer dizer manchado em italiano, referência à marca que o café deixa no leite. Aqui as camadas se formam com a baunilha embaixo e o caramelo por cima, uma criação de cafeteria mais americana do que italiana."
     },
     {
       "id": "cappuccino-tradicional",
@@ -1127,7 +1331,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite vaporizado",
+        "Espuma de leite"
+      ],
+      "story": "Conta-se que o nome vem dos frades capuchinhos, cujo hábito marrom lembra a cor da bebida; a versão mais aceita liga o nome ao capuz, o capuccio. A espuma de leite de hoje se firmou na Itália no século XX."
     },
     {
       "id": "cappuccino-brigadeiro",
@@ -1164,7 +1374,14 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite vaporizado",
+        "Calda de brigadeiro",
+        "Granulado de chocolate belga ao leite"
+      ],
+      "story": "O chocolate belga é famoso pela qualidade do cacau e pelo cuidado na produção. Em forma de granulado sobre o cappuccino, lembra o doce de festa brasileiro e dá uma crocância na espuma."
     },
     {
       "id": "cappuccino-canela",
@@ -1201,7 +1418,14 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite vaporizado",
+        "Xarope de canela",
+        "Canela em pó"
+      ],
+      "story": "A canela vem da casca de uma árvore nativa do Sri Lanka e já foi mais valiosa que ouro na Europa medieval. Hoje é o toque tradicional de cima do cappuccino, que aquece a bebida só pelo aroma."
     },
     {
       "id": "cappuccino-chocolate",
@@ -1238,7 +1462,15 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Calda de chocolate",
+        "Espresso",
+        "Leite vaporizado",
+        "Cobertura de chocolate",
+        "Chocolate em pó"
+      ],
+      "story": "O cacau é nativo da América: maias e astecas o bebiam amargo, às vezes com pimenta. Só na Europa o chocolate virou doce. A bebida junta os dois mundos, café italiano e cacau americano."
     },
     {
       "id": "cappuccino-doce-de-leite",
@@ -1275,7 +1507,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite vaporizado",
+        "Calda de doce de leite"
+      ],
+      "story": "O doce de leite tem sotaque diferente em cada lugar: dulce de leche no Rio da Prata, doce de leite em pasta em Minas, cajeta no México. Cada um é versão do mesmo encontro de leite e açúcar cozidos devagar."
     },
     {
       "id": "refresher",
@@ -1310,7 +1548,14 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Extrato de café verde",
+        "Suco de fruta",
+        "Pedaços de fruta",
+        "Gelo"
+      ],
+      "story": "Bebidas geladas com fruta e um toque de cafeína vinda do café verde, o grão antes de ser torrado, ganharam espaço nos verões do Hemisfério Norte. O café verde é o mesmo grão, só que sem torra, por isso quase não tem gosto de café."
     },
     {
       "id": "pink-dragon-violet-drink",
@@ -1347,7 +1592,14 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Refresher",
+        "Leite de coco",
+        "Leite de castanha-de-caju",
+        "Gelo"
+      ],
+      "story": "A pitaya, ou fruta-do-dragão, é um cacto nativo das Américas Central e do Sul e hoje é cultivada no Vietnã e em outros países asiáticos. A cor rosa intensa e as sementinhas pretas explicam o nome. O leite de coco dá o toque tropical."
     },
     {
       "id": "chocolate-classico",
@@ -1384,7 +1636,15 @@
         "iced": false,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Calda de chocolate",
+        "Xarope de baunilha",
+        "Leite vaporizado",
+        "Chantilly",
+        "Cobertura de chocolate"
+      ],
+      "story": "Entre os maias e astecas, o chocolate era uma bebida amarga, espumosa e picante, servida em cerimônias. Foi na Europa, com açúcar e leite, que ele virou a bebida doce e cremosa que conhecemos, bem diferente da original."
     },
     {
       "id": "chocolate-branco",
@@ -1421,7 +1681,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Calda de chocolate branco",
+        "Leite vaporizado",
+        "Chantilly"
+      ],
+      "story": "O chocolate branco leva só manteiga de cacau, açúcar e leite, sem cacau em pó. Conta-se que a Nestlé criou a primeira receita na Suíça, nos anos 1930, a versão mais repetida sobre sua origem."
     },
     {
       "id": "cafe-americano-gelado",
@@ -1456,7 +1722,13 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Água",
+        "Gelo"
+      ],
+      "story": "O café gelado tem história própria: há registros de café frio no Mediterrâneo e na Argélia do século XIX. O americano gelado é a versão mais simples, só espresso e água sobre gelo, leve e refrescante."
     },
     {
       "id": "cafe-latte-gelado",
@@ -1493,7 +1765,13 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Leite frio",
+        "Gelo"
+      ],
+      "story": "Na Itália, o caffè freddo é tradição de verão, e há bebidas geladas de café típicas do sul do país. O latte gelado leva a ideia para o café com leite: combina em qualquer temperatura."
     },
     {
       "id": "caramelo-macchiato-gelado",
@@ -1530,7 +1808,15 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Leite frio",
+        "Xarope de baunilha",
+        "Espresso",
+        "Calda de caramelo",
+        "Gelo"
+      ],
+      "story": "O caramelo nasceu de açúcar derretido até dourar, técnica que se espalhou pela Europa e pela Ásia. Em camadas sobre o leite gelado, o espresso escorre devagar e mancha, como o nome macchiato, que significa manchado em italiano, indica."
     },
     {
       "id": "doce-de-leite-latte-gelado",
@@ -1567,7 +1853,16 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Leite frio",
+        "Espresso",
+        "Calda de doce de leite",
+        "Chantilly",
+        "Calda de caramelo",
+        "Gelo"
+      ],
+      "story": "O doce de leite é presença forte na cozinha do Brasil, da Argentina e do Uruguai. O alfajor, a pamonha doce e a sobremesa mineira de colher já o usam há gerações. Gelado, vira uma bebida de lanche de tarde."
     },
     {
       "id": "cafe-mocha-gelado",
@@ -1604,7 +1899,15 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Calda de chocolate",
+        "Espresso",
+        "Leite frio",
+        "Chantilly",
+        "Gelo"
+      ],
+      "story": "O mocha, café com chocolate, ganha no gelado cara de sorveteria. Lembra o affogato italiano, em que sorvete é regado com espresso quente: a mesma fusão de doce e amargo, só que em copo."
     },
     {
       "id": "latte-macchiato-gelado",
@@ -1641,7 +1944,13 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Leite frio",
+        "Espresso",
+        "Gelo"
+      ],
+      "story": "O latte macchiato nasceu para mostrar camadas: leite embaixo, café por cima, formando um degradê. No copo transparente com gelo, o efeito visual fica ainda mais bonito, e você decide quando misturar."
     },
     {
       "id": "shaken-espresso-gelado",
@@ -1678,7 +1987,14 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Espresso",
+        "Xarope clássico",
+        "Leite",
+        "Gelo"
+      ],
+      "story": "Agitar o café na coqueteleira com gelo resfria na hora e cria uma espuma leve, técnica que lembra a do frappé grego, inventado em 1957, em Tessalônica, quando um funcionário da Nescafé misturou café solúvel com água fria em um shaker."
     },
     {
       "id": "cold-brew",
@@ -1713,7 +2029,13 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Café moído",
+        "Água fria",
+        "Gelo"
+      ],
+      "story": "A extração a frio é antiga: no Japão, o café estilo Kyoto pinga gota a gota de uma torre de vidro, por horas. O cold brew usa a mesma ideia: ficando cerca de 20 horas em água fria, o café sai suave, com menos acidez e amargor."
     },
     {
       "id": "cold-brew-baunilha",
@@ -1748,7 +2070,13 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Cold Brew",
+        "Xarope de baunilha",
+        "Gelo"
+      ],
+      "story": "A baunilha é uma das especiarias mais caras do mundo, porque cada flor de orquídea precisa ser polinizada à mão. Com o cold brew suave, ela realça as notas doces do café."
     },
     {
       "id": "cold-brew-leite",
@@ -1785,7 +2113,13 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Cold Brew",
+        "Leite",
+        "Gelo"
+      ],
+      "story": "O café com leite gelado é um clássico caseiro em muitos lugares, como no Vietnã, onde o café forte vai com leite condensado e gelo. O cold brew com leite segue essa ideia, cremoso e pouco ácido."
     },
     {
       "id": "frappuccino-avela",
@@ -1822,7 +2156,15 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Café",
+        "Leite",
+        "Essência de avelã",
+        "Gelo",
+        "Chantilly"
+      ],
+      "story": "O Frappuccino nasceu na The Coffee Connection, em Boston, e chegou à Starbucks em 1994, quando a empresa comprou a rede. O nome mistura frappé e cappuccino. A avelã faz dupla clássica com café e chocolate."
     },
     {
       "id": "frappuccino-brigadeiro",
@@ -1859,7 +2201,17 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Café",
+        "Leite",
+        "Calda de brigadeiro",
+        "Choco chip",
+        "Gelo",
+        "Chantilly",
+        "Granulado de chocolate belga ao leite"
+      ],
+      "story": "O Frappuccino é um frappé, gelo batido com café, que veio do estilo gelado de Boston. O brigadeiro, doce brasileiro de leite condensado e chocolate, é o ingrediente local que dá a ele sotaque de festa de aniversário."
     },
     {
       "id": "frappuccino-doce-de-leite",
@@ -1896,7 +2248,16 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Café",
+        "Leite",
+        "Calda de doce de leite",
+        "Gelo",
+        "Chantilly",
+        "Calda de caramelo"
+      ],
+      "story": "O doce de leite é herdeiro da tradição ibérica de cozinhar leite e açúcar por horas. Na América do Sul, virou item de cozinha, e no copo gelado e batido ele aparece numa das releituras mais cremosas do café."
     },
     {
       "id": "frappuccino-choco-chip",
@@ -1933,7 +2294,16 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Leite",
+        "Chocolate",
+        "Choco chip",
+        "Gelo",
+        "Chantilly",
+        "Cobertura de chocolate"
+      ],
+      "story": "O chocolate chip é quase uma invenção americana: a história mais conhecida diz que, nos anos 1930, Ruth Wakefield, do Toll House Inn, em Massachusetts, picou chocolate numa massa de cookie, e ele não derreteu por completo."
     },
     {
       "id": "caramelo-frappuccino",
@@ -1970,7 +2340,16 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Café",
+        "Leite",
+        "Essência de caramelo",
+        "Gelo",
+        "Chantilly",
+        "Cobertura de caramelo"
+      ],
+      "story": "O caramelo aparece na confeitaria desde que o homem aprendeu a queimar açúcar. Ele tem um ponto exato: se passar, amarga. O Frappuccino de caramelo é uma versão geladinha e cremosa dessa receita."
     },
     {
       "id": "frappuccino-mocha",
@@ -2007,7 +2386,15 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Café",
+        "Leite",
+        "Chocolate",
+        "Gelo",
+        "Chantilly"
+      ],
+      "story": "O mocha tem o nome do porto de Mocha, no Iêmen, de onde saíam sacas de café para o mundo. Hoje o termo indica café com chocolate, e a versão branca troca o cacau escuro por manteiga de cacau, açúcar e leite."
     },
     {
       "id": "frappuccino-chai",
@@ -2044,7 +2431,15 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Leite",
+        "Chai",
+        "Gelo",
+        "Chantilly",
+        "Canela em pó"
+      ],
+      "story": "Chai significa chá em hindi. O masala chai, chá preto fervido com leite, açúcar e especiarias, é a bebida de rua da Índia e ganhou força no século XX, quando o consumo de chá foi muito incentivado no país."
     },
     {
       "id": "frappuccino-matcha",
@@ -2081,7 +2476,15 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Matcha",
+        "Leite",
+        "Essência adocicada",
+        "Gelo",
+        "Chantilly"
+      ],
+      "story": "O matcha vem de folhas de chá sombreadas antes da colheita, o que as deixa mais verdes e ricas em aminoácidos. Foi levado da China ao Japão por monges budistas, como o monge Eisai, no século XII."
     },
     {
       "id": "super-morango-frappuccino",
@@ -2118,7 +2521,14 @@
         "iced": true,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Leite",
+        "Calda de morango",
+        "Gelo",
+        "Chantilly"
+      ],
+      "story": "O morango cultivado de hoje é um cruzamento feito na França do século XVIII, entre espécies da América do Norte e do Chile. Daí vem a fruta grande e perfumada que a bebida celebra."
     },
     {
       "id": "frappuccino-baunilha",
@@ -2155,7 +2565,14 @@
         "iced": true,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Leite",
+        "Baunilha",
+        "Gelo",
+        "Chantilly"
+      ],
+      "story": "A baunilha é o sabor que costuma servir de referência para tudo: sorvete de baunilha, milkshake de baunilha. O Frappuccino de baunilha é uma bebida de sorveteria em formato de cafeteria, sem café."
     },
     {
       "id": "frappuccino-chocolate",
@@ -2192,7 +2609,15 @@
         "iced": true,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Leite",
+        "Chocolate ou chocolate branco",
+        "Gelo",
+        "Chantilly",
+        "Cobertura de chocolate"
+      ],
+      "story": "O milkshake, que inspirou bebidas como esta, nasceu nos Estados Unidos do início do século XX, primeiro como uma bebida alcoólica com ovo e depois, nos anos 1920, na versão com sorvete e xarope de chocolate."
     },
     {
       "id": "infusao-chai",
@@ -2227,7 +2652,17 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Chá preto",
+        "Canela",
+        "Cravo",
+        "Anis",
+        "Cardamomo",
+        "Pimenta-preta",
+        "Gengibre"
+      ],
+      "story": "O masala chai indiano mistura chá preto com especiarias que cada família ajusta ao seu jeito. A mistura é o chá com leite e açúcar consagrado nas ruas, vendido por chaiwallahs. Aqui vem a infusão, sem leite."
     },
     {
       "id": "cha-verde",
@@ -2262,7 +2697,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Folhas de chá verde",
+        "Água quente",
+        "Gelo (versão fria)"
+      ],
+      "story": "Conta-se que o chá foi descoberto na China, quando o imperador Shennong, por volta de 2700 a.C., viu folhas caírem na água fervente. É lenda, mas mostra uma tradição milenar. O chá verde não é oxidado, o que preserva a cor."
     },
     {
       "id": "cha-preto",
@@ -2297,7 +2738,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Folhas de chá preto",
+        "Água quente",
+        "Gelo (versão fria)"
+      ],
+      "story": "O chá preto é oxidado, o que escurece as folhas e dá sabor encorpado. No Ocidente virou o chá padrão, sobretudo na Inglaterra, onde o chá da tarde é costume desde o século XIX."
     },
     {
       "id": "cha-gelado-limonada-verde-preto",
@@ -2332,7 +2779,13 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Chá verde ou preto",
+        "Limonada",
+        "Gelo"
+      ],
+      "story": "Segundo a história mais repetida, o chá gelado ficou famoso na Feira Mundial de St. Louis, em 1904, quando um vendedor serviu a bebida com gelo num dia de calor. A limonada dá o toque cítrico."
     },
     {
       "id": "cha-gelado-limonada-chai",
@@ -2367,7 +2820,13 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Chá chai",
+        "Limonada",
+        "Gelo"
+      ],
+      "story": "O chai da Índia nasceu quente e cheio de especiarias. Gelado e com limão, vira uma bebida inesperada: canela e gengibre aquecem, a limonada refresca. É uma mistura de cozinhas de dois cantos do mundo."
     },
     {
       "id": "chai-latte",
@@ -2404,7 +2863,13 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Concentrado de chai",
+        "Leite vaporizado",
+        "Água quente"
+      ],
+      "story": "O chai latte é uma releitura ocidental do masala chai: o chá especiado da Índia, servido com leite vaporizado como num latte. O formato é criação das cafeterias americanas do final do século XX."
     },
     {
       "id": "matcha-latte",
@@ -2441,7 +2906,13 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "ingredients": [
+        "Matcha",
+        "Leite",
+        "Essência clássica"
+      ],
+      "story": "No Japão, o matcha é parte da cerimônia do chá, o chanoyu, que valoriza a calma e o gesto. Em versão com leite, virou uma bebida de cafeteria, mais doce e suave que o chá puro, e a cor verde vibrante é a marca."
     },
     {
       "id": "croissant",
@@ -2466,7 +2937,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Massa folhada de manteiga",
+        "Presunto e queijo",
+        "Frango ou peito de peru com cream cheese"
+      ],
+      "story": "O croissant é associado à França, mas a versão mais contada diz que veio do kipferl austríaco, pão em meia-lua que chegou a Paris no século XIX com uma padaria vienense. A massa folhada de manteiga é a marca registrada."
     },
     {
       "id": "pao-de-queijo",
@@ -2491,7 +2968,16 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Polvilho",
+        "Queijo",
+        "Leite",
+        "Ovos",
+        "Óleo",
+        "Sal"
+      ],
+      "story": "O pão de queijo é de Minas Gerais, onde o polvilho da mandioca, aproveitado desde o período colonial, se juntou ao queijo da fazenda. Ele não leva farinha de trigo e é naturalmente sem glúten, o que explica a textura elástica."
     },
     {
       "id": "minipao-de-queijo",
@@ -2516,7 +3002,16 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Polvilho",
+        "Queijo",
+        "Leite",
+        "Ovos",
+        "Óleo",
+        "Sal"
+      ],
+      "story": "Em Minas, o pão de queijo é parte do café da tarde, da cozinha de fogão a lenha e do lanche da estrada. Em tamanho mini, ele ganha papel de petisco: a ideia é beliscar, dividir e pedir mais uma rodada."
     },
     {
       "id": "torrada-petropolis",
@@ -2541,7 +3036,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Pão tipo brioche artesanal",
+        "Manteiga",
+        "Tostagem leve"
+      ],
+      "story": "Brioche é um pão francês enriquecido com ovos e manteiga, típico da Normandia. Há quem conte que o termo vem de um verbo antigo, brier, que quer dizer amassar. Torrada com manteiga é o café da manhã mais simples e reconfortante."
     },
     {
       "id": "coxinha-frango-requeijao",
@@ -2566,7 +3067,14 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Massa de trigo e caldo de frango",
+        "Frango desfiado",
+        "Requeijão cremoso",
+        "Farinha de rosca"
+      ],
+      "story": "Conta-se que a coxinha nasceu no interior de São Paulo, no século XIX, na casa de uma família real, quando um filho pequeno só aceitava comer coxa de frango, e a cozinheira a empanou. A forma lembra uma coxa."
     },
     {
       "id": "minicoxinha-frango-requeijao",
@@ -2591,7 +3099,14 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Massa de trigo e caldo de frango",
+        "Frango desfiado",
+        "Requeijão",
+        "Farinha de rosca"
+      ],
+      "story": "O salgadinho de festa, em que cada coxinha cabe numa mão, é parte do cenário de aniversários e botecos brasileiros. A minicoxinha é a versão para dividir, com uma massa que fica crocante por fora e macia por dentro."
     },
     {
       "id": "empada-palmito",
@@ -2618,7 +3133,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Massa quebradiça",
+        "Palmito",
+        "Azeitona verde"
+      ],
+      "story": "A empada tem origem em tortas portuguesas, com massa amanteigada que se desfaz. O palmito, extraído de palmeiras como a pupunha e a juçara, está na cozinha brasileira há séculos e é recheio clássico de salgadinho."
     },
     {
       "id": "empada-frango-requeijao",
@@ -2645,7 +3166,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Massa quebradiça",
+        "Frango desfiado",
+        "Requeijão"
+      ],
+      "story": "A empada vem de Portugal, onde existem empadas de galinha desde pelo menos o século XVII. No Brasil, ganhou tamanho individual e recheios variados. O requeijão, de tradição mineira, deixa o frango mais cremoso."
     },
     {
       "id": "queijo-quente",
@@ -2672,7 +3199,14 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "ingredients": [
+        "Pão de forma",
+        "Mussarela",
+        "Requeijão",
+        "Manteiga"
+      ],
+      "story": "O queijo quente é o parente brasileiro do grilled cheese americano, que se popularizou nos anos 1920 com o pão de forma fatiado. A chapa e a manteiga criam a crosta dourada, e o queijo derrete no meio."
     },
     {
       "id": "misto-quente",
@@ -2699,7 +3233,15 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "ingredients": [
+        "Pão de forma",
+        "Presunto",
+        "Mussarela",
+        "Requeijão",
+        "Manteiga"
+      ],
+      "story": "O misto quente é um clássico das padarias do Brasil, o primo do croque-monsieur francês. A ideia de prensar pão, queijo e presunto na chapa é uma das formas mais simples e universais de fazer um sanduíche quente."
     },
     {
       "id": "croque-monsieur",
@@ -2724,7 +3266,15 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "ingredients": [
+        "Pão de forma",
+        "Presunto",
+        "Queijo prato",
+        "Molho bechamel",
+        "Parmesão"
+      ],
+      "story": "Croque-monsieur quer dizer, mais ou menos, crocante, senhor. A versão mais conhecida o liga a um café de Paris, por volta de 1910. O molho bechamel e o queijo gratinado são a marca."
     },
     {
       "id": "croissant-roll",
@@ -2751,7 +3301,14 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "ingredients": [
+        "Massa de croissant",
+        "Ovos mexidos",
+        "Bacon",
+        "Queijo"
+      ],
+      "story": "Ovos com bacon são a dupla do café da manhã nos países de língua inglesa. O croissant roll junta esse prato com a massa folhada francesa, um sanduíche de café da manhã para comer com a mão."
     },
     {
       "id": "sanduiche-proteico-keto",
@@ -2779,7 +3336,14 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "ingredients": [
+        "Massa proteica de ovos",
+        "Frango",
+        "Presunto",
+        "Queijo"
+      ],
+      "story": "A dieta cetogênica, ou keto, foi criada nos anos 1920 como tratamento médico para epilepsia, e só depois virou moda. A ideia é cortar carboidratos, por isso a massa de ovos substitui o pão."
     },
     {
       "id": "ciabatta-frango-pesto",
@@ -2806,7 +3370,14 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "ingredients": [
+        "Pão ciabatta",
+        "Frango",
+        "Mussarela",
+        "Molho pesto"
+      ],
+      "story": "A ciabatta foi criada em 1982 por Arnaldo Cavallari, padeiro do Vêneto, na Itália, para responder à baguete francesa. O nome significa chinelo. O pesto é de Gênova, de manjericão, pinoli, parmesão e azeite."
     },
     {
       "id": "ciabatta-frango-mostarda",
@@ -2833,7 +3404,14 @@
         "iced": false,
         "caffeine": false,
         "hunger": 3
-      }
+      },
+      "ingredients": [
+        "Pão ciabatta",
+        "Frango",
+        "Mussarela",
+        "Mostarda com mel"
+      ],
+      "story": "A mostarda com mel é um molho que mistura picante e doce, comum em sanduíches da Europa e dos EUA. A ciabatta, com sua casca crocante e miolo macio e cheio de buracos, foi criada na Itália em 1982."
     },
     {
       "id": "bolo-red-velvet",
@@ -2863,7 +3441,15 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Massa de cacau",
+        "Corante vermelho",
+        "Cream cheese",
+        "Açúcar",
+        "Manteiga"
+      ],
+      "story": "O red velvet é receita americana, popular no Sul dos EUA. A versão mais conhecida liga o tom avermelhado à reação do cacau com ingredientes ácidos, como buttermilk e vinagre. Depois veio o corante."
     },
     {
       "id": "brownie",
@@ -2888,7 +3474,17 @@
         "iced": false,
         "caffeine": true,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Chocolate meio amargo",
+        "Café",
+        "Manteiga",
+        "Ovos",
+        "Açúcar",
+        "Farinha",
+        "Lascas de chocolate ao leite"
+      ],
+      "story": "Conta-se que o brownie surgiu em Chicago, por volta de 1893, quando a organizadora Bertha Palmer pediu um doce de chocolate pequeno para comer com a mão. A versão mais conhecida, mas sem confirmação."
     },
     {
       "id": "cinnamon-roll",
@@ -2915,7 +3511,15 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Massa de fermento",
+        "Manteiga",
+        "Açúcar",
+        "Canela",
+        "Glaceado de açúcar"
+      ],
+      "story": "O cinnamon roll é um clássico da Suécia, onde o kanelbulle tem até dia nacional, em 4 de outubro. A canela chegou do Oriente à Europa e virou o perfume do café da tarde nórdico."
     },
     {
       "id": "muffin-blueberry",
@@ -2940,7 +3544,15 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Farinha",
+        "Ovos",
+        "Mirtilos",
+        "Raspas de limão",
+        "Açúcar"
+      ],
+      "story": "O blueberry, ou mirtilo, é uma fruta nativa da América do Norte, parte da alimentação dos povos nativos antes da chegada dos europeus. O muffin americano, de massa pequena, ganhou espaço nos cafés da manhã dos EUA."
     },
     {
       "id": "muffin-chocolate",
@@ -2965,7 +3577,15 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Farinha",
+        "Cacau",
+        "Ovos",
+        "Gotas de chocolate ao leite",
+        "Açúcar"
+      ],
+      "story": "Muffin é palavra inglesa, mas o muffin americano, assado em forminha e mais bolo do que pão, é outro bicho. Virou item básico de qualquer café por ser prático e portátil, e o chocolate é sua versão mais querida."
     },
     {
       "id": "cuca-de-maca",
@@ -2992,7 +3612,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Massa de bolo",
+        "Maçã",
+        "Farofa de açúcar e manteiga"
+      ],
+      "story": "A cuca chegou ao Brasil com imigrantes alemães no Sul, onde é feita a partir do kuchen, o bolo alemão. A farofa doce por cima, chamada de streusel, é a marca, e a maçã é recheio tradicional."
     },
     {
       "id": "donut-chocoberry",
@@ -3017,7 +3643,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Massa de donut",
+        "Geleia de morango",
+        "Cobertura de chocolate branco"
+      ],
+      "story": "Segundo a história popular, a forma de anel do donut vem do capitão americano Hanson Gregory, no século XIX, que teria furado o meio para fritar por igual. O recheio de geleia é a variante clássica."
     },
     {
       "id": "donut-chocolate",
@@ -3042,7 +3674,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Massa de donut",
+        "Recheio de chocolate ao leite",
+        "Cobertura de chocolate"
+      ],
+      "story": "Os doughnuts chegaram aos EUA com colonos holandeses, os olykoeks, bolinhos fritos na gordura. Com o tempo se tornaram parte do café da manhã americano. A versão de chocolate é a mais clássica."
     },
     {
       "id": "donut-doce-de-leite",
@@ -3067,7 +3705,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Massa de donut",
+        "Doce de leite",
+        "Cobertura de chocolate branco"
+      ],
+      "story": "O donut é americano e o doce de leite é sul-americano, uma mistura que só existe no Brasil. O doce de leite faz sucesso em muita sobremesa, e dentro do donut combina com a cobertura branca."
     },
     {
       "id": "donut-cookies-n-cream",
@@ -3092,7 +3736,14 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Massa de donut",
+        "Creme",
+        "Chocolate branco",
+        "Cobertura de biscoito de chocolate"
+      ],
+      "story": "Cookies and cream é sabor de sorvete americano, que muita gente liga a Nova York nos anos 1970, mas a origem exata é incerta. Pedaços de biscoito de chocolate no creme viraram sabor de sorvete, bolo e donut."
     },
     {
       "id": "bolo-de-limao",
@@ -3119,7 +3770,13 @@
         "iced": false,
         "caffeine": false,
         "hunger": 2
-      }
+      },
+      "ingredients": [
+        "Massa de bolo amanteigada",
+        "Suco e raspas de limão",
+        "Cobertura de limão"
+      ],
+      "story": "O loaf cake, bolo assado em forma retangular, vem da tradição inglesa do pound cake, que usava uma libra de cada ingrediente. O limão, vindo da Ásia e levado pelos árabes à Europa, dá o toque ácido."
     },
     {
       "id": "cookie-de-baunilha",
@@ -3146,7 +3803,14 @@
         "iced": false,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "ingredients": [
+        "Farinha",
+        "Manteiga",
+        "Baunilha",
+        "Gotas de chocolate"
+      ],
+      "story": "A palavra cookie vem do holandês koekje, pequeno bolo. Segundo a história mais conhecida, os cookies com gotas de chocolate surgiram nos anos 1930, com Ruth Wakefield, em Massachusetts. A baunilha dá o perfume."
     }
   ],
   "extras": [

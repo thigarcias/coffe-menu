@@ -4,15 +4,26 @@ Protótipo do lado do cliente, feito em React, Vite e TypeScript. A base de refe
 
 ```bash
 npm install
+cp .env.example .env    # e coloque sua OPENAI_API_KEY
 npm run dev -- --host   # abre no celular pela rede local
 ```
+
+Para produção: `npm run build && npm start` (o servidor em `server/index.mjs` serve o build e a rota da IA).
+
+## IA (OpenAI)
+
+- Toda a IA do app usa o modelo **`gpt-6-luna`** com `reasoning.effort: "max"`, pela Responses API. Isso é configurável no `.env` (`OPENAI_MODEL`, `OPENAI_REASONING_EFFORT`, `OPENAI_TIMEOUT_MS`).
+- A chave fica **só no servidor**: o React chama `POST /api/recommend`, e o servidor (`server/ai.mjs`) fala com a OpenAI. O `.env` está no `.gitignore`.
+- A resposta vem em JSON estruturado (até 3 ids do cardápio, cada um com uma frase de motivo), e ids que não existem são descartados.
+- Sem servidor (por exemplo, no link estático do claude.ai) ou se a IA falhar, o quiz usa as regras de `src/lib/recommend.ts` e avisa "Sugestão rápida".
+- No modo `max`, cada sugestão leva de 10 a 20 segundos.
 
 ## O que tem
 
 - **Feed em tela cheia**, um produto por tela, no estilo Reels, com as categorias em pílulas no topo.
 - **"Ver tudo"**: o botão de grade mostra todas as opções de uma vez, separadas por seção.
-- **"Com o que se parece?"**: um painel com a tradução para leigos, os tamanhos e preços e os alérgenos.
-- **"Ainda não sei, me ajuda a escolher"**: três perguntas (vontade, paladar e o que evitar) que devolvem três sugestões. Por enquanto a sugestão sai de regras sobre as etiquetas dos itens, em `src/lib/recommend.ts`.
+- **Detalhe do produto**: "com o que se parece" (tradução para leigos), ingredientes, tamanhos e preços, alérgenos e "de onde vem" (história da bebida ou do ingrediente, a partir de conhecimento geral e não de informação oficial).
+- **"Me ajuda a escolher"**: três perguntas (vontade, paladar e o que evitar), mais um campo opcional de texto livre. A IA devolve até três sugestões, cada uma com o motivo.
 - **"Quero provar"**: o coração guarda o item numa lista para mostrar no balcão.
 - **Eventos de interesse** (tempo em cada produto, detalhes abertos, favoritos, resultado do quiz) são salvos no `localStorage` com a chave `cm.events`. Eles vão alimentar o painel do dono.
 
