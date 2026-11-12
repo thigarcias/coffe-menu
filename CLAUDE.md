@@ -57,7 +57,7 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 ```bash
 npm run dev -- --host     # app + rota da IA (precisa de OPENAI_API_KEY no .env)
 npm run build             # typecheck + build
-npm run test:e2e          # 230 testes em 5 celulares (layout + capturas)
+npm run test:e2e          # 245 testes em 5 celulares (layout + capturas)
 npm run test:e2e:update   # aceita uma mudança visual feita de propósito
 npm run artifact          # gera app/artifact/ para publicar como Artifact do claude.ai
 ```

@@ -52,7 +52,8 @@ test.describe('cardápio no celular', () => {
     await expect(hint).toBeVisible()
     const h = await box(hint)
     expect(h.bottom).toBeLessThanOrEqual((await box(page.locator('.dock'))).y)
-    expect(h.y).toBeGreaterThanOrEqual((await box(page.locator('.slide__body').first())).bottom - 1)
+    // respiro de pelo menos 8px até a descrição (antes encostava no iPhone SE)
+    expect(h.y).toBeGreaterThanOrEqual((await box(page.locator('.slide__body').first())).bottom + 8)
     await page.locator('.feed').evaluate((el) => el.scrollBy(0, el.clientHeight))
     await expect(hint).toHaveCount(0)
     // voltando ao primeiro produto, a dica aparece de novo (nada fica gravado)
@@ -84,7 +85,7 @@ test.describe('cardápio no celular', () => {
     }))
     expect(scroll).toBeLessThanOrEqual(width)
     const vp = page.viewportSize()!
-    for (const sel of ['.brand', '.cats', '.dock', '.slide__name >> nth=0', '.slide__row >> nth=0']) {
+    for (const sel of ['.brand', '.cats', '.dock', '.slide__name >> nth=0', '.slide__actions >> nth=0']) {
       const b = await box(page.locator(sel))
       expect(b.x, sel).toBeGreaterThanOrEqual(0)
       expect(b.right, sel).toBeLessThanOrEqual(vp.width + 0.5)
@@ -93,7 +94,7 @@ test.describe('cardápio no celular', () => {
 
   test('todos os botões fora do trilho de categorias cabem na tela', async ({ page }) => {
     const out = await page.evaluate(() =>
-      [...document.querySelectorAll<HTMLElement>('.top button, .dock button, .dock__group, .slide__row button')]
+      [...document.querySelectorAll<HTMLElement>('.top button, .dock button, .dock__group, .slide__actions button')]
         .filter((el) => !el.closest('.cats__track'))
         .map((el) => ({ el, r: el.getBoundingClientRect() }))
         .filter(({ r }) => r.width && r.bottom > 0 && r.top < innerHeight && (r.left < -0.5 || r.right > innerWidth + 0.5))
@@ -127,19 +128,83 @@ test.describe('cardápio no celular', () => {
     await expectThumbOnActive(page)
   })
 
-  test('texto e botões do produto ficam acima do dock, numa linha só', async ({ page }) => {
+  test('texto e botões do produto ficam acima do dock', async ({ page }) => {
     const body = await box(page.locator('.slide__body').first())
     const dock = await box(page.locator('.dock'))
     expect(body.bottom).toBeLessThanOrEqual(dock.y)
-    const capsule = await box(page.locator('.slide__row .capsule').first())
-    const add = await box(page.locator('.slide__row .addbtn').first())
-    expect(Math.abs(capsule.cy - add.cy)).toBeLessThanOrEqual(2)
-    expect(capsule.right).toBeLessThanOrEqual(add.x)
-    expect(add.right).toBeLessThanOrEqual(page.viewportSize()!.width - 8)
-    // o texto dos dois botões não pode ser cortado
-    for (const sel of ['.slide__row .capsule', '.slide__row .addbtn']) {
-      const clipped = await page.locator(sel).first().evaluate((el) => el.scrollWidth > el.clientWidth + 1)
-      expect(clipped, sel).toBe(false)
+    const what = await box(page.locator('.whatbtn').first())
+    const add = await box(page.locator('.addbtn').first())
+    expect(add.bottom).toBeLessThanOrEqual(body.y)
+    expect(what.bottom).toBeLessThanOrEqual(body.y)
+    // lado a lado, na mesma linha: "O que é?" à esquerda, "Adicionar" à direita
+    expect(Math.abs(what.cy - add.cy)).toBeLessThanOrEqual(2)
+    expect(what.right).toBeLessThanOrEqual(add.x + 1)
+    // borda direita alinhada ao texto e ao dock (margem = gutter); o botão é a caixa de toque, o chip é o vidro
+    const vp = page.viewportSize()!
+    const gutter = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gutter')))
+    const dockG = await box(page.locator('.dock__group').first())
+    const addPill = await box(page.locator('.addbtn .chipbtn__pill').first())
+    expect(Math.abs(add.right - (vp.width - gutter))).toBeLessThanOrEqual(1)
+    expect(Math.abs(add.right - dockG.right)).toBeLessThanOrEqual(1)
+    expect(addPill.right).toBeLessThanOrEqual(vp.width - gutter + 0.5)
+    expect(what.x).toBeGreaterThanOrEqual(gutter)
+    // chip de vidro com 36–40px de altura; alvo de toque (botão) ≥ 44px
+    for (const sel of ['.whatbtn', '.addbtn']) {
+      const b = page.locator(sel).first()
+      const pill = b.locator('.chipbtn__pill')
+      await expect(pill).toHaveClass(/glass/)
+      const p = await box(pill)
+      expect(p.height, sel).toBeGreaterThanOrEqual(36)
+      expect(p.height, sel).toBeLessThanOrEqual(40)
+      const hit = await box(b)
+      expect(hit.width, sel).toBeGreaterThanOrEqual(44)
+      expect(hit.height, sel).toBeGreaterThanOrEqual(44)
+      // ícone + texto na mesma linha, sem quebra nem corte
+      const info = await pill.evaluate((el) => {
+        const lbl = el.querySelector('.chipbtn__lbl') as HTMLElement
+        const svg = el.querySelector('svg')!.getBoundingClientRect()
+        const l = lbl.getBoundingClientRect(), r = el.getBoundingClientRect(), cs = getComputedStyle(lbl)
+        return {
+          cut: el.scrollWidth > el.clientWidth + 1 || lbl.scrollWidth > lbl.clientWidth + 1,
+          lines: Math.round(l.height / parseFloat(cs.lineHeight === 'normal' ? String(parseFloat(cs.fontSize) * 1.2) : cs.lineHeight)),
+          sameRow: Math.abs((svg.top + svg.bottom) / 2 - (l.top + l.bottom) / 2) <= 2 && svg.right <= l.left + 0.5,
+          inside: l.left >= r.left && l.right <= r.right,
+          size: parseFloat(cs.fontSize), weight: Number(cs.fontWeight), wrap: cs.whiteSpace,
+        }
+      })
+      expect(info.cut, sel).toBe(false)
+      expect(info.lines, sel).toBe(1)
+      expect(info.sameRow, sel).toBe(true)
+      expect(info.inside, sel).toBe(true)
+      expect(info.wrap, sel).toBe('nowrap')
+      expect(info.weight, sel).toBeGreaterThanOrEqual(600)
+      expect(info.size, sel).toBeGreaterThanOrEqual(13.5)
+      await expect(b.locator('.chipbtn__lbl')).toBeVisible()
+    }
+    await expect(page.locator('.whatbtn .chipbtn__lbl').first()).toHaveText('O que é?')
+    await expect(page.locator('.addbtn .chipbtn__lbl').first()).toHaveText('Adicionar')
+  })
+
+  test('os botões do produto ficam dentro da área da foto e não tocam o texto', async ({ page }) => {
+    for (const id of ['matcha-latte-proteico-gelado', 'chocolate-quente', 'bolo-red-velvet-fatia', 'mocha-strate-frappuccino-com-caramelo-salgado-cold-foam']) {
+      const slide = page.locator(`[data-item="${id}"]`)
+      await slide.scrollIntoViewIfNeeded()
+      const photo = await box(slide.locator('.pimg__box'))
+      const body = await box(slide.locator('.slide__body'))
+      const cats = await box(page.locator('.cats'))
+      const w = await box(slide.locator('.whatbtn')), a = await box(slide.locator('.addbtn'))
+      expect(Math.abs(w.cy - a.cy), `${id} mesma linha`).toBeLessThanOrEqual(2)
+      expect(w.right, `${id} ordem`).toBeLessThanOrEqual(a.x + 1)
+      for (const sel of ['.whatbtn', '.addbtn']) {
+        const b = await box(slide.locator(sel))
+        expect(b.right, `${id} ${sel}: gutter`).toBeLessThanOrEqual(page.viewportSize()!.width - 16 + 0.5)
+        expect(b.y, `${id} ${sel}`).toBeGreaterThanOrEqual(photo.y)
+        expect(b.bottom, `${id} ${sel}`).toBeLessThanOrEqual(photo.bottom + 12) // a margem de baixo da foto
+        expect(b.bottom, `${id} ${sel}: sobre o texto`).toBeLessThanOrEqual(body.y)
+        expect(b.y, `${id} ${sel}: sobre as categorias`).toBeGreaterThanOrEqual(cats.bottom)
+        expect(b.x, `${id} ${sel}`).toBeGreaterThanOrEqual(photo.x)
+        expect(b.right, `${id} ${sel}`).toBeLessThanOrEqual(photo.right)
+      }
     }
   })
 
@@ -157,25 +222,62 @@ test.describe('cardápio no celular', () => {
     }
   })
 
-  test('o texto do botão de ajuda aparece inteiro', async ({ page }) => {
-    const cut = await page.locator('.dock__help span').evaluate((el) => el.scrollWidth > el.clientWidth + 1)
-    expect(cut).toBe(false)
-    // nem cortado com reticências: no máximo duas linhas, dentro do botão
-    const fits = await page.locator('.dock__help span').evaluate((el) => {
-      const r = el.getBoundingClientRect(), b = el.parentElement!.getBoundingClientRect()
-      return getComputedStyle(el).textOverflow !== 'ellipsis' && r.height <= 2 * parseFloat(getComputedStyle(el).lineHeight) + 1 && r.bottom <= b.bottom
-    })
-    expect(fits).toBe(true)
-  })
-
-  test('produto com preço "a partir de" cabe na linha', async ({ page }) => {
+  test('produto com preço "a partir de" cabe na largura, com descrição de uma linha', async ({ page }) => {
     const slide = page.locator('[data-item="chocolate-quente"]')
     await slide.scrollIntoViewIfNeeded()
-    const row = slide.locator('.slide__row')
-    const r = await box(row)
-    const vp = page.viewportSize()!
-    expect(r.right).toBeLessThanOrEqual(vp.width)
-    expect(r.height).toBeLessThanOrEqual(48)
+    const body = await box(slide.locator('.slide__body'))
+    expect(body.right).toBeLessThanOrEqual(page.viewportSize()!.width)
+    const lines = await slide.locator('.slide__desc').evaluate((el) => Math.round(el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight)))
+    expect(lines).toBe(1)
+  })
+
+  test('os rótulos do dock cabem numa linha só, sem corte nem reticências', async ({ page }) => {
+    const labels = ['Me ajuda', 'Sacola', 'Ver tudo']
+    await expect(page.locator('.dock__lbl')).toHaveText(labels)
+    const info = await page.locator('.dock__lbl').evaluateAll((els) =>
+      els.map((el) => {
+        const r = el.getBoundingClientRect(), b = el.parentElement!.getBoundingClientRect(), cs = getComputedStyle(el)
+        const lines = Math.round(r.height / parseFloat(cs.lineHeight))
+        return { txt: el.textContent, lines, cut: el.scrollWidth > el.clientWidth + 1, ell: cs.textOverflow === 'ellipsis', inside: r.left >= b.left && r.right <= b.right && r.bottom <= b.bottom }
+      }),
+    )
+    for (const i of info) {
+      expect(i.lines, i.txt!).toBe(1)
+      expect(i.cut, i.txt!).toBe(false)
+      expect(i.ell, i.txt!).toBe(false)
+      expect(i.inside, i.txt!).toBe(true)
+    }
+    // três abas iguais e a barra fina
+    const tabs = await page.locator('.dock__btn').all()
+    const w = await Promise.all(tabs.map(async (t) => (await box(t)).width))
+    expect(Math.max(...w) - Math.min(...w)).toBeLessThanOrEqual(1)
+    expect((await box(page.locator('.dock__group'))).height).toBeLessThanOrEqual(56)
+  })
+
+  test('a dica de deslizar não encosta no dock nem nos botões do produto', async ({ page }) => {
+    const h = await box(page.locator('.swipe-hint'))
+    expect(h.bottom).toBeLessThanOrEqual((await box(page.locator('.dock__group'))).y - 2)
+    expect(h.y).toBeGreaterThanOrEqual((await box(page.locator('.addbtn').first())).bottom)
+  })
+
+  test('na grade, o dock some ao rolar para baixo e volta ao rolar para cima', async ({ page }) => {
+    await page.getByRole('button', { name: 'Ver tudo' }).click()
+    const dock = page.locator('.dock')
+    const grid = page.locator('.grid-view')
+    await expect(dock).not.toHaveClass(/dock--hidden/)
+    await grid.evaluate((el) => el.scrollTo({ top: 400 }))
+    await expect(dock).toHaveClass(/dock--hidden/)
+    await grid.evaluate((el) => el.scrollTo({ top: 200 }))
+    await expect(dock).not.toHaveClass(/dock--hidden/)
+    // parando de rolar, ele também volta
+    await grid.evaluate((el) => el.scrollTo({ top: 700 }))
+    await expect(dock).toHaveClass(/dock--hidden/)
+    await expect(dock).not.toHaveClass(/dock--hidden/, { timeout: 3000 })
+    // e no feed ele nunca some
+    await page.getByRole('button', { name: 'Ver em tela cheia' }).click()
+    await page.locator('.feed').evaluate((el) => el.scrollBy(0, el.clientHeight * 3))
+    await page.waitForTimeout(200)
+    await expect(dock).not.toHaveClass(/dock--hidden/)
   })
 
   test('botões do dock: ícones centralizados e área de toque ≥ 44px', async ({ page }) => {
@@ -191,7 +293,7 @@ test.describe('cardápio no celular', () => {
   })
 
   test('detalhe do produto abre dentro da tela e o X não cobre o título', async ({ page }) => {
-    await page.locator('.slide__row .capsule').first().click()
+    await page.locator('.whatbtn').first().click()
     const sheet = page.locator('.sheet-wrap--open .sheet')
     await expect(sheet).toBeVisible()
     await page.waitForTimeout(500)
@@ -250,7 +352,7 @@ test.describe('cardápio no celular', () => {
         const el = feed.querySelector<HTMLElement>(`[data-item="${id}"]`)!
         feed.scrollTo({ top: el.offsetTop })
       }, id)
-      await page.locator(`[data-item="${id}"] .slide__row .capsule`).click()
+      await page.locator(`[data-item="${id}"] .whatbtn`).click()
       const sheet = page.locator('.sheet-wrap--open .sheet')
       await expect(sheet).toBeVisible()
       await page.waitForTimeout(450)
@@ -326,7 +428,7 @@ test.describe('cardápio no celular', () => {
       const el = feed.querySelector<HTMLElement>(`[data-item="${id}"]`)!
       feed.scrollTo({ top: el.offsetTop })
     }, id)
-    await page.locator(`[data-item="${id}"] .slide__row .capsule`).click()
+    await page.locator(`[data-item="${id}"] .whatbtn`).click()
     const sheet = page.locator('.sheet-wrap--open .sheet')
     await expect(sheet).toBeVisible()
     return sheet
@@ -554,7 +656,7 @@ test.describe('sacola e pedido', () => {
 
   test('adicionar pelo detalhe, pela grade e pelo quiz registra de onde veio', async ({ page }) => {
     // detalhe
-    await page.locator('.slide__row .capsule').first().click()
+    await page.locator('.whatbtn').first().click()
     await page.waitForTimeout(450)
     await expect(sheetOpen(page).locator('.cta')).toHaveText(/Adicionar · R\$\s\d+,\d{2}/)
     await sheetOpen(page).locator('.cta').click()
@@ -680,9 +782,8 @@ test.describe('sacola e pedido: layout', () => {
     const vp = page.viewportSize()!
     const dock = await box(page.locator('.dock'))
     expect(dock.right).toBeLessThanOrEqual(vp.width)
-    const help = await box(page.locator('.dock__help'))
     const group = await box(page.locator('.dock__group'))
-    expect(help.right).toBeLessThanOrEqual(group.x)
+    expect(group.x).toBeGreaterThanOrEqual(0)
     expect(group.right).toBeLessThanOrEqual(vp.width - 8)
     const bag = page.locator('.dock__bag')
     expect(await bag.evaluate((el) => el.scrollWidth > el.clientWidth + 1)).toBe(false)
@@ -709,12 +810,12 @@ test.describe('sacola e pedido: layout', () => {
     // dock: cada ícone com o nome embaixo
     await expect(page.locator('.dock__bag .dock__lbl')).toHaveText('Sacola')
     await expect(page.getByRole('button', { name: 'Ver tudo' }).locator('.dock__lbl')).toHaveText('Ver tudo')
-    await expect(page.locator('.dock__help span')).toHaveText('Me ajuda a escolher')
+    await expect(page.locator('.dock__help .dock__lbl')).toHaveText('Me ajuda')
     // feed
-    await expect(page.locator('.slide__row .addbtn').first()).toContainText('Adicionar')
+    await expect(page.locator('.addbtn').first()).toContainText('Adicionar')
     // com algo na sacola, o "Me ajuda" continua com o texto e a sacola mostra o total
     await addFromFeed(page, 'misto-quente')
-    await expect(page.locator('.dock__help span')).toBeVisible()
+    await expect(page.locator('.dock__help .dock__lbl')).toBeVisible()
     await expect(page.locator('.dock__bag .dock__lbl')).toHaveText(BRL('19,90'))
     // sacola: editar e remover por extenso
     await openBag(page)
@@ -749,7 +850,7 @@ test.describe('visual', () => {
     await expect(page).toHaveScreenshot('feed.png')
   })
   test('detalhe', async ({ page }) => {
-    await page.locator('.slide__row .capsule').first().click()
+    await page.locator('.whatbtn').first().click()
     await page.waitForTimeout(500)
     await expect(page).toHaveScreenshot('detalhe.png')
   })

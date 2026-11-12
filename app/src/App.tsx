@@ -253,6 +253,33 @@ export default function App() {
     openDetails(item)
   }
 
+  // Na grade, o dock some ao rolar para baixo e volta ao rolar para cima ou ao parar.
+  const [scrollingDown, setScrollingDown] = useState(false)
+  const lastTop = useRef(0)
+  const stopTimer = useRef<number | undefined>(undefined)
+  const dockAway = mode === 'grid' && scrollingDown
+  useEffect(() => {
+    setScrollingDown(false)
+    if (mode !== 'grid') return
+    const el = document.querySelector<HTMLElement>('.grid-view')
+    if (!el) return
+    lastTop.current = el.scrollTop
+    const onScroll = () => {
+      const top = el.scrollTop
+      const dy = top - lastTop.current
+      lastTop.current = top
+      if (dy > 4 && top > 40) setScrollingDown(true)
+      else if (dy < -4 || top <= 40) setScrollingDown(false)
+      window.clearTimeout(stopTimer.current)
+      stopTimer.current = window.setTimeout(() => setScrollingDown(false), 800)
+    }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      el.removeEventListener('scroll', onScroll)
+      window.clearTimeout(stopTimer.current)
+    }
+  }, [mode])
+
   const switchMode = () => {
     const next = mode === 'feed' ? 'grid' : 'feed'
     setTagFilter(null)
@@ -307,18 +334,19 @@ export default function App() {
         </div>
       )}
 
-      <footer className={`dock ${panel ? 'dock--hidden' : ''}`}>
-        <button
-          className="glass capsule capsule--lg dock__help"
-          aria-label="Me ajuda a escolher"
-          onClick={() => {
-            track({ type: 'quiz_open' })
-            setPanel({ kind: 'quiz' })
-          }}
-        >
-          <Sparkle /> <span>Me ajuda a escolher</span>
-        </button>
+      <footer className={`dock ${panel || dockAway ? 'dock--hidden' : ''}`}>
         <div className="glass dock__group">
+          <button
+            className="dock__btn dock__help"
+            aria-label="Me ajuda a escolher"
+            onClick={() => {
+              track({ type: 'quiz_open' })
+              setPanel({ kind: 'quiz' })
+            }}
+          >
+            <Sparkle />
+            <span className="dock__lbl">Me ajuda</span>
+          </button>
           <button className="dock__btn dock__bag" onClick={openBag} aria-label={bagLabel}>
             <Bag />
             {count > 0 && <span className="count">{count}</span>}

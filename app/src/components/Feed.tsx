@@ -84,6 +84,20 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
             <ProductImage src={item.image} alt={item.name} eager={i < 2} className="slide__img" />
             <div className="slide__shade" />
 
+            {/* ações sobre a foto, no canto inferior direito dela (estilo Reels) */}
+            <div className="slide__actions">
+              <button className="chipbtn whatbtn" aria-label={`O que é ${item.name}?`} onClick={() => onDetails(item)}>
+                <span className="glass capsule chipbtn__pill"><Info size={18} /><span className="chipbtn__lbl">O que é?</span></span>
+              </button>
+              <button className="chipbtn addbtn" aria-label={`Adicionar ${item.name} à sacola`} onClick={() => onAdd(item)}>
+                <span className="glass capsule chipbtn__pill">
+                  <BagPlus size={18} />
+                  <span className="chipbtn__lbl">Adicionar</span>
+                  {n > 0 && <span className="count" aria-label={`${n} na sacola`}>{n}</span>}
+                </span>
+              </button>
+            </div>
+
             <div className="slide__body">
               <div className="slide__meta">
                 <span className="slide__cat">{categoryName(item.subcategory ?? item.category)}</span>
@@ -99,15 +113,6 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
                 </span>
               )}
               <p className="slide__desc">{item.description}</p>
-              <div className="slide__row">
-                <button className="glass capsule" onClick={() => onDetails(item)}>
-                  <Info size={16} /> Com o que se parece?
-                </button>
-                <button className="glass addbtn" aria-label={`Adicionar ${item.name} à sacola`} onClick={() => onAdd(item)}>
-                  <BagPlus size={18} /> <span>Adicionar</span>
-                  {n > 0 && <span className="count" aria-label={`${n} na sacola`}>{n}</span>}
-                </button>
-              </div>
             </div>
           </section>
         )
