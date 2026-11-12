@@ -20,10 +20,10 @@ export function Sheet({ open, onClose, children, title }: Props) {
   return (
     <div className={`sheet-wrap ${open ? 'sheet-wrap--open' : ''}`} aria-hidden={!open}>
       <div className="sheet-backdrop" onClick={onClose} />
-      <div className="sheet" role="dialog" aria-label={title}>
+      <div className="sheet glass glass--thick" role="dialog" aria-label={title}>
         <div className="sheet__grip" />
-        <button className="sheet__close" onClick={onClose} aria-label="Fechar">
-          <Close />
+        <button className="sheet__close glass circle circle--sm" onClick={onClose} aria-label="Fechar">
+          <Close size={16} />
         </button>
         {open && children}
       </div>

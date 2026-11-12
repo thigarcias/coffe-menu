@@ -67,7 +67,7 @@ export default function App() {
       document.getElementById(`sec-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     } else {
       const first = items.find((i) => i.category === id)
-      if (first) feed.current?.scrollTo(first.id)
+      if (first) feed.current?.scrollTo(first.id, false)
     }
   }
 
@@ -93,18 +93,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="top">
-        <div className="top__row">
-          <span className="brand">{menu.cafe.name}</span>
-          <div className="top__btns">
-            <button className="icon-btn" onClick={() => setPanel({ kind: 'list' })} aria-label="Minha lista">
-              <List />
-              {favorites.size > 0 && <span className="count">{favorites.size}</span>}
-            </button>
-            <button className="icon-btn" onClick={switchMode} aria-label={mode === 'feed' ? 'Ver tudo' : 'Ver em tela cheia'}>
-              {mode === 'feed' ? <Grid /> : <Reels />}
-            </button>
-          </div>
-        </div>
+        <span className="brand">{menu.cafe.name}</span>
         <CategoryBar categories={categories} active={activeCat} onPick={pickCategory} />
       </header>
 
@@ -122,15 +111,26 @@ export default function App() {
         <GridView categories={categories} items={items} favorites={favorites} onOpen={goToItem} />
       )}
 
-      <button
-        className="help"
-        onClick={() => {
-          track({ type: 'quiz_open' })
-          setPanel({ kind: 'quiz' })
-        }}
-      >
-        <Sparkle /> Ainda não sei, me ajuda a escolher
-      </button>
+      <footer className={`dock ${panel ? 'dock--hidden' : ''}`}>
+        <button
+          className="glass capsule capsule--lg dock__help"
+          onClick={() => {
+            track({ type: 'quiz_open' })
+            setPanel({ kind: 'quiz' })
+          }}
+        >
+          <Sparkle /> Me ajuda a escolher
+        </button>
+        <div className="glass dock__group">
+          <button className="dock__btn" onClick={() => setPanel({ kind: 'list' })} aria-label="Quero provar">
+            <List />
+            {favorites.size > 0 && <span className="count">{favorites.size}</span>}
+          </button>
+          <button className="dock__btn" onClick={switchMode} aria-label={mode === 'feed' ? 'Ver tudo' : 'Ver em tela cheia'}>
+            {mode === 'feed' ? <Grid /> : <Reels />}
+          </button>
+        </div>
+      </footer>
 
       <Sheet open={panel?.kind === 'detail'} onClose={() => setPanel(null)} title="Detalhes">
         {panel?.kind === 'detail' && (

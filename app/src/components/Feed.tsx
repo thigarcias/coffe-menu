@@ -86,33 +86,28 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
             <div className="slide__shade" />
 
             <div className="slide__body">
-              {firstOfCat && <span className="slide__cat">{categoryName(item.category)}</span>}
-              {!!item.badges?.length && (
-                <div className="badges">
-                  {item.badges.map((b) => (
-                    <span key={b} className="badge">{b}</span>
-                  ))}
-                </div>
-              )}
+              <div className="slide__meta">
+                {firstOfCat && <span className="slide__cat">{categoryName(item.category)}</span>}
+                {item.badges?.map((b) => (
+                  <span key={b} className="badge">{b}</span>
+                ))}
+              </div>
               <h2 className="slide__name">{item.name}</h2>
-              {price && <div className="slide__price">{price}</div>}
               <p className="slide__desc">{item.description}</p>
-              <button className="lookalike-btn" onClick={() => onDetails(item)}>
-                Com o que se parece?
-              </button>
-            </div>
-
-            <div className="slide__actions">
-              <button
-                className={`round ${fav ? 'round--fav' : ''}`}
-                aria-label={fav ? 'Tirar da lista' : 'Quero provar'}
-                onClick={() => onToggleFavorite(item.id)}
-              >
-                <Heart filled={fav} />
-              </button>
-              <button className="round" aria-label="Detalhes" onClick={() => onDetails(item)}>
-                <Info />
-              </button>
+              <div className="slide__row">
+                {price && <span className="price">{price}</span>}
+                <button className="glass capsule" onClick={() => onDetails(item)}>
+                  <Info size={16} /> Com o que se parece?
+                </button>
+                <button
+                  className={`glass circle ${fav ? 'circle--fav' : ''}`}
+                  aria-label={fav ? 'Tirar da lista' : 'Quero provar'}
+                  aria-pressed={fav}
+                  onClick={() => onToggleFavorite(item.id)}
+                >
+                  <Heart size={20} filled={fav} />
+                </button>
+              </div>
             </div>
           </section>
         )
