@@ -1,12 +1,12 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import type { MenuItem } from '../types'
 import { money, nameSize } from '../lib/format'
-import { Heart } from './Icons'
+import { defaultChoices, optionSetOf, unitPrice } from '../lib/cart'
+import { BagPlus } from './Icons'
 
 interface Props {
   item: MenuItem
-  fav: boolean
-  onToggleFavorite: (id: string) => void
+  onAdd: (item: MenuItem) => void
   storyNote?: string
   label?: string
 }
@@ -23,10 +23,12 @@ type Tab = (typeof TABS)[number]['id']
  * Se um texto não couber (tela pequena, texto longo), a fonte do painel diminui
  * aos poucos até caber, sem cortar nada.
  */
-export function DetailSheet({ item, fav, onToggleFavorite, storyNote, label }: Props) {
+export function DetailSheet({ item, onAdd, storyNote, label }: Props) {
   const [tab, setTab] = useState<Tab>('parece')
   const panel = useRef<HTMLDivElement>(null)
   const prices = item.prices.filter((p) => p.price != null)
+  // o botão adiciona o padrão (Tall, café padrão, leite integral); a personalização vem depois, no aviso ou na sacola
+  const base = unitPrice(item, defaultChoices(item, optionSetOf(item)))
 
   useLayoutEffect(() => {
     const el = panel.current
@@ -108,8 +110,8 @@ export function DetailSheet({ item, fav, onToggleFavorite, storyNote, label }: P
             ))}
           </div>
         )}
-        <button className={`cta ${fav ? 'cta--ghost' : ''}`} onClick={() => onToggleFavorite(item.id)}>
-          <Heart size={18} filled={fav} /> {fav ? 'Está na sua lista' : 'Quero provar'}
+        <button className="cta" onClick={() => onAdd(item)}>
+          <BagPlus size={20} /> Adicionar · {money(base)}
         </button>
       </footer>
     </div>

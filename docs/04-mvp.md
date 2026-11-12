@@ -63,7 +63,6 @@ celular ──► React (Vite) ──► POST /api/recommend ──► servidor 
 | 1 | **Painel do dono** | É metade da proposta de valor | Uma tela com os mais vistos, o tempo de atenção, os favoritos, o uso da ajuda e o que a IA sugeriu. Uma versão da matriz de engenharia de cardápio com "visto x escolhido". |
 | 2 | **Eventos num servidor** | Hoje ficam só no celular de cada cliente; o painel precisa juntar todos | Uma rota `/api/events` e um banco simples |
 | 3 | **Fotos da coleção de Natal** | As 8 fotos vêm com fundo vermelho e selo "Novo" embutido; destoam do resto | Decidir se ficam, vão para o fim de Novidades ou trocam de foto |
-| 4 | **Carrinho / checkout** | O cliente monta o pedido enquanto navega | Usar `prices` e `extras` do `menu.json` |
 | 6 | **Cardápio impresso em PDF** | A lei já exige em SC, Juiz de Fora e Taubaté (doc core) | Uma página de impressão A4 gerada do mesmo `menu.json` |
 | 7 | **Cafeteria real** | Transforma a demo em convite para piloto | Montar o cardápio de uma cafeteria local, com autorização |
 

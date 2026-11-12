@@ -1,11 +1,5 @@
 type P = { size?: number; filled?: boolean }
 
-export const Heart = ({ size = 24, filled }: P) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
-    <path d="M12 20s-7-4.4-9.2-8.6C1.3 8.4 3.1 4.8 6.6 4.8c2 0 3.3 1.1 4.1 2.3h2.6c.8-1.2 2.1-2.3 4.1-2.3 3.5 0 5.3 3.6 3.8 6.6C19 15.6 12 20 12 20Z" transform="translate(0 -0.4)" />
-  </svg>
-)
-
 export const Grid = ({ size = 20 }: P) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
     <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
@@ -42,11 +36,52 @@ export const Close = ({ size = 22 }: P) => (
   </svg>
 )
 
-export const List = ({ size = 20 }: P) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-    <path d="M8 6.5h12M8 12h12M8 17.5h12" />
-    <circle cx="4" cy="6.5" r="1" fill="currentColor" />
-    <circle cx="4" cy="12" r="1" fill="currentColor" />
-    <circle cx="4" cy="17.5" r="1" fill="currentColor" />
+
+const stroke = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' } as const
+
+export const Bag = ({ size = 20 }: P) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" {...stroke}>
+    <path d="M5.6 8.8h12.8l.9 10.2a2 2 0 0 1-2 2.2H6.7a2 2 0 0 1-2-2.2l.9-10.2Z" />
+    <path d="M8.6 8.8V6.8a3.4 3.4 0 0 1 6.8 0v2" />
+  </svg>
+)
+
+/** Sacola com "+": adicionar ao pedido. */
+export const BagPlus = ({ size = 20 }: P) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" {...stroke}>
+    <path d="M5.6 8.8h12.8l.9 10.2a2 2 0 0 1-2 2.2H6.7a2 2 0 0 1-2-2.2l.9-10.2Z" />
+    <path d="M8.6 8.8V6.8a3.4 3.4 0 0 1 6.8 0v2" />
+    <path d="M12 11.7v5.4M9.3 14.4h5.4" />
+  </svg>
+)
+
+export const Plus = ({ size = 18 }: P) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" {...stroke} strokeWidth={2.2}>
+    <path d="M12 5.5v13M5.5 12h13" />
+  </svg>
+)
+
+export const Minus = ({ size = 18 }: P) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" {...stroke} strokeWidth={2.2}>
+    <path d="M5.5 12h13" />
+  </svg>
+)
+
+export const Trash = ({ size = 18 }: P) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" {...stroke}>
+    <path d="M4.5 7h15M9.5 7V5.2c0-.7.6-1.2 1.2-1.2h2.6c.7 0 1.2.5 1.2 1.2V7M6.5 7l.8 11.2c.1 1 .9 1.8 1.9 1.8h5.6c1 0 1.8-.8 1.9-1.8L17.5 7M10 11v5.5M14 11v5.5" />
+  </svg>
+)
+
+export const Pencil = ({ size = 18 }: P) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" {...stroke}>
+    <path d="M4.5 19.5l.9-3.9L16.3 4.7a1.8 1.8 0 0 1 2.5 0l.5.5a1.8 1.8 0 0 1 0 2.5L8.4 18.6l-3.9.9Z" />
+    <path d="M14.5 6.5l3 3" />
+  </svg>
+)
+
+export const Check = ({ size = 18 }: P) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" {...stroke} strokeWidth={2.4}>
+    <path d="M5 12.5l4.5 4.5L19 7.5" />
   </svg>
 )

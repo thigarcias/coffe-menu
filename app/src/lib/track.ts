@@ -1,16 +1,22 @@
+import type { Choices } from './cart'
+
 /**
  * Registro de eventos de interesse do cliente.
  * No protótipo fica no localStorage; é a base do painel do dono
- * (o que foi visto, por quanto tempo, o que foi favoritado e sugerido).
+ * (o que foi visto, por quanto tempo, o que foi pedido e sugerido).
  */
 export type TrackEvent =
   | { type: 'view'; itemId: string; ms: number }
   | { type: 'open_details'; itemId: string }
-  | { type: 'favorite'; itemId: string; on: boolean }
   | { type: 'category'; categoryId: string }
   | { type: 'quiz_open' }
   | { type: 'quiz_result'; answers: Record<string, string | string[] | undefined>; itemIds: string[] }
   | { type: 'view_mode'; mode: 'feed' | 'grid' }
+  | { type: 'cart_add'; itemId: string; from: 'feed' | 'grid' | 'detail' | 'quiz'; customized: boolean }
+  | { type: 'cart_customize'; itemId: string; choices: Choices }
+  | { type: 'cart_remove'; itemId: string }
+  | { type: 'checkout_start'; items: number; total: number }
+  | { type: 'order_sent'; items: number; total: number; by: 'nome' | 'mesa' | 'ambos' }
 
 const KEY = 'cm.events'
 const SESSION = Math.random().toString(36).slice(2, 10)

@@ -7,7 +7,9 @@ const box = async (l: Locator) => {
   return { ...b, right: b.x + b.width, bottom: b.y + b.height, cy: b.y + b.height / 2 }
 }
 
-async function open(page: Page) {
+async function open(page: Page, opts: { clock?: boolean } = {}) {
+  // relógio de mentira: deixa adiantar o tempo do pedido (Recebido, Preparando, Pronto)
+  if (opts.clock) await page.clock.install()
   // A IA é simulada: os testes de layout não dependem da OpenAI.
   await page.route('**/api/recommend', (r) =>
     r.fulfill({
@@ -284,7 +286,7 @@ test.describe('cardápio no celular', () => {
     await page.getByText('Algo quente').click()
     await page.getByText('Equilibrado', { exact: true }).click()
     await page.getByText('Nada, ver sugestões').click()
-    await page.locator('.sug').nth(1).click() // cafe-latte, longe do topo
+    await page.locator('.sug__main').nth(1).click() // cafe-latte, longe do topo
     await expect
       .poll(() =>
         page.locator('.feed').evaluate((feed) => {
@@ -306,10 +308,344 @@ test.describe('cardápio no celular', () => {
   })
 })
 
+// ---------- sacola e pedido simulado ----------
+
+const BRL = (v: string) => new RegExp(`R\\$\\s${v}`)
+
+/** Vai até o produto no feed e toca na sacola com "+". */
+async function addFromFeed(page: Page, id: string) {
+  await page.locator('.feed').evaluate((feed, id) => {
+    const el = feed.querySelector<HTMLElement>(`[data-item="${id}"]`)!
+    feed.scrollTo({ top: el.offsetTop })
+  }, id)
+  await page.locator(`[data-item="${id}"] .circle--bag`).click()
+}
+
+const bagButton = (page: Page) => page.locator('.dock__bag')
+const sheetOpen = (page: Page) => page.locator('.sheet-wrap--open .sheet')
+
+/** Abre a sacola pelo dock (os painéis só abrem com o dock visível). */
+async function openBag(page: Page) {
+  await bagButton(page).click()
+  await expect(sheetOpen(page)).toBeVisible()
+  await page.waitForTimeout(450)
+}
+
+const storedEvents = (page: Page) =>
+  page.evaluate(() => (JSON.parse(localStorage.getItem('cm.events') ?? '[]') as { type: string; from?: string }[]))
+
+test.describe('sacola e pedido', () => {
+  test.beforeEach(async ({ page }) => open(page, { clock: true }))
+
+  test('salgado entra direto na sacola e o número sobe', async ({ page }) => {
+    await expect(page.locator('.dock__bag .count')).toHaveCount(0)
+    await addFromFeed(page, 'misto-quente')
+    const toast = page.locator('.toast')
+    await expect(toast).toContainText('Adicionado à sacola')
+    await expect(toast.getByRole('button')).toHaveText(['Desfazer'])
+    await expect(page.locator('.dock__bag .count')).toHaveText('1')
+    await expect(page.locator('[data-item="misto-quente"] .circle--bag .count')).toHaveText('1')
+    await expect(page.locator('.dock__total')).toHaveText(BRL('19,90'))
+    // "Desfazer" tira o que acabou de entrar
+    await toast.getByRole('button', { name: 'Desfazer' }).click()
+    await expect(page.locator('.dock__bag .count')).toHaveCount(0)
+    await expect(page.locator('.toast')).toHaveCount(0)
+  })
+
+  test('bebida entra com o padrão e dá para personalizar: Grande + leite de aveia + 1 dose', async ({ page }) => {
+    await addFromFeed(page, 'cafe-latte')
+    const toast = page.locator('.toast')
+    await expect(toast.getByRole('button')).toHaveText(['Usar o padrão', 'Personalizar'])
+    await expect(page.locator('.dock__total')).toHaveText(BRL('16,90')) // Tall, leite integral
+    await toast.getByRole('button', { name: 'Personalizar' }).click()
+    const sheet = sheetOpen(page)
+    await expect(sheet.locator('.detail__name')).toHaveText('Café Latte')
+    await page.waitForTimeout(450)
+    await expect(sheet.getByRole('radio', { name: /Tall/ })).toHaveAttribute('aria-checked', 'true')
+    await expect(sheet.getByRole('radio', { name: /Leite integral/ })).toHaveAttribute('aria-checked', 'true')
+    await sheet.getByRole('radio', { name: /Grande/ }).click()
+    await sheet.getByRole('radio', { name: /Leite de aveia/ }).click()
+    await sheet.getByRole('button', { name: 'Mais Dose extra de café' }).click()
+    await sheet.locator('#custom-note').fill('bem quente')
+    // 18,90 + 5,50 + 4,90
+    await expect(sheet.locator('.cta')).toHaveText(/Salvar · R\$\s29,30/)
+    await sheet.locator('.cta').click()
+    await expect(page.locator('.sheet-wrap--open')).toHaveCount(0)
+    await expect(page.locator('.dock__total')).toHaveText(BRL('29,30'))
+
+    await openBag(page)
+    const row = page.locator('.bagrow')
+    await expect(row).toHaveCount(1)
+    await expect(row.locator('.bagrow__sum')).toHaveText('Grande · Leite de aveia · +1 dose')
+    await expect(row.locator('.bagrow__note')).toContainText('bem quente')
+    await expect(row.locator('.bagrow__price')).toHaveText(BRL('29,30'))
+  })
+
+  test('o mesmo item com escolhas diferentes vira duas linhas; igual soma a quantidade', async ({ page }) => {
+    await addFromFeed(page, 'cafe-latte')
+    await page.locator('.toast').getByRole('button', { name: 'Usar o padrão' }).click()
+    await addFromFeed(page, 'cafe-latte') // igual ao primeiro: só soma
+    await page.locator('.toast').getByRole('button', { name: 'Personalizar' }).click()
+    const sheet = sheetOpen(page)
+    await page.waitForTimeout(450)
+    await sheet.getByRole('radio', { name: /Grande/ }).click()
+    await sheet.locator('.cta').click()
+
+    await openBag(page)
+    const rows = page.locator('.bagrow')
+    // a unidade personalizada sai da linha padrão (que ficava com 2) e vira outra linha
+    await expect(rows).toHaveCount(2)
+    await expect(rows.nth(0).locator('.stepper__n')).toHaveText('1')
+    await expect(rows.nth(1).locator('.bagrow__sum')).toHaveText('Grande')
+    await expect(page.locator('.cart .foot__total strong')).toHaveText(BRL('35,80')) // 16,90 + 18,90
+    // quantidade e remover
+    await rows.nth(0).getByRole('button', { name: /^Mais/ }).click()
+    await expect(rows.nth(0).locator('.stepper__n')).toHaveText('2')
+    await expect(page.locator('.cart .foot__total strong')).toHaveText(BRL('52,70'))
+    await rows.nth(1).getByRole('button', { name: /^Remover/ }).click()
+    await expect(rows).toHaveCount(1)
+  })
+
+  test('sacola, nome e enviar levam a Recebido, Preparando e Pronto', async ({ page }) => {
+    await addFromFeed(page, 'misto-quente')
+    await openBag(page)
+    await page.getByRole('button', { name: 'Continuar' }).click()
+    const send = page.getByRole('button', { name: /^Enviar pedido/ })
+    await expect(send).toBeDisabled() // sem nome, não envia
+    await page.locator('#order-name').fill('Thiago')
+    await expect(send).toHaveText(/Enviar pedido · R\$\s19,90/)
+    await send.click()
+
+    const now = page.locator('.sheet-wrap--open .step-row--now .step-row__label')
+    await expect(page.locator('.sheet-wrap--open .order__code')).toHaveText(/^#[A-Z]\d{2}$/)
+    await expect(now).toHaveText('Recebido')
+    await expect(page.locator('.sheet-wrap--open .cart__count')).toHaveText('Thiago')
+    await expect(page.locator('.sheet-wrap--open .recap')).toContainText('1× Misto Quente')
+    await expect(page.locator('.sheet-wrap--open .ready')).toHaveCount(0)
+
+    await page.clock.fastForward(9_000)
+    await expect(now).toHaveText('Preparando')
+    await page.clock.fastForward(12_000)
+    await expect(page.locator('.sheet-wrap--open .ready h4')).toHaveText('Seu pedido está pronto, Thiago')
+    await expect(page.locator('.sheet-wrap--open .step-row--done')).toHaveCount(3)
+
+    await page.getByRole('button', { name: 'Pedir mais alguma coisa?' }).click()
+    await expect(page.locator('.sheet-wrap--open')).toHaveCount(0)
+    await expect(page.locator('.dock__total')).toHaveCount(0) // sacola e pedido zerados
+    await expect(page.locator('.dock--bag')).toHaveCount(0)
+    const events = (await storedEvents(page)).map((e) => e.type)
+    expect(events).toEqual(expect.arrayContaining(['cart_add', 'checkout_start', 'order_sent']))
+  })
+
+  test('recarregar mantém a sacola e o pedido em andamento', async ({ page }) => {
+    await addFromFeed(page, 'misto-quente')
+    await page.reload()
+    await page.locator('[data-item]').first().waitFor()
+    await expect(page.locator('.dock__bag .count')).toHaveText('1')
+    await openBag(page)
+    await expect(page.locator('.bagrow')).toHaveCount(1)
+    await page.getByRole('button', { name: 'Continuar' }).click()
+    await page.locator('#order-name').fill('Ana')
+    await page.getByRole('button', { name: /^Enviar pedido/ }).click()
+    await page.locator('.sheet-wrap--open .sheet__close').click()
+    await expect(page.locator('.dock__status')).toHaveText('Recebido…')
+
+    await page.reload()
+    await page.locator('[data-item]').first().waitFor()
+    await expect(page.locator('.dock__status')).toBeVisible() // o pedido continua
+    await expect(page.locator('.dock__bag .count')).toHaveCount(0) // a sacola foi para o pedido
+
+    // o andamento vem de sentAt: com o pedido "antigo", o celular já mostra Pronto
+    await page.evaluate(() => {
+      const o = JSON.parse(localStorage.getItem('cm.order')!)
+      o.sentAt = Date.now() - 25_000
+      localStorage.setItem('cm.order', JSON.stringify(o))
+    })
+    await page.reload()
+    await page.locator('[data-item]').first().waitFor()
+    await expect(page.locator('.dock__status')).toHaveText('Pronto!')
+    await bagButton(page).click()
+    await expect(page.locator('.sheet-wrap--open .ready h4')).toHaveText('Seu pedido está pronto, Ana')
+  })
+
+  test('item com alérgeno mostra o aviso no fechamento', async ({ page }) => {
+    await addFromFeed(page, 'cappuccino-doce-de-leite')
+    await page.locator('.toast').getByRole('button', { name: 'Usar o padrão' }).click()
+    await addFromFeed(page, 'misto-quente')
+    await openBag(page)
+    await page.getByRole('button', { name: 'Continuar' }).click()
+    await expect(page.locator('.alert')).toHaveText('Contém lactose, glúten. Confirme com a equipe.')
+  })
+
+  test('adicionar pelo detalhe, pela grade e pelo quiz registra de onde veio', async ({ page }) => {
+    // detalhe
+    await page.locator('.slide__row .capsule').first().click()
+    await page.waitForTimeout(450)
+    await expect(sheetOpen(page).locator('.cta')).toHaveText(/Adicionar · R\$\s\d+,\d{2}/)
+    await sheetOpen(page).locator('.cta').click()
+    await expect(page.locator('.sheet-wrap--open')).toHaveCount(0)
+    await expect(page.locator('.dock__bag .count')).toHaveText('1')
+    // grade
+    await page.getByRole('button', { name: 'Ver tudo' }).click()
+    await page.locator('.card__add').nth(3).click()
+    await expect(page.locator('.dock__bag .count')).toHaveText('2')
+    // quiz (IA simulada: caramelo-macchiato e cafe-latte)
+    await page.locator('.dock__help').click()
+    await page.getByText('Algo quente').click()
+    await page.getByText('Equilibrado', { exact: true }).click()
+    await page.getByText('Nada, ver sugestões').click()
+    await page.locator('.sug__add').first().click()
+    await page.locator('.sheet-wrap--open .sheet__close').click()
+    await expect(page.locator('.dock__bag .count')).toHaveText('3')
+    const events = (await storedEvents(page)).filter((e) => e.type === 'cart_add').map((e) => e.from)
+    expect(events).toEqual(['detail', 'grid', 'quiz'])
+  })
+
+  test('os favoritos antigos viram itens da sacola, uma vez só', async ({ page }) => {
+    await page.evaluate(() => localStorage.setItem('cm.favorites', JSON.stringify(['cafe-latte', 'misto-quente'])))
+    await page.reload()
+    await page.locator('[data-item]').first().waitFor()
+    await expect(page.locator('.dock__bag .count')).toHaveText('2')
+    expect(await page.evaluate(() => localStorage.getItem('cm.favorites'))).toBeNull()
+    await page.reload()
+    await page.locator('[data-item]').first().waitFor()
+    await expect(page.locator('.dock__bag .count')).toHaveText('2') // não dobra
+  })
+
+  test('o app funciona sem localStorage', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(window, 'localStorage', {
+        get() {
+          throw new Error('sem storage')
+        },
+      })
+    })
+    await page.reload()
+    await page.locator('[data-item]').first().waitFor()
+    await addFromFeed(page, 'misto-quente')
+    await expect(page.locator('.dock__bag .count')).toHaveText('1')
+  })
+})
+
+// A sacola e a personalização cabem em qualquer celular e têm alvos de toque ≥ 44px.
+test.describe('sacola e pedido: layout', () => {
+  test.beforeEach(async ({ page }) => open(page, { clock: true }))
+
+  /** O painel aberto cabe na tela, não rola para o lado e todo botão tem pelo menos 44px. */
+  async function expectSheetFits(page: Page, what: string) {
+    const sheet = sheetOpen(page)
+    await expect(sheet).toBeVisible()
+    await page.waitForTimeout(500)
+    const vp = page.viewportSize()!
+    const s = await box(sheet)
+    expect(s.x, what).toBeGreaterThanOrEqual(0)
+    expect(s.right, what).toBeLessThanOrEqual(vp.width + 0.5)
+    expect(s.y, what).toBeGreaterThanOrEqual(0)
+    expect(s.bottom, what).toBeLessThanOrEqual(vp.height + 0.5)
+    const info = await sheet.evaluate((el) => {
+      const sr = el.getBoundingClientRect()
+      const small: string[] = []
+      const wide: string[] = []
+      for (const b of el.querySelectorAll<HTMLElement>('button, input, [role=radio], [role=switch]')) {
+        if (b.classList.contains('sheet__close')) continue // o X é do painel, anterior à sacola
+        const r = b.getBoundingClientRect()
+        if (r.width && (r.height < 43.5 || r.width < 43.5)) small.push(`${b.className || b.tagName} ${Math.round(r.width)}x${Math.round(r.height)}`)
+      }
+      for (const n of el.querySelectorAll<HTMLElement>('*')) {
+        const r = n.getBoundingClientRect()
+        if (r.width && (r.left < sr.left - 0.5 || r.right > sr.right + 0.5) && !n.closest('.sheet__grip')) wide.push(`${n.className} ${Math.round(r.left)}..${Math.round(r.right)}`)
+      }
+      const cut = [...el.querySelectorAll<HTMLElement>('.pane, .pane *')].filter((n) => n.scrollWidth > n.clientWidth + 1 && getComputedStyle(n).overflowX === 'visible' && n.clientWidth > 0).map((n) => n.className)
+      return { small, wide, cut }
+    })
+    expect(info.small, `${what}: alvos de toque menores que 44px`).toEqual([])
+    expect(info.wide, `${what}: elementos para fora do painel`).toEqual([])
+    expect(info.cut, `${what}: conteúdo que passa da largura`).toEqual([])
+    const fh = sheet.locator('.foot')
+    if (await fh.count()) expect((await box(fh)).bottom, `${what}: rodapé`).toBeLessThanOrEqual(s.bottom)
+  }
+
+  test('sacola, fechamento e pedido', async ({ page }) => {
+    // o pior caso: nomes longos, observação, personalização e alérgenos
+    await addFromFeed(page, 'mocha-strate-frappuccino-com-caramelo-salgado-cold-foam')
+    await page.locator('.toast').getByRole('button', { name: 'Personalizar' }).click()
+    const custom = sheetOpen(page)
+    await page.waitForTimeout(450)
+    await custom.getByRole('radio', { name: /Leite vegetal de coco/ }).click()
+    await custom.getByRole('button', { name: /^Mais/ }).first().click()
+    await custom.locator('#custom-note').fill('bem gelado, pouco gelo e um canudo de papel')
+    await expectSheetFits(page, 'personalização')
+    await custom.locator('.cta').click()
+    await addFromFeed(page, 'misto-quente')
+    await page.locator('.toast').getByRole('button', { name: 'Desfazer' }).waitFor()
+
+    await openBag(page)
+    await expectSheetFits(page, 'sacola')
+    await page.getByRole('button', { name: 'Continuar' }).click()
+    await page.locator('#order-name').fill('Maria Eduarda')
+    await expectSheetFits(page, 'fechamento')
+    await page.getByRole('button', { name: /^Enviar pedido/ }).click()
+    await expectSheetFits(page, 'pedido')
+    await page.clock.fastForward(21_000)
+    await expect(page.locator('.sheet-wrap--open .ready')).toBeVisible()
+    await expectSheetFits(page, 'pedido pronto')
+  })
+
+  test('sacola vazia e dock com a sacola cheia cabem na tela', async ({ page }) => {
+    await bagButton(page).click()
+    await expect(page.locator('.sheet-wrap--open .empty')).toBeVisible()
+    await expectSheetFits(page, 'sacola vazia')
+    await page.locator('.sheet-wrap--open .sheet__close').click()
+    await expect(page.locator('.sheet-wrap--open')).toHaveCount(0)
+
+    for (const id of ['cafe-latte', 'cafe-mocha', 'misto-quente']) {
+      await addFromFeed(page, id)
+    }
+    await page.waitForTimeout(500)
+    const vp = page.viewportSize()!
+    const dock = await box(page.locator('.dock'))
+    expect(dock.right).toBeLessThanOrEqual(vp.width)
+    const help = await box(page.locator('.dock__help'))
+    const group = await box(page.locator('.dock__group'))
+    expect(help.right).toBeLessThanOrEqual(group.x)
+    expect(group.right).toBeLessThanOrEqual(vp.width - 8)
+    const bag = page.locator('.dock__bag')
+    expect(await bag.evaluate((el) => el.scrollWidth > el.clientWidth + 1)).toBe(false)
+    for (const l of await page.locator('.dock button').all()) {
+      const b = await box(l)
+      expect(b.height).toBeGreaterThanOrEqual(44)
+      expect(b.width).toBeGreaterThanOrEqual(42)
+    }
+  })
+
+  test('o aviso de "Adicionado" cabe na tela e não cobre os botões do produto', async ({ page }) => {
+    await addFromFeed(page, 'cafe-latte')
+    const t = await box(page.locator('.toast'))
+    const vp = page.viewportSize()!
+    expect(t.x).toBeGreaterThanOrEqual(0)
+    expect(t.right).toBeLessThanOrEqual(vp.width)
+    expect(t.y).toBeGreaterThanOrEqual((await box(page.locator('.cats'))).bottom)
+    // o botão de sacola do produto continua livre para outro toque
+    expect(t.bottom).toBeLessThanOrEqual((await box(page.locator('[data-item="cafe-latte"] .circle--bag'))).y)
+    for (const b of await page.locator('.toast__btn').all()) expect((await box(b)).height).toBeGreaterThanOrEqual(44)
+  })
+
+  test('botões de sacola do feed, da grade e do quiz têm pelo menos 44px', async ({ page }) => {
+    const feedBtn = await box(page.locator('.circle--bag').first())
+    expect(feedBtn.width).toBeGreaterThanOrEqual(44)
+    expect(feedBtn.height).toBeGreaterThanOrEqual(44)
+    await page.getByRole('button', { name: 'Ver tudo' }).click()
+    const gridBtn = await box(page.locator('.card__add').first())
+    expect(gridBtn.width).toBeGreaterThanOrEqual(44)
+    const card = await box(page.locator('.card').first())
+    expect(gridBtn.right).toBeLessThanOrEqual(card.right)
+  })
+})
+
 // Capturas de referência: qualquer mudança visual não intencional quebra o teste.
 // Para aceitar uma mudança de propósito: npx playwright test --update-snapshots
 test.describe('visual', () => {
-  test.beforeEach(async ({ page }) => open(page))
+  test.beforeEach(async ({ page }) => open(page, { clock: true }))
 
   test('feed', async ({ page }) => {
     await expect(page).toHaveScreenshot('feed.png')
@@ -328,5 +664,37 @@ test.describe('visual', () => {
     await page.getByRole('button', { name: 'Ver tudo' }).click()
     await page.waitForTimeout(500)
     await expect(page).toHaveScreenshot('grade.png')
+  })
+  test('sacola', async ({ page }) => {
+    await addFromFeed(page, 'cafe-latte')
+    await page.locator('.toast').getByRole('button', { name: 'Personalizar' }).click()
+    await page.waitForTimeout(450)
+    await sheetOpen(page).getByRole('radio', { name: /Grande/ }).click()
+    await sheetOpen(page).getByRole('radio', { name: /Leite de aveia/ }).click()
+    await sheetOpen(page).getByRole('button', { name: 'Mais Dose extra de café' }).click()
+    await sheetOpen(page).locator('#custom-note').fill('bem quente')
+    await sheetOpen(page).locator('.cta').click()
+    await addFromFeed(page, 'misto-quente')
+    await openBag(page)
+    await expect(page).toHaveScreenshot('sacola.png')
+  })
+  test('personalizar', async ({ page }) => {
+    await addFromFeed(page, 'cafe-mocha')
+    await page.locator('.toast').getByRole('button', { name: 'Personalizar' }).click()
+    await page.waitForTimeout(500)
+    await expect(page).toHaveScreenshot('personalizar.png')
+  })
+  test('pedido', async ({ page }) => {
+    await page.evaluate(() => {
+      Math.random = () => 0.3 // número do pedido fixo, para a captura não variar
+    })
+    await addFromFeed(page, 'cafe-latte')
+    await openBag(page)
+    await page.getByRole('button', { name: 'Continuar' }).click()
+    await page.locator('#order-name').fill('Thiago')
+    await page.getByRole('button', { name: /^Enviar pedido/ }).click()
+    await page.clock.fastForward(9_000)
+    await page.waitForTimeout(300)
+    await expect(page).toHaveScreenshot('pedido.png')
   })
 })

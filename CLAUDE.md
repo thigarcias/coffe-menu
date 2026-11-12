@@ -54,7 +54,7 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 ```bash
 npm run dev -- --host     # app + rota da IA (precisa de OPENAI_API_KEY no .env)
 npm run build             # typecheck + build
-npm run test:e2e          # 125 testes em 5 celulares (layout + capturas)
+npm run test:e2e          # 205 testes em 5 celulares (layout + capturas)
 npm run test:e2e:update   # aceita uma mudança visual feita de propósito
 npm run artifact          # gera app/artifact/ para publicar como Artifact do claude.ai
 ```
@@ -76,4 +76,4 @@ npm run artifact          # gera app/artifact/ para publicar como Artifact do cl
 
 ## Pendências conhecidas
 
-Ver a tabela em `docs/03-entrevista-mvp.md` e o estado em `docs/04-mvp.md`. Resumo: carrinho/checkout, fotos da coleção de Natal (fundo vermelho) e o painel do dono.
+Ver a tabela em `docs/03-entrevista-mvp.md` e o estado em `docs/04-mvp.md`. Resumo: fotos da coleção de Natal (fundo vermelho) e o painel do dono. O checkout (sacola e pedido simulado) está em `docs/05-checkout.md`.

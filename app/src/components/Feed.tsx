@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import type { MenuItem } from '../types'
 import { nameSize, priceParts } from '../lib/format'
 import { track } from '../lib/track'
-import { Heart, Info } from './Icons'
+import { BagPlus, Info } from './Icons'
 import { ProductImage } from './ProductImage'
 
 export interface FeedHandle {
@@ -12,15 +12,16 @@ export interface FeedHandle {
 interface Props {
   items: MenuItem[]
   categoryName: (id: string) => string
-  favorites: Set<string>
-  onToggleFavorite: (id: string) => void
+  /** quantas unidades de cada item estão na sacola */
+  counts: Map<string, number>
+  onAdd: (item: MenuItem) => void
   onDetails: (item: MenuItem) => void
   onActive: (item: MenuItem) => void
 }
 
 /** Feed vertical em tela cheia, um produto por tela, no estilo Reels. */
 export const Feed = forwardRef<FeedHandle, Props>(function Feed(
-  { items, categoryName, favorites, onToggleFavorite, onDetails, onActive },
+  { items, categoryName, counts, onAdd, onDetails, onActive },
   ref,
 ) {
   const box = useRef<HTMLDivElement>(null)
@@ -77,7 +78,7 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
     <div className="feed" ref={box}>
       {items.map((item, i) => {
         const price = priceParts(item)
-        const fav = favorites.has(item.id)
+        const n = counts.get(item.id) ?? 0
         return (
           <section key={item.id} className="slide" data-item={item.id}>
             <ProductImage src={item.image} alt={item.name} eager={i < 2} className="slide__img" />
@@ -102,13 +103,9 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
                 <button className="glass capsule" onClick={() => onDetails(item)}>
                   <Info size={16} /> Com o que se parece?
                 </button>
-                <button
-                  className={`glass circle ${fav ? 'circle--fav' : ''}`}
-                  aria-label={fav ? 'Tirar da lista' : 'Quero provar'}
-                  aria-pressed={fav}
-                  onClick={() => onToggleFavorite(item.id)}
-                >
-                  <Heart size={20} filled={fav} />
+                <button className="glass circle circle--bag" aria-label={`Adicionar ${item.name} à sacola`} onClick={() => onAdd(item)}>
+                  <BagPlus size={22} />
+                  {n > 0 && <span className="count" aria-label={`${n} na sacola`}>{n}</span>}
                 </button>
               </div>
             </div>

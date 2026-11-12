@@ -4,10 +4,13 @@ import type { Avoid, QuizAnswers, Taste, Want } from '../lib/recommend'
 import { suggest, type PickResult } from '../lib/ai'
 import { fromPrice } from '../lib/format'
 import { track } from '../lib/track'
+import { BagPlus } from './Icons'
 
 interface Props {
   items: MenuItem[]
   onPick: (item: MenuItem) => void
+  counts: Map<string, number>
+  onAdd: (item: MenuItem) => void
 }
 
 const WANT: { v: Want; label: string; emoji: string }[] = [
@@ -28,7 +31,7 @@ const AVOID: { v: Avoid; label: string }[] = [
 ]
 
 /** "Ainda não sei, preciso de ajuda": três perguntas e três sugestões. */
-export function Quiz({ items, onPick }: Props) {
+export function Quiz({ items, onPick, counts, onAdd }: Props) {
   const [step, setStep] = useState(0)
   const [want, setWant] = useState<Want | null>(null)
   const [taste, setTaste] = useState<Taste | null>(null)
@@ -73,17 +76,26 @@ export function Quiz({ items, onPick }: Props) {
         </span>
         {!result.picks.length && <p className="quiz__empty">Nada bateu com tudo isso. Tenta tirar uma restrição?</p>}
         <div className="sugs">
-          {result.picks.map(({ item, why }, i) => (
-            <button key={item.id} className="sug" onClick={() => onPick(item)}>
-              <div className="sug__img">{item.image && <img src={item.image} alt="" />}</div>
-              <div className="sug__txt">
-                <span className="sug__rank">{i === 0 ? 'Melhor escolha' : `Opção ${i + 1}`}</span>
-                <strong>{item.name}</strong>
-                <span className="sug__look">{why}</span>
-                {fromPrice(item) && <span className="sug__meta">{fromPrice(item)}</span>}
+          {result.picks.map(({ item, why }, i) => {
+            const n = counts.get(item.id) ?? 0
+            return (
+              <div key={item.id} className="sug">
+                <button className="sug__main" onClick={() => onPick(item)}>
+                  <div className="sug__img">{item.image && <img src={item.image} alt="" />}</div>
+                  <div className="sug__txt">
+                    <span className="sug__rank">{i === 0 ? 'Melhor escolha' : `Opção ${i + 1}`}</span>
+                    <strong>{item.name}</strong>
+                    <span className="sug__look">{why}</span>
+                    {fromPrice(item) && <span className="sug__meta">{fromPrice(item)}</span>}
+                  </div>
+                </button>
+                <button className="glass circle circle--bag sug__add" aria-label={`Adicionar ${item.name} à sacola`} onClick={() => onAdd(item)}>
+                  <BagPlus size={22} />
+                  {n > 0 && <span className="count" aria-label={`${n} na sacola`}>{n}</span>}
+                </button>
               </div>
-            </button>
-          ))}
+            )
+          })}
         </div>
         {avoid.length > 0 && (
           <p className="warn">

@@ -2,7 +2,8 @@
   "cafe": {
     "name": "Starbucks (referência)",
     "source": "Cardápio do site da Starbucks Brasil (preços de uma loja da Grande São Paulo), extraído em 12/11/2026",
-    "storyNote": "Histórias baseadas em conhecimento geral sobre as bebidas e ingredientes; não são informação oficial da Starbucks."
+    "storyNote": "Histórias baseadas em conhecimento geral sobre as bebidas e ingredientes; não são informação oficial da Starbucks.",
+    "orderBy": "nome"
   },
   "categories": [
     {
@@ -145,7 +146,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "mocha"
     },
     {
       "id": "avela-caramelo-latte-gelado",
@@ -195,7 +197,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "mocha"
     },
     {
       "id": "avela-caramelo-frappuccino-base-creme",
@@ -245,7 +248,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "avela-caramelo-frappuccino-base-cafe",
@@ -295,7 +299,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "morango-mocha-latte",
@@ -343,7 +348,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "morango-mocha-latte-gelado",
@@ -392,7 +398,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "mocha"
     },
     {
       "id": "morango-mocha-frappuccino-base-creme",
@@ -441,7 +448,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "morango-mocha-frappuccino-base-cafe",
@@ -490,7 +498,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "panettone",
@@ -612,7 +621,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "cafe-latte",
@@ -655,7 +665,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "cafe-mocha",
@@ -699,7 +710,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "mocha"
     },
     {
       "id": "cafe-mocha-branco",
@@ -743,7 +755,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "mocha"
     },
     {
       "id": "chocolate-quente",
@@ -788,7 +801,8 @@
         "iced": false,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "options": "chocolate"
     },
     {
       "id": "doce-de-leite-latte",
@@ -833,7 +847,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "mocha"
     },
     {
       "id": "brigadeiro-latte",
@@ -878,7 +893,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "mocha"
     },
     {
       "id": "baunilha-latte",
@@ -921,7 +937,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "flat-white",
@@ -964,7 +981,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "avela-latte",
@@ -1010,7 +1028,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "mocha"
     },
     {
       "id": "chocolate-branco-quente",
@@ -1053,7 +1072,8 @@
         "iced": false,
         "caffeine": false,
         "hunger": 0
-      }
+      },
+      "options": "chocolate"
     },
     {
       "id": "chocolate-gelado",
@@ -1098,7 +1118,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "chocolate"
     },
     {
       "id": "caramelo-macchiato-gelado",
@@ -1143,7 +1164,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "baunilha-latte-gelado",
@@ -1187,7 +1209,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "cafe-mocha-gelado",
@@ -1232,7 +1255,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "mocha"
     },
     {
       "id": "doce-de-leite-latte-gelado",
@@ -1278,7 +1302,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "mocha"
     },
     {
       "id": "cafe-mocha-branco-gelado",
@@ -1323,7 +1348,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "mocha"
     },
     {
       "id": "shaken-espresso-gelado-double-shot",
@@ -1367,7 +1393,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "mocha"
     },
     {
       "id": "chocolate-branco-gelado",
@@ -1411,7 +1438,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "chocolate"
     },
     {
       "id": "cafe-latte-gelado",
@@ -1454,7 +1482,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "mocha"
     },
     {
       "id": "cold-brew-tradicional",
@@ -1495,7 +1524,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cold-brew"
     },
     {
       "id": "cold-brew-baunilha",
@@ -1539,7 +1569,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cold-brew-leite"
     },
     {
       "id": "cold-brew-com-leite",
@@ -1582,7 +1613,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cold-brew-leite"
     },
     {
       "id": "flat-white-gelado",
@@ -1625,7 +1657,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "brown-sugar-shaken-espresso-gelado",
@@ -1668,7 +1701,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "avela-shaken-espresso",
@@ -1712,7 +1746,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "chocolate-shaken-espresso",
@@ -1754,7 +1789,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "cappuccino-tradicional-gelado",
@@ -1788,7 +1824,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "cappuccino-tradicional",
@@ -1836,7 +1873,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "cappuccino-doce-de-leite",
@@ -1884,7 +1922,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "cappuccino-brigadeiro",
@@ -1933,7 +1972,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "cappuccino-chocolate",
@@ -1983,7 +2023,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "cappuccino-canela",
@@ -2032,7 +2073,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "bolo-red-velvet-fatia",
@@ -3454,7 +3496,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "cold-brew-leite"
     },
     {
       "id": "matcha-latte-gelado-com-cold-foam-proteico",
@@ -3501,7 +3544,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "leite"
     },
     {
       "id": "mocha-frappuccino-com-cold-foam-proteico",
@@ -3548,7 +3592,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "morango-frappuccino-com-cold-foam-proteico",
@@ -3595,7 +3640,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "baunilha-sem-acucar-latte-proteico",
@@ -3641,7 +3687,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "cafe-simples"
     },
     {
       "id": "baunilha-sem-acucar-latte-proteico-gelado",
@@ -3688,7 +3735,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "cafe-simples"
     },
     {
       "id": "matcha-sem-acucar-latte-proteico-quente",
@@ -3733,7 +3781,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "proteico"
     },
     {
       "id": "matcha-sem-acucar-latte-proteico-gelado",
@@ -3779,7 +3828,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "proteico"
     },
     {
       "id": "matcha-latte-proteico-quente",
@@ -3825,7 +3875,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "proteico"
     },
     {
       "id": "matcha-latte-proteico-gelado",
@@ -3871,7 +3922,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "proteico"
     },
     {
       "id": "cafe-latte-proteico",
@@ -3912,7 +3964,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "cafe-simples"
     },
     {
       "id": "cafe-latte-proteico-gelado",
@@ -3958,7 +4011,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "cafe-simples"
     },
     {
       "id": "cafe-media",
@@ -4001,7 +4055,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "cafe-pingado",
@@ -4044,7 +4099,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "espresso-leite"
     },
     {
       "id": "cafe-americano",
@@ -4084,7 +4140,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cafe-simples"
     },
     {
       "id": "cafe-coado-gelado",
@@ -4124,7 +4181,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cafe-simples"
     },
     {
       "id": "cafe-coado",
@@ -4165,7 +4223,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cafe-simples"
     },
     {
       "id": "cafe-americano-gelado",
@@ -4206,7 +4265,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cafe-simples"
     },
     {
       "id": "espressos",
@@ -4237,7 +4297,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cafe-simples"
     },
     {
       "id": "espresso-collection",
@@ -4273,7 +4334,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cafe-simples"
     },
     {
       "id": "brigadeiro-frappuccino-base-cafe",
@@ -4319,7 +4381,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "brigadeiro-frappuccino-base-creme",
@@ -4365,7 +4428,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "caramelo-frappuccino-base-cafe",
@@ -4411,7 +4475,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "caramelo-frappuccino-base-creme",
@@ -4457,7 +4522,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "choco-chip-frappuccino-base-cafe",
@@ -4503,7 +4569,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "choco-chip-frappuccino-base-creme",
@@ -4549,7 +4616,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "super-morango-frappuccino",
@@ -4593,7 +4661,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "mocha-branco-frappuccino",
@@ -4638,7 +4707,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "matcha-frappuccino",
@@ -4682,7 +4752,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "maracuja-frappuccino",
@@ -4727,7 +4798,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "avela-frappuccino-base-cafe",
@@ -4774,7 +4846,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "avela-frappuccino-base-creme",
@@ -4820,7 +4893,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "doce-de-leite-frappuccino-base-cafe",
@@ -4866,7 +4940,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "doce-de-leite-frappuccino-base-creme",
@@ -4912,7 +4987,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "baunilha-frappuccino",
@@ -4956,7 +5032,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "cafe-frappuccino",
@@ -4999,7 +5076,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "chai-frappuccino",
@@ -5044,7 +5122,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "chocolate-frappuccino",
@@ -5088,7 +5167,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "chocolate-branco-frappuccino",
@@ -5133,7 +5213,8 @@
         "iced": true,
         "caffeine": false,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "mocha-frappuccino",
@@ -5178,7 +5259,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "matcha-strate-frappuccino-com-morango-cold-foam",
@@ -5223,7 +5305,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "mocha-strate-frappuccino-com-caramelo-salgado-cold-foam",
@@ -5269,7 +5352,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "strate-frappuccino-com-brown-sugar-cold-foam",
@@ -5314,7 +5398,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 1
-      }
+      },
+      "options": "frappuccino"
     },
     {
       "id": "chai-latte-quente",
@@ -5357,7 +5442,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "leite"
     },
     {
       "id": "chai-latte-gelado",
@@ -5401,7 +5487,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "leite"
     },
     {
       "id": "cha-chai-gelado",
@@ -5445,7 +5532,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cha"
     },
     {
       "id": "cha-chai-gelado-com-limonada",
@@ -5486,7 +5574,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cha"
     },
     {
       "id": "cha-chai-quente",
@@ -5529,7 +5618,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cha"
     },
     {
       "id": "matcha-latte-quente",
@@ -5572,7 +5662,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "leite"
     },
     {
       "id": "matcha-latte-gelado",
@@ -5616,7 +5707,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "leite"
     },
     {
       "id": "cha-verde-gelado",
@@ -5657,7 +5749,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cha"
     },
     {
       "id": "cha-verde-gelado-com-limonada",
@@ -5698,7 +5791,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cha"
     },
     {
       "id": "cha-verde-quente",
@@ -5738,7 +5832,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cha"
     },
     {
       "id": "cha-preto-quente",
@@ -5778,7 +5873,8 @@
         "iced": false,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cha"
     },
     {
       "id": "cha-preto-gelado",
@@ -5819,7 +5915,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cha"
     },
     {
       "id": "cha-preto-gelado-com-limonada",
@@ -5860,7 +5957,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "cha"
     },
     {
       "id": "refresher-de-morango-com-limonada",
@@ -5902,7 +6000,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "refresher"
     },
     {
       "id": "refresher-de-pitaya-com-limonada",
@@ -5944,7 +6043,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "refresher"
     },
     {
       "id": "refresher-de-frutas-vermelhas-com-limonada",
@@ -5986,7 +6086,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "refresher"
     },
     {
       "id": "refresher-de-pitaya",
@@ -6028,7 +6129,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "refresher"
     },
     {
       "id": "refresher-de-morango",
@@ -6070,7 +6172,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "refresher"
     },
     {
       "id": "refresher-de-frutas-vermelhas",
@@ -6112,7 +6215,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "refresher"
     },
     {
       "id": "pink-drink",
@@ -6154,7 +6258,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "refresher"
     },
     {
       "id": "dragon-drink",
@@ -6196,7 +6301,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "refresher"
     },
     {
       "id": "violet-drink",
@@ -6238,7 +6344,8 @@
         "iced": true,
         "caffeine": true,
         "hunger": 0
-      }
+      },
+      "options": "refresher"
     },
     {
       "id": "caramelo-stroopwafel",
@@ -6782,5 +6889,1210 @@
       "name": "Cold Foam (espuma de leite desnatado, verificar disponibilidade)",
       "price": 5.9
     }
-  ]
+  ],
+  "optionSets": {
+    "espresso-leite": {
+      "name": "Café com leite",
+      "groups": [
+        {
+          "id": "tamanho",
+          "name": "Tamanho",
+          "kind": "size",
+          "required": true,
+          "max": 1,
+          "options": [],
+          "default": "Tall"
+        },
+        {
+          "id": "cafe",
+          "name": "Café",
+          "kind": "single",
+          "required": true,
+          "max": 1,
+          "options": [
+            {
+              "id": "espresso-roast",
+              "name": "Espresso Roast (intenso)",
+              "add": 0
+            },
+            {
+              "id": "espresso-veranda",
+              "name": "Espresso Veranda (equilibrado)",
+              "add": 0
+            }
+          ],
+          "default": "espresso-roast"
+        },
+        {
+          "id": "leite",
+          "name": "Leite",
+          "kind": "single",
+          "required": true,
+          "max": 1,
+          "options": [
+            {
+              "id": "integral",
+              "name": "Leite integral",
+              "add": 0
+            },
+            {
+              "id": "desnatado",
+              "name": "Leite desnatado",
+              "add": 0
+            },
+            {
+              "id": "zero-lactose",
+              "name": "Leite zero lactose",
+              "add": 0
+            },
+            {
+              "id": "aveia",
+              "name": "Leite de aveia",
+              "add": 5.5
+            },
+            {
+              "id": "amendoas",
+              "name": "Leite vegetal de amêndoas",
+              "add": 5.5
+            },
+            {
+              "id": "coco",
+              "name": "Leite vegetal de coco com castanha",
+              "add": 5.5
+            },
+            {
+              "id": "proteico",
+              "name": "Leite proteico (19g de proteína)",
+              "add": 9.9
+            }
+          ],
+          "default": "integral"
+        },
+        {
+          "id": "adicionais",
+          "name": "Adicionais",
+          "kind": "extras",
+          "required": false,
+          "max": 3,
+          "options": [
+            {
+              "id": "dose",
+              "name": "Dose extra de café",
+              "short": "dose",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha",
+              "name": "Essência de baunilha",
+              "short": "baunilha",
+              "add": 4.9
+            },
+            {
+              "id": "caramelo",
+              "name": "Essência de caramelo",
+              "short": "caramelo",
+              "add": 4.9
+            },
+            {
+              "id": "avela",
+              "name": "Essência de avelã",
+              "short": "avelã",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha-sem-acucar",
+              "name": "Essência de baunilha sem açúcar",
+              "short": "baunilha s/ açúcar",
+              "add": 4.9
+            },
+            {
+              "id": "canela",
+              "name": "Xarope de canela",
+              "short": "canela",
+              "add": 4.9
+            },
+            {
+              "id": "mocha",
+              "name": "Xarope de mocha",
+              "short": "mocha",
+              "add": 4.9
+            },
+            {
+              "id": "mocha-branco",
+              "name": "Xarope de mocha branco",
+              "short": "mocha branco",
+              "add": 4.9
+            },
+            {
+              "id": "morango",
+              "name": "Xarope de morango",
+              "short": "morango",
+              "add": 4.9
+            },
+            {
+              "id": "doce-de-leite",
+              "name": "Base de doce de leite",
+              "short": "doce de leite",
+              "add": 4.9
+            },
+            {
+              "id": "chai",
+              "name": "Concentrado de chai",
+              "short": "chai",
+              "add": 4.9
+            },
+            {
+              "id": "choco-chip",
+              "name": "Choco chip",
+              "short": "choco chip",
+              "add": 4.9
+            }
+          ],
+          "default": null
+        }
+      ]
+    },
+    "mocha": {
+      "name": "Café com leite e chantilly",
+      "groups": [
+        {
+          "id": "tamanho",
+          "name": "Tamanho",
+          "kind": "size",
+          "required": true,
+          "max": 1,
+          "options": [],
+          "default": "Tall"
+        },
+        {
+          "id": "cafe",
+          "name": "Café",
+          "kind": "single",
+          "required": true,
+          "max": 1,
+          "options": [
+            {
+              "id": "espresso-roast",
+              "name": "Espresso Roast (intenso)",
+              "add": 0
+            },
+            {
+              "id": "espresso-veranda",
+              "name": "Espresso Veranda (equilibrado)",
+              "add": 0
+            }
+          ],
+          "default": "espresso-roast"
+        },
+        {
+          "id": "leite",
+          "name": "Leite",
+          "kind": "single",
+          "required": true,
+          "max": 1,
+          "options": [
+            {
+              "id": "integral",
+              "name": "Leite integral",
+              "add": 0
+            },
+            {
+              "id": "desnatado",
+              "name": "Leite desnatado",
+              "add": 0
+            },
+            {
+              "id": "zero-lactose",
+              "name": "Leite zero lactose",
+              "add": 0
+            },
+            {
+              "id": "aveia",
+              "name": "Leite de aveia",
+              "add": 5.5
+            },
+            {
+              "id": "amendoas",
+              "name": "Leite vegetal de amêndoas",
+              "add": 5.5
+            },
+            {
+              "id": "coco",
+              "name": "Leite vegetal de coco com castanha",
+              "add": 5.5
+            },
+            {
+              "id": "proteico",
+              "name": "Leite proteico (19g de proteína)",
+              "add": 9.9
+            }
+          ],
+          "default": "integral"
+        },
+        {
+          "id": "adicionais",
+          "name": "Adicionais",
+          "kind": "extras",
+          "required": false,
+          "max": 3,
+          "options": [
+            {
+              "id": "dose",
+              "name": "Dose extra de café",
+              "short": "dose",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha",
+              "name": "Essência de baunilha",
+              "short": "baunilha",
+              "add": 4.9
+            },
+            {
+              "id": "caramelo",
+              "name": "Essência de caramelo",
+              "short": "caramelo",
+              "add": 4.9
+            },
+            {
+              "id": "avela",
+              "name": "Essência de avelã",
+              "short": "avelã",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha-sem-acucar",
+              "name": "Essência de baunilha sem açúcar",
+              "short": "baunilha s/ açúcar",
+              "add": 4.9
+            },
+            {
+              "id": "canela",
+              "name": "Xarope de canela",
+              "short": "canela",
+              "add": 4.9
+            },
+            {
+              "id": "mocha",
+              "name": "Xarope de mocha",
+              "short": "mocha",
+              "add": 4.9
+            },
+            {
+              "id": "mocha-branco",
+              "name": "Xarope de mocha branco",
+              "short": "mocha branco",
+              "add": 4.9
+            },
+            {
+              "id": "morango",
+              "name": "Xarope de morango",
+              "short": "morango",
+              "add": 4.9
+            },
+            {
+              "id": "doce-de-leite",
+              "name": "Base de doce de leite",
+              "short": "doce de leite",
+              "add": 4.9
+            },
+            {
+              "id": "chai",
+              "name": "Concentrado de chai",
+              "short": "chai",
+              "add": 4.9
+            },
+            {
+              "id": "choco-chip",
+              "name": "Choco chip",
+              "short": "choco chip",
+              "add": 4.9
+            }
+          ],
+          "default": null
+        },
+        {
+          "id": "chantilly",
+          "name": "Chantilly",
+          "kind": "toggle",
+          "required": false,
+          "max": 1,
+          "options": [
+            {
+              "id": "sem-chantilly",
+              "name": "Sem chantilly",
+              "add": 0
+            }
+          ],
+          "default": null
+        }
+      ]
+    },
+    "leite": {
+      "name": "Bebida de leite",
+      "groups": [
+        {
+          "id": "tamanho",
+          "name": "Tamanho",
+          "kind": "size",
+          "required": true,
+          "max": 1,
+          "options": [],
+          "default": "Tall"
+        },
+        {
+          "id": "leite",
+          "name": "Leite",
+          "kind": "single",
+          "required": true,
+          "max": 1,
+          "options": [
+            {
+              "id": "integral",
+              "name": "Leite integral",
+              "add": 0
+            },
+            {
+              "id": "desnatado",
+              "name": "Leite desnatado",
+              "add": 0
+            },
+            {
+              "id": "zero-lactose",
+              "name": "Leite zero lactose",
+              "add": 0
+            },
+            {
+              "id": "aveia",
+              "name": "Leite de aveia",
+              "add": 5.5
+            },
+            {
+              "id": "amendoas",
+              "name": "Leite vegetal de amêndoas",
+              "add": 5.5
+            },
+            {
+              "id": "coco",
+              "name": "Leite vegetal de coco com castanha",
+              "add": 5.5
+            },
+            {
+              "id": "proteico",
+              "name": "Leite proteico (19g de proteína)",
+              "add": 9.9
+            }
+          ],
+          "default": "integral"
+        },
+        {
+          "id": "adicionais",
+          "name": "Adicionais",
+          "kind": "extras",
+          "required": false,
+          "max": 3,
+          "options": [
+            {
+              "id": "dose",
+              "name": "Dose extra de café",
+              "short": "dose",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha",
+              "name": "Essência de baunilha",
+              "short": "baunilha",
+              "add": 4.9
+            },
+            {
+              "id": "caramelo",
+              "name": "Essência de caramelo",
+              "short": "caramelo",
+              "add": 4.9
+            },
+            {
+              "id": "avela",
+              "name": "Essência de avelã",
+              "short": "avelã",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha-sem-acucar",
+              "name": "Essência de baunilha sem açúcar",
+              "short": "baunilha s/ açúcar",
+              "add": 4.9
+            },
+            {
+              "id": "canela",
+              "name": "Xarope de canela",
+              "short": "canela",
+              "add": 4.9
+            },
+            {
+              "id": "mocha",
+              "name": "Xarope de mocha",
+              "short": "mocha",
+              "add": 4.9
+            },
+            {
+              "id": "mocha-branco",
+              "name": "Xarope de mocha branco",
+              "short": "mocha branco",
+              "add": 4.9
+            },
+            {
+              "id": "doce-de-leite",
+              "name": "Base de doce de leite",
+              "short": "doce de leite",
+              "add": 4.9
+            },
+            {
+              "id": "cobertura-chocolate",
+              "name": "Cobertura de chocolate",
+              "short": "cob. chocolate",
+              "add": 4.9
+            },
+            {
+              "id": "granulado",
+              "name": "Granulado de chocolate",
+              "short": "granulado",
+              "add": 4.9
+            }
+          ],
+          "default": null
+        }
+      ]
+    },
+    "chocolate": {
+      "name": "Chocolate com chantilly",
+      "groups": [
+        {
+          "id": "tamanho",
+          "name": "Tamanho",
+          "kind": "size",
+          "required": true,
+          "max": 1,
+          "options": [],
+          "default": "Tall"
+        },
+        {
+          "id": "leite",
+          "name": "Leite",
+          "kind": "single",
+          "required": true,
+          "max": 1,
+          "options": [
+            {
+              "id": "integral",
+              "name": "Leite integral",
+              "add": 0
+            },
+            {
+              "id": "desnatado",
+              "name": "Leite desnatado",
+              "add": 0
+            },
+            {
+              "id": "zero-lactose",
+              "name": "Leite zero lactose",
+              "add": 0
+            },
+            {
+              "id": "aveia",
+              "name": "Leite de aveia",
+              "add": 5.5
+            },
+            {
+              "id": "amendoas",
+              "name": "Leite vegetal de amêndoas",
+              "add": 5.5
+            },
+            {
+              "id": "coco",
+              "name": "Leite vegetal de coco com castanha",
+              "add": 5.5
+            },
+            {
+              "id": "proteico",
+              "name": "Leite proteico (19g de proteína)",
+              "add": 9.9
+            }
+          ],
+          "default": "integral"
+        },
+        {
+          "id": "adicionais",
+          "name": "Adicionais",
+          "kind": "extras",
+          "required": false,
+          "max": 3,
+          "options": [
+            {
+              "id": "dose",
+              "name": "Dose extra de café",
+              "short": "dose",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha",
+              "name": "Essência de baunilha",
+              "short": "baunilha",
+              "add": 4.9
+            },
+            {
+              "id": "caramelo",
+              "name": "Essência de caramelo",
+              "short": "caramelo",
+              "add": 4.9
+            },
+            {
+              "id": "avela",
+              "name": "Essência de avelã",
+              "short": "avelã",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha-sem-acucar",
+              "name": "Essência de baunilha sem açúcar",
+              "short": "baunilha s/ açúcar",
+              "add": 4.9
+            },
+            {
+              "id": "canela",
+              "name": "Xarope de canela",
+              "short": "canela",
+              "add": 4.9
+            },
+            {
+              "id": "mocha",
+              "name": "Xarope de mocha",
+              "short": "mocha",
+              "add": 4.9
+            },
+            {
+              "id": "mocha-branco",
+              "name": "Xarope de mocha branco",
+              "short": "mocha branco",
+              "add": 4.9
+            },
+            {
+              "id": "doce-de-leite",
+              "name": "Base de doce de leite",
+              "short": "doce de leite",
+              "add": 4.9
+            },
+            {
+              "id": "cobertura-chocolate",
+              "name": "Cobertura de chocolate",
+              "short": "cob. chocolate",
+              "add": 4.9
+            },
+            {
+              "id": "granulado",
+              "name": "Granulado de chocolate",
+              "short": "granulado",
+              "add": 4.9
+            }
+          ],
+          "default": null
+        },
+        {
+          "id": "chantilly",
+          "name": "Chantilly",
+          "kind": "toggle",
+          "required": false,
+          "max": 1,
+          "options": [
+            {
+              "id": "sem-chantilly",
+              "name": "Sem chantilly",
+              "add": 0
+            }
+          ],
+          "default": null
+        }
+      ]
+    },
+    "cafe-simples": {
+      "name": "Café",
+      "groups": [
+        {
+          "id": "tamanho",
+          "name": "Tamanho",
+          "kind": "size",
+          "required": true,
+          "max": 1,
+          "options": [],
+          "default": "Tall"
+        },
+        {
+          "id": "cafe",
+          "name": "Café",
+          "kind": "single",
+          "required": true,
+          "max": 1,
+          "options": [
+            {
+              "id": "espresso-roast",
+              "name": "Espresso Roast (intenso)",
+              "add": 0
+            },
+            {
+              "id": "espresso-veranda",
+              "name": "Espresso Veranda (equilibrado)",
+              "add": 0
+            }
+          ],
+          "default": "espresso-roast"
+        },
+        {
+          "id": "adicionais",
+          "name": "Adicionais",
+          "kind": "extras",
+          "required": false,
+          "max": 3,
+          "options": [
+            {
+              "id": "dose",
+              "name": "Dose extra de café",
+              "short": "dose",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha",
+              "name": "Essência de baunilha",
+              "short": "baunilha",
+              "add": 4.9
+            },
+            {
+              "id": "caramelo",
+              "name": "Essência de caramelo",
+              "short": "caramelo",
+              "add": 4.9
+            },
+            {
+              "id": "avela",
+              "name": "Essência de avelã",
+              "short": "avelã",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha-sem-acucar",
+              "name": "Essência de baunilha sem açúcar",
+              "short": "baunilha s/ açúcar",
+              "add": 4.9
+            },
+            {
+              "id": "canela",
+              "name": "Xarope de canela",
+              "short": "canela",
+              "add": 4.9
+            },
+            {
+              "id": "mocha",
+              "name": "Xarope de mocha",
+              "short": "mocha",
+              "add": 4.9
+            },
+            {
+              "id": "mocha-branco",
+              "name": "Xarope de mocha branco",
+              "short": "mocha branco",
+              "add": 4.9
+            },
+            {
+              "id": "doce-de-leite",
+              "name": "Base de doce de leite",
+              "short": "doce de leite",
+              "add": 4.9
+            }
+          ],
+          "default": null
+        }
+      ]
+    },
+    "frappuccino": {
+      "name": "Frappuccino",
+      "groups": [
+        {
+          "id": "tamanho",
+          "name": "Tamanho",
+          "kind": "size",
+          "required": true,
+          "max": 1,
+          "options": [],
+          "default": "Tall"
+        },
+        {
+          "id": "leite",
+          "name": "Leite",
+          "kind": "single",
+          "required": true,
+          "max": 1,
+          "options": [
+            {
+              "id": "integral",
+              "name": "Leite integral",
+              "add": 0
+            },
+            {
+              "id": "desnatado",
+              "name": "Leite desnatado",
+              "add": 0
+            },
+            {
+              "id": "zero-lactose",
+              "name": "Leite zero lactose",
+              "add": 0
+            },
+            {
+              "id": "aveia",
+              "name": "Leite de aveia",
+              "add": 5.5
+            },
+            {
+              "id": "amendoas",
+              "name": "Leite vegetal de amêndoas",
+              "add": 5.5
+            },
+            {
+              "id": "coco",
+              "name": "Leite vegetal de coco com castanha",
+              "add": 5.5
+            },
+            {
+              "id": "proteico",
+              "name": "Leite proteico (19g de proteína)",
+              "add": 9.9
+            }
+          ],
+          "default": "integral"
+        },
+        {
+          "id": "adicionais",
+          "name": "Adicionais",
+          "kind": "extras",
+          "required": false,
+          "max": 3,
+          "options": [
+            {
+              "id": "dose",
+              "name": "Dose extra de café",
+              "short": "dose",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha",
+              "name": "Essência de baunilha",
+              "short": "baunilha",
+              "add": 4.9
+            },
+            {
+              "id": "caramelo",
+              "name": "Essência de caramelo",
+              "short": "caramelo",
+              "add": 4.9
+            },
+            {
+              "id": "avela",
+              "name": "Essência de avelã",
+              "short": "avelã",
+              "add": 4.9
+            },
+            {
+              "id": "canela",
+              "name": "Xarope de canela",
+              "short": "canela",
+              "add": 4.9
+            },
+            {
+              "id": "mocha",
+              "name": "Xarope de mocha",
+              "short": "mocha",
+              "add": 4.9
+            },
+            {
+              "id": "mocha-branco",
+              "name": "Xarope de mocha branco",
+              "short": "mocha branco",
+              "add": 4.9
+            },
+            {
+              "id": "morango",
+              "name": "Xarope de morango",
+              "short": "morango",
+              "add": 4.9
+            },
+            {
+              "id": "choco-chip",
+              "name": "Choco chip",
+              "short": "choco chip",
+              "add": 4.9
+            },
+            {
+              "id": "cobertura-caramelo",
+              "name": "Cobertura de caramelo",
+              "short": "cob. caramelo",
+              "add": 4.9
+            }
+          ],
+          "default": null
+        },
+        {
+          "id": "chantilly",
+          "name": "Chantilly",
+          "kind": "toggle",
+          "required": false,
+          "max": 1,
+          "options": [
+            {
+              "id": "sem-chantilly",
+              "name": "Sem chantilly",
+              "add": 0
+            }
+          ],
+          "default": null
+        }
+      ]
+    },
+    "cold-brew": {
+      "name": "Cold brew",
+      "groups": [
+        {
+          "id": "tamanho",
+          "name": "Tamanho",
+          "kind": "size",
+          "required": true,
+          "max": 1,
+          "options": [],
+          "default": "Tall"
+        },
+        {
+          "id": "adicionais",
+          "name": "Adicionais",
+          "kind": "extras",
+          "required": false,
+          "max": 3,
+          "options": [
+            {
+              "id": "dose",
+              "name": "Dose extra de café",
+              "short": "dose",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha",
+              "name": "Essência de baunilha",
+              "short": "baunilha",
+              "add": 4.9
+            },
+            {
+              "id": "caramelo",
+              "name": "Essência de caramelo",
+              "short": "caramelo",
+              "add": 4.9
+            },
+            {
+              "id": "avela",
+              "name": "Essência de avelã",
+              "short": "avelã",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha-sem-acucar",
+              "name": "Essência de baunilha sem açúcar",
+              "short": "baunilha s/ açúcar",
+              "add": 4.9
+            },
+            {
+              "id": "canela",
+              "name": "Xarope de canela",
+              "short": "canela",
+              "add": 4.9
+            },
+            {
+              "id": "mocha",
+              "name": "Xarope de mocha",
+              "short": "mocha",
+              "add": 4.9
+            },
+            {
+              "id": "mocha-branco",
+              "name": "Xarope de mocha branco",
+              "short": "mocha branco",
+              "add": 4.9
+            },
+            {
+              "id": "morango",
+              "name": "Xarope de morango",
+              "short": "morango",
+              "add": 4.9
+            },
+            {
+              "id": "doce-de-leite",
+              "name": "Base de doce de leite",
+              "short": "doce de leite",
+              "add": 4.9
+            },
+            {
+              "id": "chai",
+              "name": "Concentrado de chai",
+              "short": "chai",
+              "add": 4.9
+            }
+          ],
+          "default": null
+        }
+      ]
+    },
+    "cold-brew-leite": {
+      "name": "Cold brew com leite",
+      "groups": [
+        {
+          "id": "tamanho",
+          "name": "Tamanho",
+          "kind": "size",
+          "required": true,
+          "max": 1,
+          "options": [],
+          "default": "Tall"
+        },
+        {
+          "id": "leite",
+          "name": "Leite",
+          "kind": "single",
+          "required": true,
+          "max": 1,
+          "options": [
+            {
+              "id": "integral",
+              "name": "Leite integral",
+              "add": 0
+            },
+            {
+              "id": "desnatado",
+              "name": "Leite desnatado",
+              "add": 0
+            },
+            {
+              "id": "zero-lactose",
+              "name": "Leite zero lactose",
+              "add": 0
+            },
+            {
+              "id": "aveia",
+              "name": "Leite de aveia",
+              "add": 5.5
+            },
+            {
+              "id": "amendoas",
+              "name": "Leite vegetal de amêndoas",
+              "add": 5.5
+            },
+            {
+              "id": "coco",
+              "name": "Leite vegetal de coco com castanha",
+              "add": 5.5
+            },
+            {
+              "id": "proteico",
+              "name": "Leite proteico (19g de proteína)",
+              "add": 9.9
+            }
+          ],
+          "default": "integral"
+        },
+        {
+          "id": "adicionais",
+          "name": "Adicionais",
+          "kind": "extras",
+          "required": false,
+          "max": 3,
+          "options": [
+            {
+              "id": "dose",
+              "name": "Dose extra de café",
+              "short": "dose",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha",
+              "name": "Essência de baunilha",
+              "short": "baunilha",
+              "add": 4.9
+            },
+            {
+              "id": "caramelo",
+              "name": "Essência de caramelo",
+              "short": "caramelo",
+              "add": 4.9
+            },
+            {
+              "id": "avela",
+              "name": "Essência de avelã",
+              "short": "avelã",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha-sem-acucar",
+              "name": "Essência de baunilha sem açúcar",
+              "short": "baunilha s/ açúcar",
+              "add": 4.9
+            },
+            {
+              "id": "canela",
+              "name": "Xarope de canela",
+              "short": "canela",
+              "add": 4.9
+            },
+            {
+              "id": "mocha",
+              "name": "Xarope de mocha",
+              "short": "mocha",
+              "add": 4.9
+            },
+            {
+              "id": "mocha-branco",
+              "name": "Xarope de mocha branco",
+              "short": "mocha branco",
+              "add": 4.9
+            },
+            {
+              "id": "morango",
+              "name": "Xarope de morango",
+              "short": "morango",
+              "add": 4.9
+            },
+            {
+              "id": "doce-de-leite",
+              "name": "Base de doce de leite",
+              "short": "doce de leite",
+              "add": 4.9
+            },
+            {
+              "id": "chai",
+              "name": "Concentrado de chai",
+              "short": "chai",
+              "add": 4.9
+            }
+          ],
+          "default": null
+        }
+      ]
+    },
+    "proteico": {
+      "name": "Bebida proteica",
+      "groups": [
+        {
+          "id": "tamanho",
+          "name": "Tamanho",
+          "kind": "size",
+          "required": true,
+          "max": 1,
+          "options": [],
+          "default": "Tall"
+        },
+        {
+          "id": "adicionais",
+          "name": "Adicionais",
+          "kind": "extras",
+          "required": false,
+          "max": 3,
+          "options": [
+            {
+              "id": "baunilha",
+              "name": "Essência de baunilha",
+              "short": "baunilha",
+              "add": 4.9
+            },
+            {
+              "id": "mocha-branco",
+              "name": "Xarope de mocha branco",
+              "short": "mocha branco",
+              "add": 4.9
+            }
+          ],
+          "default": null
+        }
+      ]
+    },
+    "cha": {
+      "name": "Chá",
+      "groups": [
+        {
+          "id": "tamanho",
+          "name": "Tamanho",
+          "kind": "size",
+          "required": true,
+          "max": 1,
+          "options": [],
+          "default": "Tall"
+        },
+        {
+          "id": "adicionais",
+          "name": "Adicionais",
+          "kind": "extras",
+          "required": false,
+          "max": 3,
+          "options": [
+            {
+              "id": "baunilha",
+              "name": "Essência de baunilha",
+              "short": "baunilha",
+              "add": 4.9
+            },
+            {
+              "id": "caramelo",
+              "name": "Essência de caramelo",
+              "short": "caramelo",
+              "add": 4.9
+            },
+            {
+              "id": "canela",
+              "name": "Xarope de canela",
+              "short": "canela",
+              "add": 4.9
+            }
+          ],
+          "default": null
+        }
+      ]
+    },
+    "refresher": {
+      "name": "Refresher",
+      "groups": [
+        {
+          "id": "tamanho",
+          "name": "Tamanho",
+          "kind": "size",
+          "required": true,
+          "max": 1,
+          "options": [],
+          "default": "Tall"
+        },
+        {
+          "id": "adicionais",
+          "name": "Adicionais",
+          "kind": "extras",
+          "required": false,
+          "max": 3,
+          "options": [
+            {
+              "id": "morango",
+              "name": "Xarope de morango",
+              "short": "morango",
+              "add": 4.9
+            },
+            {
+              "id": "baunilha",
+              "name": "Essência de baunilha",
+              "short": "baunilha",
+              "add": 4.9
+            }
+          ],
+          "default": null
+        }
+      ]
+    }
+  }
 }

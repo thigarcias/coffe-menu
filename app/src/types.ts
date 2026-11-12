@@ -28,6 +28,42 @@ export interface MenuItem {
   ingredients?: string[]
   story?: string
   tags: ItemTags
+  /** id do conjunto de opções (Menu.optionSets) a personalizar; sem ele, o item entra na sacola direto */
+  options?: string
+}
+
+/** Como o pedido é identificado: pelo nome (balcão), pela mesa (QR) ou pelos dois. */
+export type OrderBy = 'nome' | 'mesa' | 'ambos'
+
+export interface Choice {
+  id: string
+  name: string
+  /** acréscimo em R$ */
+  add: number
+  /** nome curto, usado no resumo da linha ( "+1 dose" ) */
+  short?: string
+}
+
+/**
+ * Grupo de opções, na ordem do site.
+ * - size: tamanho (as opções vêm de item.prices)
+ * - single: escolhe uma (café, leite)
+ * - extras: cada opção pode ter quantidade, até max por opção (adicionais)
+ * - toggle: liga/desliga (sem chantilly)
+ */
+export interface OptionGroup {
+  id: string
+  name: string
+  kind: 'size' | 'single' | 'extras' | 'toggle'
+  required: boolean
+  max: number
+  options: Choice[]
+  default: string | null
+}
+
+export interface OptionSet {
+  name: string
+  groups: OptionGroup[]
 }
 
 export interface Category {
@@ -36,9 +72,10 @@ export interface Category {
 }
 
 export interface Menu {
-  cafe: { name: string; source?: string; storyNote?: string }
+  cafe: { name: string; source?: string; storyNote?: string; orderBy?: OrderBy }
   categories: Category[]
   subcategories?: (Category & { group: string })[]
   items: MenuItem[]
   extras?: { name: string; price: number | null }[]
+  optionSets?: Record<string, OptionSet>
 }
