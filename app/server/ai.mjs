@@ -4,7 +4,7 @@ const API = 'https://api.openai.com/v1/responses'
 export const config = () => ({
   key: process.env.OPENAI_API_KEY,
   model: process.env.OPENAI_MODEL || 'gpt-6-luna',
-  effort: process.env.OPENAI_REASONING_EFFORT || 'max',
+  effort: process.env.OPENAI_REASONING_EFFORT || 'high',
   timeoutMs: Number(process.env.OPENAI_TIMEOUT_MS || 60000),
 })
 
