@@ -167,6 +167,12 @@ test.describe('cardápio no celular', () => {
     const title = await box(sheet.locator('.detail__name'))
     expect(title.right).toBeLessThanOrEqual(close.x)
     await expect(sheet.locator('.ingredients li').first()).toBeVisible()
+    // o reflexo do vidro não pode ficar por cima do texto (deixava o título desbotado)
+    const onTop = await sheet.locator('.detail__name').evaluate((el) => {
+      const r = el.getBoundingClientRect()
+      return document.elementFromPoint(r.left + 10, r.top + r.height / 2) === el || el.contains(document.elementFromPoint(r.left + 10, r.top + r.height / 2))
+    })
+    expect(onTop).toBe(true)
     await expect(page.locator('.dock')).toHaveClass(/dock--hidden/)
   })
 
