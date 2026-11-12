@@ -11,3 +11,10 @@ export function fromPrice(item: MenuItem): string | null {
   const min = Math.min(...values)
   return values.length > 1 ? `a partir de ${money(min)}` : money(min)
 }
+
+/** Preço em duas partes, para o feed: rótulo pequeno + valor. */
+export function priceParts(item: MenuItem): { label: string | null; value: string } | null {
+  const values = item.prices.map((p) => p.price).filter((p): p is number => p != null)
+  if (!values.length) return null
+  return { label: values.length > 1 ? 'a partir de' : null, value: money(Math.min(...values)) }
+}

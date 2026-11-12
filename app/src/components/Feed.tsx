@@ -1,8 +1,9 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import type { MenuItem } from '../types'
-import { fromPrice } from '../lib/format'
+import { priceParts } from '../lib/format'
 import { track } from '../lib/track'
 import { Heart, Info } from './Icons'
+import { ProductImage } from './ProductImage'
 
 export interface FeedHandle {
   scrollTo: (itemId: string, smooth?: boolean) => void
@@ -74,15 +75,11 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
       {items.map((item, i) => {
         const prev = items[i - 1]
         const firstOfCat = !prev || prev.category !== item.category
-        const price = fromPrice(item)
+        const price = priceParts(item)
         const fav = favorites.has(item.id)
         return (
           <section key={item.id} className="slide" data-item={item.id}>
-            {item.image ? (
-              <img className="slide__img" src={item.image} alt={item.name} loading={i < 2 ? 'eager' : 'lazy'} />
-            ) : (
-              <div className="slide__img slide__img--empty" />
-            )}
+            <ProductImage src={item.image} alt={item.name} eager={i < 2} className="slide__img" />
             <div className="slide__shade" />
 
             <div className="slide__body">
@@ -95,7 +92,12 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
               <h2 className="slide__name">{item.name}</h2>
               <p className="slide__desc">{item.description}</p>
               <div className="slide__row">
-                {price && <span className="price">{price}</span>}
+                {price && (
+                  <span className="price">
+                    {price.label && <small>{price.label}</small>}
+                    {price.value}
+                  </span>
+                )}
                 <button className="glass capsule" onClick={() => onDetails(item)}>
                   <Info size={16} /> Com o que se parece?
                 </button>

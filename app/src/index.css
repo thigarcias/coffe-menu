@@ -126,8 +126,38 @@ img { display: block; max-width: none; }
 .feed { height: 100%; overflow-y: auto; scroll-snap-type: y mandatory; scrollbar-width: none; }
 .feed::-webkit-scrollbar { display: none; }
 .slide { position: relative; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; }
-.slide__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.slide__img--empty { background: radial-gradient(circle at 50% 35%, #4a3b2e, #15110e 70%); }
+/* foto: produto inteiro na frente, a mesma foto desfocada preenchendo o fundo */
+.pimg { position: absolute; inset: 0; overflow: hidden; background: #15110e; }
+.pimg--empty { background: radial-gradient(circle at 50% 35%, #4a3b2e, #15110e 70%); }
+.pimg__bg {
+  position: absolute; inset: -12%; width: 124%; height: 124%; object-fit: cover;
+  filter: blur(40px) saturate(1.35) brightness(.72);
+}
+.pimg__box {
+  position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+  display: grid; place-items: center; container-type: size;
+}
+.pimg__fg {
+  --ar: 0.75; /* largura / altura, vem da foto carregada */
+  width: min(100cqw, 100cqh * var(--ar));
+  height: min(100cqh, 100cqw / var(--ar));
+  object-fit: cover;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 82%, transparent 100%),
+                      linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 82%, transparent 100%),
+              linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-composite: intersect;
+}
+/* no feed: a foto ocupa o espaço entre as categorias e o texto */
+.slide__img .pimg__box {
+  top: calc(max(12px, env(safe-area-inset-top)) + 92px);
+  bottom: 31%;
+  left: 8px; right: 8px;
+}
+/* na grade: foto inteira com respiro */
+.card__pimg .pimg__bg { filter: blur(22px) saturate(1.3) brightness(.75); }
+.card__pimg .pimg__box { inset: 4%; }
 .slide__shade {
   position: absolute; inset: 0;
   background: linear-gradient(to top, rgba(0,0,0,.86) 0%, rgba(0,0,0,.5) 26%, rgba(0,0,0,0) 48%);
@@ -156,7 +186,8 @@ img { display: block; max-width: none; }
 }
 .slide__row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
 .slide__row .circle { margin-left: auto; width: 40px; height: 40px; }
-.price { font-size: 15px; font-weight: 600; margin-right: 4px; font-variant-numeric: tabular-nums; }
+.price { display: grid; line-height: 1.1; font-size: 16px; font-weight: 600; margin-right: 4px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.price small { font-size: 11px; font-weight: 500; color: var(--ink-3); }
 
 /* ---------- dock (rodapé flutuante) ---------- */
 .dock {
@@ -191,7 +222,6 @@ img { display: block; max-width: none; }
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 10px; }
 .card { text-align: left; display: grid; gap: 3px; min-width: 0; }
 .card__img { position: relative; aspect-ratio: 4/5; max-width: 100%; border-radius: 22px; overflow: hidden; background: #1d1a17; margin-bottom: 5px; }
-.card__img img { width: 100%; height: 100%; object-fit: cover; }
 .card__fav { position: absolute; top: 8px; right: 10px; color: var(--fav); font-size: 16px; }
 .card__name { font-size: 14px; font-weight: 600; line-height: 1.25; }
 .card__price { font-size: 12.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
