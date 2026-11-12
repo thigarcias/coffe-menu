@@ -4,6 +4,12 @@ const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' 
 
 export const money = (v: number) => brl.format(v)
 
+/**
+ * Tamanho do nome do produto: nomes longos (ex.: "… com Cold Foam Proteico (19g)") ganham
+ * fonte menor, para a foto do feed e o painel do detalhe não perderem espaço.
+ */
+export const nameSize = (name: string): '' | 'l' | 'xl' => (name.length > 36 ? 'xl' : name.length > 18 ? 'l' : '')
+
 /** Menor preço do item, para mostrar "a partir de". */
 export function fromPrice(item: MenuItem): string | null {
   const values = item.prices.map((p) => p.price).filter((p): p is number => p != null)

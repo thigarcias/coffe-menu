@@ -44,7 +44,7 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 - A saída é JSON estruturado (até 3 ids, cada um com um motivo), e ids que não existem no cardápio são descartados. Se a IA falhar ou não houver servidor, o quiz cai nas **regras** de `src/lib/recommend.ts` e mostra "Sugestão rápida".
 
 ### Dados e conteúdo
-- `app/src/data/menu.json` usa o cardápio oficial da **Starbucks Brasil (PDF)** como **referência interna**. Não é para mostrar a terceiros como se fosse produto da Starbucks.
+- `app/src/data/menu.json` usa o cardápio do **site da Starbucks Brasil** (162 itens, com preços, tamanhos e fotos oficiais) como **referência interna**. Não é para mostrar a terceiros como se fosse produto da Starbucks.
 - Histórias ("De onde vem") vêm de conhecimento geral. Lenda leva "conta-se que", e **nunca se inventa fato sobre a Starbucks**. O aviso `cafe.storyNote` aparece no app.
 - Foto de produto é sempre a **foto real**; nunca gerar produto com IA. Estender só o **fundo** está ok.
 - Alergia é dado sensível: o quiz não guarda as respostas e sempre avisa para confirmar com a equipe.
@@ -54,7 +54,7 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 ```bash
 npm run dev -- --host     # app + rota da IA (precisa de OPENAI_API_KEY no .env)
 npm run build             # typecheck + build
-npm run test:e2e          # 110 testes em 5 celulares (layout + capturas)
+npm run test:e2e          # 125 testes em 5 celulares (layout + capturas)
 npm run test:e2e:update   # aceita uma mudança visual feita de propósito
 npm run artifact          # gera app/artifact/ para publicar como Artifact do claude.ai
 ```
@@ -71,9 +71,9 @@ npm run artifact          # gera app/artifact/ para publicar como Artifact do cl
 - A sessão roda no ambiente pessoal **coffe-menu**. A chave da OpenAI está salva como segredo do ambiente e é injetada pelo proxy em `api.openai.com`; ninguém vê o valor.
 - Para o Node passar pelo proxy aqui: `NODE_USE_ENV_PROXY=1 NODE_EXTRA_CA_CERTS=/root/.ccr/ca-bundle.crt OPENAI_API_KEY=proxy-injected`. Na máquina do usuário e na Vercel isso não é necessário.
 - O Playwright e o Chromium já vêm instalados (versão 1.63.0); o `@playwright/test` do projeto está fixo nessa versão. Não rode `playwright install`.
-- A Vercel (`*.vercel.app`) e o site da Starbucks não são acessíveis daqui.
+- A Vercel (`*.vercel.app`) e o site da Starbucks não são acessíveis daqui. O cardápio foi extraído no PC do usuário, pelo Chrome dele: o site só mostra o cardápio depois de escolher uma loja (precisa de geolocalização) e bloqueia quem abre muitas páginas seguidas.
 - Rodar modelo de IA baixado da internet (ex.: LaMa para estender fotos) foi **bloqueado** pelo sistema de permissões. Não contorne: peça ao usuário.
 
 ## Pendências conhecidas
 
-Ver a tabela em `docs/03-entrevista-mvp.md` e o estado em `docs/04-mvp.md`. Resumo: fotos com fundo estendido para 9:16, preços que faltam, fotos de salgados e sanduíches e o painel do dono.
+Ver a tabela em `docs/03-entrevista-mvp.md` e o estado em `docs/04-mvp.md`. Resumo: carrinho/checkout, fotos da coleção de Natal (fundo vermelho) e o painel do dono.

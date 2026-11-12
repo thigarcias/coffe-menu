@@ -139,7 +139,8 @@ test.describe('cardápio no celular', () => {
   })
 
   test('a foto do produto não invade o texto nem as categorias', async ({ page }) => {
-    for (const id of ['matcha-latte-gelado-proteico', 'chocolate-classico', 'bolo-red-velvet']) {
+    // inclui o nome mais longo do cardápio: a foto não pode encolher demais no iPhone SE
+    for (const id of ['matcha-latte-proteico-gelado', 'chocolate-quente', 'bolo-red-velvet-fatia', 'mocha-strate-frappuccino-com-caramelo-salgado-cold-foam']) {
       const slide = page.locator(`[data-item="${id}"]`)
       await slide.scrollIntoViewIfNeeded()
       const img = await box(slide.locator('.pimg__box'))
@@ -157,7 +158,7 @@ test.describe('cardápio no celular', () => {
   })
 
   test('produto com preço "a partir de" cabe na linha', async ({ page }) => {
-    const slide = page.locator('[data-item="chocolate-classico"]')
+    const slide = page.locator('[data-item="chocolate-quente"]')
     await slide.scrollIntoViewIfNeeded()
     const row = slide.locator('.slide__row')
     const r = await box(row)
@@ -202,7 +203,7 @@ test.describe('cardápio no celular', () => {
   test('quiz com IA mostra as sugestões', async ({ page }) => {
     await page.locator('.dock__help').click()
     await page.getByText('Algo quente').click()
-    await page.getByText('Equilibrado').click()
+    await page.getByText('Equilibrado', { exact: true }).click()
     await page.locator('#quiz-text').fill('algo cremoso')
     await page.getByText('Nada, ver sugestões').click()
     await expect(page.locator('.source')).toHaveText('Sugerido pela IA')
@@ -222,7 +223,13 @@ test.describe('cardápio no celular', () => {
 
   test('detalhe: tamanho fixo e tudo cabe sem rolar, nos piores casos de texto', async ({ page }) => {
     // tradução, história, ingredientes e nome mais longos; e um item com preços e alérgeno
-    const ids = ['latte-macchiato', 'caramelo-macchiato-gelado', 'frappuccino-brigadeiro', 'morango-frappuccino-cold-foam-proteico', 'chocolate-classico']
+    const ids = [
+      'mocha-strate-frappuccino-com-caramelo-salgado-cold-foam', // nome e descrição mais longos
+      'matcha-sem-acucar-latte-proteico-quente', // história mais longa
+      'cheesecake-de-frutas-vermelhas', // "com o que se parece" mais longo
+      'bolo-red-velvet-fatia', // ingredientes mais longos
+      'cappuccino-doce-de-leite', // 4 tamanhos com preço e alérgeno
+    ]
     const heights = new Set<number>()
     for (const id of ids) {
       await page.locator('.feed').evaluate((feed, id) => {
@@ -275,7 +282,7 @@ test.describe('cardápio no celular', () => {
   test('escolher uma sugestão do quiz leva ao produto certo no feed', async ({ page }) => {
     await page.locator('.dock__help').click()
     await page.getByText('Algo quente').click()
-    await page.getByText('Equilibrado').click()
+    await page.getByText('Equilibrado', { exact: true }).click()
     await page.getByText('Nada, ver sugestões').click()
     await page.locator('.sug').nth(1).click() // cafe-latte, longe do topo
     await expect

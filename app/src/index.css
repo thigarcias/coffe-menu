@@ -156,6 +156,9 @@ img { display: block; max-width: none; }
 .pimg__box {
   position: absolute; left: 0; right: 0; top: 0; bottom: 0;
   display: grid; place-items: center; container-type: size;
+  /* as fotos vêm com fundo branco: o multiply funde o branco no tom pastel de trás
+     (fica na caixa, e não na foto, porque o container-type isola a mistura) */
+  mix-blend-mode: multiply;
 }
 .pimg__fg {
   --ar: 0.75; /* largura / altura, vem da foto carregada */
@@ -193,10 +196,14 @@ img { display: block; max-width: none; }
   font-family: var(--font-display); font-size: 30px; font-weight: 800;
   letter-spacing: -0.4px; line-height: 1.08; margin: 0; text-wrap: balance;
 }
+.slide__name[data-size='l'] { font-size: 25px; }
+.slide__name[data-size='xl'] { font-size: 21px; letter-spacing: -0.2px; }
 .slide__desc {
   margin: 0; font-size: 14.5px; line-height: 1.4; color: var(--ink-2);
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
+/* telas baixas (iPhone SE): uma linha só, para a foto não encolher; o texto inteiro fica no detalhe */
+@media (max-height: 600px) { .slide__desc { -webkit-line-clamp: 1; } }
 .slide__row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
 .slide__row .circle { margin-left: auto; width: 40px; height: 40px; }
 .price { font-size: 16px; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -402,6 +409,8 @@ img { display: block; max-width: none; }
 .sheet--fixed .detail { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
 .detail__head { display: grid; gap: 4px; padding-right: 44px; }
 .detail__head .detail__name { margin: 0; }
+.detail__head .detail__name[data-size='l'] { font-size: 22px; }
+.detail__head .detail__name[data-size='xl'] { font-size: 19px; letter-spacing: -0.1px; }
 .seg {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 3px;
   border-radius: var(--r-capsule); background: var(--tint);

@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import type { MenuItem } from '../types'
-import { money } from '../lib/format'
+import { money, nameSize } from '../lib/format'
 import { Heart } from './Icons'
 
 interface Props {
@@ -50,7 +50,7 @@ export function DetailSheet({ item, fav, onToggleFavorite, storyNote, label }: P
     <div className="detail">
       <header className="detail__head">
         {label && <span className="label">{label}</span>}
-        <h3 className="detail__name">{item.name}</h3>
+        <h3 className="detail__name" data-size={nameSize(item.name) || undefined}>{item.name}</h3>
       </header>
 
       <div className="seg" role="tablist" aria-label="Sobre o produto">

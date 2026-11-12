@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import type { MenuItem } from '../types'
-import { priceParts } from '../lib/format'
+import { nameSize, priceParts } from '../lib/format'
 import { track } from '../lib/track'
 import { Heart, Info } from './Icons'
 import { ProductImage } from './ProductImage'
@@ -90,7 +90,7 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
                   <span key={b} className="badge">{b}</span>
                 ))}
               </div>
-              <h2 className="slide__name">{item.name}</h2>
+              <h2 className="slide__name" data-size={nameSize(item.name) || undefined}>{item.name}</h2>
               {price && (
                 <span className="price">
                   {price.label && <small>{price.label} </small>}
