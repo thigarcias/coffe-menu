@@ -46,7 +46,7 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 ### Dados e conteúdo
 - `app/src/data/menu.json` usa o cardápio do **site da Starbucks Brasil** (162 itens, com preços, tamanhos e fotos oficiais) como **referência interna**. Não é para mostrar a terceiros como se fosse produto da Starbucks.
 - Histórias ("De onde vem") vêm de conhecimento geral. Lenda leva "conta-se que", e **nunca se inventa fato sobre a Starbucks**. O aviso `cafe.storyNote` aparece no app.
-- **Tags:** cada item tem `labels` (ids de `tagGroups` no `menu.json`: Temperatura, Base, Sabor, Perfil, Ocasião, cada família com um peso). São a base dos "Parecidos" (`src/lib/related.ts`: tags em comum, ponderadas pela família e pela raridade, com comida puxando comida), do filtro por tag na grade e da recomendação. Mudar as tags muda as sugestões; não espalhe regra de "parecido" fora do `related.ts`.
+- **Tags:** cada item tem `labels` (ids de `tagGroups` no `menu.json`: Temperatura, Base, Sabor, Perfil, Ocasião, cada família com um peso). São a base dos "Parecidos" (`src/lib/related.ts`: tags em comum, ponderadas pela família e pela raridade, com comida puxando comida), e do filtro por tag na grade. O quiz (`recommend.ts`) ainda usa as etiquetas numéricas de `tags`. Mudar as tags muda as sugestões; não espalhe regra de "parecido" fora do `related.ts`.
 - Foto de produto é sempre a **foto real**; nunca gerar produto com IA. Estender só o **fundo** está ok.
 - Alergia é dado sensível: o quiz não guarda as respostas e sempre avisa para confirmar com a equipe.
 
