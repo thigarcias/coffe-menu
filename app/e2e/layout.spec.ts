@@ -219,6 +219,36 @@ test.describe('cardápio no celular', () => {
     await expect(page.locator('.sug').first()).toBeVisible()
   })
 
+  test('na galeria, tocar num item abre os detalhes dele ali mesmo', async ({ page }) => {
+    await page.getByRole('button', { name: 'Ver tudo' }).click()
+    const card = page.locator('.grid-sec').nth(2).locator('.card').nth(1)
+    const name = (await card.locator('.card__name').textContent())!.trim()
+    await card.click()
+    const sheet = page.locator('.sheet-wrap--open .sheet')
+    await expect(sheet.locator('.detail__name')).toHaveText(name)
+    await expect(page.locator('.grid-view')).toBeVisible()
+    await sheet.locator('.sheet__close').click()
+    await expect(page.locator('.sheet-wrap--open')).toHaveCount(0)
+    await expect(page.locator('.grid-view')).toBeVisible() // continua na galeria
+  })
+
+  test('escolher uma sugestão do quiz leva ao produto certo no feed', async ({ page }) => {
+    await page.locator('.dock__help').click()
+    await page.getByText('Algo quente').click()
+    await page.getByText('Equilibrado').click()
+    await page.getByText('Nada, ver sugestões').click()
+    await page.locator('.sug').nth(1).click() // cafe-latte, longe do topo
+    await expect
+      .poll(() =>
+        page.locator('.feed').evaluate((feed) => {
+          const r = feed.getBoundingClientRect()
+          const el = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)
+          return el?.closest('[data-item]')?.getAttribute('data-item')
+        }),
+      )
+      .toBe('cafe-latte')
+  })
+
   test('ver tudo: grade em 2 colunas, sem cortar o nome', async ({ page }) => {
     await page.getByRole('button', { name: 'Ver tudo' }).click()
     const cards = page.locator('.grid-sec').first().locator('.card')

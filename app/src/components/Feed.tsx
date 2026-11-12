@@ -27,9 +27,12 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
   const current = useRef<{ id: string; since: number } | null>(null)
 
   useImperativeHandle(ref, () => ({
+    // Rola o próprio feed até o slide (sem scrollIntoView, que no Safari ignora
+    // 'instant' e pode mexer em outros contêineres).
     scrollTo(itemId, smooth = true) {
-      const el = box.current?.querySelector<HTMLElement>(`[data-item="${itemId}"]`)
-      el?.scrollIntoView({ behavior: smooth ? 'smooth' : 'instant', block: 'start' })
+      const feed = box.current
+      const el = feed?.querySelector<HTMLElement>(`[data-item="${itemId}"]`)
+      if (feed && el) feed.scrollTo({ top: el.offsetTop, behavior: smooth ? 'smooth' : 'auto' })
     },
   }))
 

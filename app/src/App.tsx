@@ -119,7 +119,7 @@ export default function App() {
       />
 
       {mode === 'grid' && (
-        <GridView categories={categories} items={items} favorites={favorites} onOpen={goToItem} />
+        <GridView categories={categories} items={items} favorites={favorites} onOpen={openDetails} />
       )}
 
       {atFirst && mode === 'feed' && !panel && (
