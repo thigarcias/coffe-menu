@@ -44,13 +44,13 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 - Toda IA usa **`gpt-6-luna` com `reasoning.effort: "high"`** pela Responses API. Os dois estão **fixos no código** (`app/server/ai.mjs`), por pedido do usuário. No `max` as respostas levavam de 9 a 19 s; no `high`, de 4 a 5 s.
 - A chave **nunca vai para o navegador.** O React chama `POST /api/recommend` e só o servidor fala com a OpenAI. A única variável de ambiente é **`OPENAI_API_KEY`**.
 - A rota existe em três lugares, todos usando `handleRecommend` de `server/ai.mjs`: o plugin no `vite.config.ts` (dev), `api/recommend.mjs` (Vercel) e `server/index.mjs` (Node próprio).
-- A saída é JSON estruturado (até 3 ids, cada um com um motivo), e ids que não existem no cardápio são descartados. Se a IA falhar ou não houver servidor, o quiz cai nas **regras** de `src/lib/recommend.ts` e mostra "Sugestão rápida".
+- **Quiz "Me ajuda a escolher"** (`POST /api/recommend`, `server/quiz.mjs`): recomendação **por etiquetas**. O algoritmo (`shared/recommend.mjs`, que roda no servidor e no navegador) aplica **filtros duros** (restrição alimentar, quente/gelado, com ou sem café, doce/salgado) e pontua o cardápio pelas `labels` (sabor, paladar, textura, momento; etiqueta rara pesa mais). Fica com os **12 melhores** (no máximo 2 por família de bebida) e o GPT-6 Luna escolhe os **3 finais só entre eles** e escreve o motivo; se a pessoa escreveu texto livre, antes disso a IA o converte em etiquetas e restrições. O servidor valida de novo: id fora dos candidatos é descartado, promessa de alérgeno no motivo é trocada por um motivo feito pelo servidor, e se a IA falhar valem as 3 melhores notas (`source: 'regras'`, rótulo "Sugestão rápida"). Sem servidor, o navegador roda o mesmo algoritmo (`src/lib/recommend.ts`). As perguntas **mudam com o caminho** (bebida: 6, comida: 5, tanto faz: 5) e cada resposta é uma etiqueta ou filtro: ao criar uma pergunta nova, ligue-a a uma etiqueta em `shared/recommend.mjs`, senão ela não muda nada. **Restrição alimentar e texto livre não vão para o registro de interesse (`cm.events`).** Para medir a fidelidade com a IA de verdade, rode `scripts/quiz-eval.mjs`.
 - **IA do chat do painel** (`POST /api/admin-chat`, `server/adminChat.mjs`): mesmo modelo e esforço (`callStructured` em `server/ai.mjs`), resposta em NDJSON (um passo por linha). Três etapas: **porteiro** (só aceita pergunta sobre os dados do painel; o resto, como script/Python, conversa, dados externos ou tentativa de burlar, recebe uma **recusa fixa escrita no servidor**), **planejador** (escolhe blocos e consultas; saída estrita com enums) e **redator** (escreve a análise só com os números que o motor devolveu; valor em R$ ou percentual que não está nos dados derruba o texto, e código na saída também). Há ainda um pré-filtro sem modelo (`precheck`). **Não afrouxe o guardrail sem rodar os testes de `e2e/server/guardrail.spec.ts` e `scripts/chat-smoke.mjs`.** A rota existe em três lugares: plugin do Vite (dev e preview), `server/index.mjs` e `api/admin-chat.mjs` (Vercel, com `maxDuration: 60` no `vercel.json`).
 
 ### Dados e conteúdo
 - `app/src/data/menu.json` usa o cardápio do **site da Starbucks Brasil** (162 itens, com preços, tamanhos e fotos oficiais) como **referência interna**. Não é para mostrar a terceiros como se fosse produto da Starbucks.
 - Histórias ("De onde vem") vêm de conhecimento geral. Lenda leva "conta-se que", e **nunca se inventa fato sobre a Starbucks**. O aviso `cafe.storyNote` aparece no app.
-- **Tags:** cada item tem `labels` (ids de `tagGroups` no `menu.json`: Temperatura, Base, Sabor, Perfil, Ocasião, cada família com um peso). São a base dos "Parecidos" (`src/lib/related.ts`: tags em comum, ponderadas pela família e pela raridade, com comida puxando comida), e do filtro por tag na grade. O quiz (`recommend.ts`) ainda usa as etiquetas numéricas de `tags`. Mudar as tags muda as sugestões; não espalhe regra de "parecido" fora do `related.ts`.
+- **Tags:** cada item tem `labels` (ids de `tagGroups` no `menu.json`: Temperatura, Base, Sabor, Perfil, Ocasião, cada família com um peso). São a base dos "Parecidos" (`src/lib/related.ts`: tags em comum, ponderadas pela família e pela raridade, com comida puxando comida), do filtro por tag na grade e **da recomendação do quiz** (`shared/recommend.mjs`; as etiquetas numéricas `tags` ficam só para temperatura, leite, cafeína e fome). Mudar as etiquetas muda as sugestões; não espalhe regra de "parecido" fora do `related.ts` nem regra de recomendação fora do `shared/recommend.mjs`.
 - Foto de produto é sempre a **foto real**; nunca gerar produto com IA. Estender só o **fundo** está ok.
 - Alergia é dado sensível: o quiz não guarda as respostas e sempre avisa para confirmar com a equipe.
 
@@ -70,10 +70,11 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 ```bash
 npm run dev -- --host     # app + rota da IA (precisa de OPENAI_API_KEY no .env)
 npm run build             # typecheck + build
-npm run test:e2e          # 662 testes: 5 celulares (layout, capturas, painel e chat) + Node (motor e guardrail)
+npm run test:e2e          # 802 testes: 5 celulares (layout, capturas, quiz, painel e chat) + Node (motor, guardrail e recomendação)
 npm run test:e2e:update   # aceita uma mudança visual feita de propósito
 npm run artifact          # gera app/artifact/ para publicar como Artifact do claude.ai
 node scripts/chat-smoke.mjs "pergunta"   # chama o GPT-6 Luna de verdade no pipeline do chat do painel (ver nota do proxy abaixo)
+node scripts/quiz-eval.mjs               # roda 14 perfis no quiz com o GPT-6 Luna e confere restrições, filtros e sabores
 ```
 
 ## Testes: obrigatórios antes de cada commit
@@ -81,7 +82,7 @@ node scripts/chat-smoke.mjs "pergunta"   # chama o GPT-6 Luna de verdade no pipe
 - Rode `npm run test:e2e` e **só commite se todos passarem**. Os testes nunca chamam a OpenAI; para validar a IA de verdade (e o guardrail) use `scripts/chat-smoke.mjs`. Não encadeie `commit` depois de `| tail`: o pipe engole o erro. Já subiu um commit com teste vermelho por causa disso.
 - Os testes (`app/e2e/layout.spec.ts`) rodam no Chromium com os tamanhos de iPhone SE, iPhone 15, iPhone 15 Pro Max, Pixel 7 e Galaxy S9+. Toda correção de layout ganha um teste que reprova o bug antigo.
 - Mudou o visual de propósito? Atualize as capturas (`test:e2e:update`) e **olhe as imagens** de `e2e/__screenshots__/` antes de commitar.
-- A IA é simulada nos testes (`page.route('**/api/recommend')`), então eles não gastam a chave.
+- A IA é simulada nos testes (`page.route('**/api/recommend')`, e um modelo falso em `e2e/server/`), então eles não gastam a chave. Os testes do quiz estão em `e2e/quiz.spec.ts` (navegador) e `e2e/server/recommend.spec.ts` (algoritmo e pipeline, inclusive uma varredura de ~7 mil combinações de respostas que garante que nenhum filtro é quebrado).
 
 ## Ambiente de nuvem (sessões do Claude Code)
 

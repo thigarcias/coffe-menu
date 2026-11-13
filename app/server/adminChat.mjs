@@ -13,7 +13,7 @@
  *
  * Saída: linhas de JSON (NDJSON). Cada linha é um status, um bloco pronto, o plano ou o fim.
  */
-import { callStructured } from './ai.mjs'
+import { callStructured } from './openai.mjs'
 import { aiStatsOf, COMPARE_WITH, describeCatalog, DIMENSIONS, FILTERS, funnelOf, heatOf, METRICS, PERIOD_IDS, PERIOD_LABEL, radarOf, runQuery, similarOf } from '../shared/analytics.mjs'
 
 export const MAX_PROMPT = 500

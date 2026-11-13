@@ -325,6 +325,16 @@ img { display: block; max-width: none; }
 .opt--on { background: var(--matcha); border-color: rgba(79,127,100,.35); }
 .opt__emoji { font-size: 26px; }
 .opt__hint { font-weight: 400; font-size: 13px; color: var(--ink-3); }
+.opt__title { display: flex; align-items: center; gap: 8px; }
+.opt__lead { font-size: 20px; line-height: 1; }
+.opts--2 .opt { min-height: 78px; justify-content: center; }
+.quiz__hint { font-size: 13px; color: var(--ink-3); margin: -8px 44px 12px 0; }
+.quiz .chip { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; }
+.chips--flavors { margin-bottom: 14px; }
+.chips--flavors .chip { padding: 8px 14px; }
+.chip__emoji { font-size: 17px; line-height: 1; }
+.sug__tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 3px 0 1px; }
+.tagchip { font-size: 10.5px; font-weight: 700; color: var(--sage); background: var(--matcha); padding: 2px 8px; border-radius: var(--r-capsule); white-space: nowrap; }
 .chips { display: flex; gap: 8px; flex-wrap: wrap; }
 .chip {
   padding: 9px 16px; border-radius: var(--r-capsule); font-size: 14px; font-weight: 500;

@@ -27,6 +27,16 @@ async function open(page: Page, opts: { clock?: boolean } = {}) {
   await page.evaluate(() => document.fonts.ready)
 }
 
+/** Responde o quiz de bebida até a última pergunta: com ou sem café = tanto faz, sem sabor, textura = tanto faz. */
+async function quizToFinal(page: Page, want = 'Algo quente', taste = 'Equilibrado') {
+  await page.locator('.dock__help').click()
+  await page.locator('.opt', { hasText: want }).click()
+  await page.locator('.opt', { hasText: 'Tanto faz' }).click()
+  await page.getByRole('button', { name: 'Sem preferência' }).click()
+  await page.locator('.opt', { hasText: taste }).click()
+  await page.locator('.opt', { hasText: 'Tanto faz' }).click()
+}
+
 /** A pílula clara precisa cobrir exatamente a categoria ativa. */
 async function expectThumbOnActive(page: Page) {
   await expect
@@ -321,9 +331,7 @@ test.describe('cardápio no celular', () => {
   })
 
   test('quiz com IA mostra as sugestões', async ({ page }) => {
-    await page.locator('.dock__help').click()
-    await page.getByText('Algo quente').click()
-    await page.getByText('Equilibrado', { exact: true }).click()
+    await quizToFinal(page)
     await page.locator('#quiz-text').fill('algo cremoso')
     await page.getByText('Nada, ver sugestões').click()
     await expect(page.locator('.source')).toHaveText('Sugerido pela IA')
@@ -333,9 +341,7 @@ test.describe('cardápio no celular', () => {
   test('quiz cai nas regras quando a IA falha', async ({ page }) => {
     await page.unroute('**/api/recommend')
     await page.route('**/api/recommend', (r) => r.fulfill({ status: 500, json: { error: 'x' } }))
-    await page.locator('.dock__help').click()
-    await page.getByText('Algo gelado').click()
-    await page.getByText('Docinho').click()
+    await quizToFinal(page, 'Algo gelado', 'Docinho')
     await page.getByText('Nada, ver sugestões').click()
     await expect(page.locator('.source')).toContainText('Sugestão rápida')
     await expect(page.locator('.sug').first()).toBeVisible()
@@ -401,9 +407,7 @@ test.describe('cardápio no celular', () => {
   })
 
   test('escolher uma sugestão do quiz leva ao produto certo no feed', async ({ page }) => {
-    await page.locator('.dock__help').click()
-    await page.getByText('Algo quente').click()
-    await page.getByText('Equilibrado', { exact: true }).click()
+    await quizToFinal(page)
     await page.getByText('Nada, ver sugestões').click()
     await page.locator('.sug__main').nth(1).click() // cafe-latte, longe do topo
     await expect
@@ -672,9 +676,7 @@ test.describe('sacola e pedido', () => {
     await page.locator('.card__add').nth(3).click()
     await expect(page.locator('.dock__bag .count')).toHaveText('2')
     // quiz (IA simulada: caramelo-macchiato e cafe-latte)
-    await page.locator('.dock__help').click()
-    await page.getByText('Algo quente').click()
-    await page.getByText('Equilibrado', { exact: true }).click()
+    await quizToFinal(page)
     await page.getByText('Nada, ver sugestões').click()
     await page.locator('.sug__add').first().click()
     await page.locator('.sheet-wrap--open .sheet__close').click()

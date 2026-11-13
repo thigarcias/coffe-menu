@@ -1,82 +1,47 @@
-import type { MenuItem } from '../types'
+import menuData from '../data/menu.json'
+import type { Menu, MenuItem } from '../types'
+import { normalizeAnswers, reasonFrom, scoreMenu, topPicks } from '../../shared/recommend.mjs'
 
 export type Want = 'quente' | 'gelada' | 'comer' | 'tanto-faz'
+export type Caffeine = 'com' | 'sem' | 'tanto-faz'
 export type Taste = 'doce' | 'equilibrado' | 'forte'
+export type Body = 'cremoso' | 'leve' | 'tanto-faz'
+export type FoodKind = 'doce' | 'salgado' | 'tanto-faz'
+export type Moment = 'cafe-da-manha' | 'lanche' | 'sobremesa' | 'proteico' | 'levar' | 'qualquer'
 export type Avoid = 'leite' | 'gluten' | 'cafeina'
+export type FlavorId = 'chocolate' | 'caramelo' | 'frutas' | 'avela-baunilha' | 'especiarias' | 'citrico' | 'matcha' | 'queijo' | 'frango' | 'presunto'
 
+/** O que a pessoa respondeu. Pergunta que não entrou no caminho dela fica de fora (e não pesa). */
 export interface QuizAnswers {
   want: Want
-  taste: Taste
+  caffeine?: Caffeine
+  foodKind?: FoodKind
+  flavors: FlavorId[]
+  taste?: Taste
+  body?: Body
+  moment?: Moment
   avoid: Avoid[]
+  /** quais perguntas apareceram para ela ('taste', 'body'): só essas pesam na nota */
+  asked: string[]
 }
 
 export interface Suggestion {
   item: MenuItem
   score: number
+  /** o que casou com as respostas (rótulos das etiquetas) */
   reasons: string[]
 }
 
-const hasAllergen = (item: MenuItem, word: string) =>
-  (item.allergens ?? []).some((a) => a.toLowerCase().includes(word))
+const tagGroups = (menuData as unknown as Menu).tagGroups ?? []
 
 /**
- * Recomendação por regras sobre as etiquetas de cada item.
- * Filtra o que a pessoa quer evitar e pontua o resto pelo desejo e pelo paladar.
+ * Plano B, sem IA: o mesmo algoritmo por etiquetas que o servidor usa (shared/recommend.mjs).
+ * Filtra o que a pessoa não pode ou não quer e pontua o resto; as 3 melhores, sem repetir a mesma bebida.
  */
 export function recommend(items: MenuItem[], a: QuizAnswers, limit = 3): Suggestion[] {
-  const out: Suggestion[] = []
-
-  for (const item of items) {
-    const t = item.tags
-    if (a.avoid.includes('leite') && (t.milk || hasAllergen(item, 'lact') || hasAllergen(item, 'leite'))) continue
-    if (a.avoid.includes('gluten') && hasAllergen(item, 'glút')) continue
-    if (a.avoid.includes('gluten') && hasAllergen(item, 'glut')) continue
-    if (a.avoid.includes('cafeina') && t.caffeine) continue
-
-    let score = 0
-    const reasons: string[] = []
-
-    switch (a.want) {
-      case 'quente':
-        if (t.iced || t.hunger >= 2) continue
-        score += 3
-        reasons.push('quentinho')
-        break
-      case 'gelada':
-        if (!t.iced || t.hunger >= 2) continue
-        score += 3
-        reasons.push('gelado')
-        break
-      case 'comer':
-        if (t.hunger < 2) continue
-        score += 2 + t.hunger
-        reasons.push('mata a fome')
-        break
-      case 'tanto-faz':
-        score += 1
-    }
-
-    switch (a.taste) {
-      case 'doce':
-        score += t.sweet * 2 - t.bitter
-        if (t.sweet >= 2) reasons.push('docinho')
-        break
-      case 'equilibrado':
-        score += 3 - Math.abs(t.sweet - 1.5) * 2 - Math.max(0, t.bitter - 2)
-        if (t.milk) {
-          score += 1
-          reasons.push('suave, com leite')
-        }
-        break
-      case 'forte':
-        score += t.bitter * 2 - t.sweet
-        if (t.bitter >= 2) reasons.push('café marcante')
-        break
-    }
-
-    if (item.badges?.length) score += 0.5
-    out.push({ item, score, reasons })
-  }
-
-  return out.sort((x, y) => y.score - x.score).slice(0, limit)
+  const scored = scoreMenu(items, tagGroups, normalizeAnswers(a))
+  return topPicks(scored, limit).map((s) => ({ item: s.item, score: s.score, reasons: s.matched }))
 }
+
+/** Frase de motivo, sem IA. */
+export const reasonOf = (s: Suggestion) => reasonFrom(s.reasons, s.item)

@@ -1,104 +1,11 @@
-// Recomendação com IA (OpenAI Responses API). Roda só no servidor: a chave nunca vai ao navegador.
-const API = 'https://api.openai.com/v1/responses'
+// Recomendação do quiz (rota POST /api/recommend). Roda só no servidor: a chave nunca vai ao navegador.
+// A lógica fica em quiz.mjs; aqui só o HTTP. O modelo e o esforço fixos estão em openai.mjs.
+import { recommendQuiz } from './quiz.mjs'
 
-// Fixos no código por enquanto: toda a IA do app usa este modelo e este esforço.
-const MODEL = 'gpt-6-luna'
-const EFFORT = 'high'
-const TIMEOUT_MS = 60000
+export { callStructured, config } from './openai.mjs'
 
-export const config = () => ({
-  key: process.env.OPENAI_API_KEY,
-  model: MODEL,
-  effort: EFFORT,
-  timeoutMs: TIMEOUT_MS,
-})
-
-const SCHEMA = {
-  type: 'object',
-  additionalProperties: false,
-  required: ['suggestions'],
-  properties: {
-    suggestions: {
-      type: 'array',
-      minItems: 1,
-      maxItems: 3,
-      items: {
-        type: 'object',
-        additionalProperties: false,
-        required: ['id', 'reason'],
-        properties: {
-          id: { type: 'string', description: 'id exato de um item do cardápio' },
-          reason: { type: 'string', description: 'uma frase curta, em português do Brasil, falando com o cliente' },
-        },
-      },
-    },
-  },
-}
-
-function menuForPrompt(menu) {
-  return menu.items
-    .map((i) => {
-      const t = i.tags
-      const tags = [
-        t.iced ? 'gelado' : 'quente',
-        t.milk ? 'com leite' : 'sem leite',
-        t.caffeine ? 'com cafeína' : 'sem cafeína',
-        `doce ${t.sweet}/3`,
-        `amargo ${t.bitter}/3`,
-        `fome ${t.hunger}/3`,
-      ].join(', ')
-      const allergens = i.allergens?.length ? ` | contém: ${i.allergens.join(', ')}` : ''
-      return `- ${i.id} | ${i.name} | ${i.category}${i.subcategory ? ` / ${i.subcategory}` : ''} | ${i.description} | ${tags}${allergens}`
-    })
-    .join('\n')
-}
-
-/**
- * @param {{answers?: object, text?: string}} input respostas do quiz e/ou texto livre do cliente
- * @param {object} menu o menu.json
- */
-export async function recommend(input, menu) {
-  const { key, model, effort, timeoutMs } = config()
-  if (!key) throw Object.assign(new Error('OPENAI_API_KEY não configurada'), { status: 503 })
-
-  const instructions = [
-    'Você é o barista de uma cafeteria e ajuda um cliente leigo a escolher o que pedir.',
-    'Escolha até 3 itens do cardápio abaixo, do mais indicado para o menos indicado.',
-    'Respeite estritamente o que o cliente quer evitar (leite, glúten, cafeína). Na dúvida, não sugira o item.',
-    'Use só ids que existem no cardápio. A razão deve ter no máximo 18 palavras, tom simpático, sem jargão.',
-    '',
-    'Cardápio (id | nome | categoria | descrição | etiquetas | alérgenos):',
-    menuForPrompt(menu),
-  ].join('\n')
-
-  const ctrl = new AbortController()
-  const timer = setTimeout(() => ctrl.abort(), timeoutMs)
-  try {
-    const res = await fetch(API, {
-      method: 'POST',
-      signal: ctrl.signal,
-      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model,
-        reasoning: { effort },
-        instructions,
-        input: `Respostas do cliente: ${JSON.stringify(input.answers ?? {})}\nPedido em texto livre: ${input.text?.trim() || '(nenhum)'}`,
-        text: { format: { type: 'json_schema', name: 'sugestoes', strict: true, schema: SCHEMA } },
-      }),
-    })
-    const data = await res.json()
-    if (!res.ok) throw Object.assign(new Error(data.error?.message || `OpenAI ${res.status}`), { status: 502 })
-    const text = data.output?.flatMap((o) => o.content ?? []).find((c) => c.type === 'output_text')?.text
-    const parsed = JSON.parse(text ?? '{}')
-    const ids = new Set(menu.items.map((i) => i.id))
-    return {
-      model: data.model,
-      suggestions: (parsed.suggestions ?? []).filter((s) => ids.has(s.id)).slice(0, 3),
-    }
-  } finally {
-    clearTimeout(timer)
-  }
-}
+/** Pontuação por etiquetas + escolha final pelo GPT-6 Luna (ver quiz.mjs). */
+export const recommend = (input, menu) => recommendQuiz(input, menu)
 
 /** Handler HTTP compartilhado pelo Vite (dev) e pelo servidor de produção. */
 export async function handleRecommend(req, res, menu) {
@@ -113,40 +20,5 @@ export async function handleRecommend(req, res, menu) {
   } catch (e) {
     res.statusCode = e.status || (e.name === 'AbortError' ? 504 : 500)
     res.end(JSON.stringify({ error: e.name === 'AbortError' ? 'A IA demorou demais' : e.message }))
-  }
-}
-
-/**
- * Chamada genérica à Responses API com saída em JSON estruturado (strict).
- * Mesmo modelo e esforço fixos de toda a IA do app. Devolve o objeto já convertido.
- * @param {{instructions: string, input: string, schema: object, name: string, signal?: AbortSignal}} o
- */
-export async function callStructured({ instructions, input, schema, name, signal }) {
-  const { key, model, effort, timeoutMs } = config()
-  if (!key) throw Object.assign(new Error('OPENAI_API_KEY não configurada'), { status: 503 })
-  const ctrl = new AbortController()
-  const timer = setTimeout(() => ctrl.abort(), timeoutMs)
-  const onAbort = () => ctrl.abort()
-  signal?.addEventListener('abort', onAbort, { once: true })
-  try {
-    const res = await fetch(API, {
-      method: 'POST',
-      signal: ctrl.signal,
-      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model,
-        reasoning: { effort },
-        instructions,
-        input,
-        text: { format: { type: 'json_schema', name, strict: true, schema } },
-      }),
-    })
-    const data = await res.json()
-    if (!res.ok) throw Object.assign(new Error(data.error?.message || `OpenAI ${res.status}`), { status: 502 })
-    const text = data.output?.flatMap((o) => o.content ?? []).find((c) => c.type === 'output_text')?.text
-    return JSON.parse(text ?? '{}')
-  } finally {
-    clearTimeout(timer)
-    signal?.removeEventListener('abort', onAbort)
   }
 }

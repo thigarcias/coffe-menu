@@ -27,10 +27,10 @@ O MVP é uma **demo de venda para donos de cafeteria**: um cardápio que o clien
 | Dica de deslizar | Um "deslize ↓" discreto no primeiro produto. |
 | Ver tudo | Uma grade de 2 colunas com todas as opções, separada por categoria. Tocar num item abre ele no feed. |
 | Detalhe do produto | "Com o que se parece" (tradução para leigos), ingredientes, tamanhos e preços, alérgenos e "De onde vem" (história). |
-| Me ajuda a escolher | 3 perguntas (vontade, paladar, o que evitar) mais texto livre opcional. A IA devolve até 3 itens, cada um com o motivo. Se ela falhar, entram as regras. |
+| Me ajuda a escolher | De 5 a 6 perguntas rápidas que **mudam com o caminho** (bebida, comida ou tanto faz): temperatura, com ou sem café (ou doce e salgado), sabores (até 2), paladar, textura, momento, o que evitar e texto livre opcional. A recomendação é **por etiquetas**: o algoritmo filtra e pontua os 162 produtos e o GPT-6 Luna escolhe os 3 finais entre os 12 melhores, com o motivo e as etiquetas que casaram. Se a IA falhar, valem as 3 melhores notas do algoritmo. |
 | Quero provar | O coração guarda o item numa lista para mostrar no balcão. |
 | Coleta de interesse | Tempo em cada produto, detalhes abertos, favoritos, categorias e resultado do quiz, salvos no `localStorage` (`cm.events`). |
-| Testes | 662 testes: 5 tamanhos de celular (320px a 430px) para layout, fluxos e capturas de referência, e testes de servidor (motor de consulta e guardrail da IA) que rodam só no Node. |
+| Testes | 802 testes: 5 tamanhos de celular (320px a 430px) para layout, fluxos e capturas de referência, e testes de servidor (motor de consulta, guardrail da IA e recomendação do quiz) que rodam só no Node. |
 
 ## Dados do cardápio
 
@@ -59,7 +59,7 @@ celular ──► React (Vite) ──► POST /api/recommend ──► servidor 
 
 - A chave da OpenAI só existe no servidor (`OPENAI_API_KEY`). O modelo e o esforço estão fixos em `app/server/ai.mjs`.
 - A resposta da IA vem em JSON estruturado, e o servidor descarta ids que não existem no cardápio.
-- Plano B: sem servidor ou com erro, o quiz usa as regras de `app/src/lib/recommend.ts`.
+- Plano B: sem servidor ou com erro, o quiz usa o mesmo algoritmo por etiquetas (`app/shared/recommend.mjs`), rodando no celular.
 - Front-end e back-end estão **misturados** na mesma pasta `app/` (`src/`, `server/`, `api/`, `shared/`), e o `shared/analytics.mjs` roda no navegador. Isso muda na próxima fase.
 
 ## O que falta para fechar o MVP
