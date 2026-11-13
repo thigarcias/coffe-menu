@@ -669,3 +669,9 @@ img { display: block; max-width: none; }
 .step-row__label { font-size: 16px; }
 .step-row__txt small { font-size: 13px; color: var(--ink-2); }
 .step-row--next { opacity: .5; }
+/* vídeo: tela cheia atrás do texto; o degradê creme (.slide__shade) garante a leitura */
+.pimg--video .pimg__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* com vídeo por trás, o degradê creme sobe mais para o texto continuar legível em qualquer quadro */
+.slide:has(.pimg--video) .slide__shade {
+  background: linear-gradient(to top, rgba(245,239,230,.98) 0%, rgba(245,239,230,.93) 30%, rgba(245,239,230,.6) 46%, rgba(245,239,230,0) 64%);
+}

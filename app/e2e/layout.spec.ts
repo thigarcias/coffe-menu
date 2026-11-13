@@ -47,6 +47,17 @@ test.describe('cardápio no celular', () => {
     await expect(page.locator('.cat--on')).toHaveText('Salgados')
   })
 
+  test('vídeo ocupa o slide inteiro (sem caixinha estreita) e o texto continua visível', async ({ page }) => {
+    const slide = page.locator('.slide:has(video)').first()
+    await slide.scrollIntoViewIfNeeded()
+    const s = await box(slide)
+    const v = await box(slide.locator('video'))
+    // antes o vídeo ficava numa caixa de ~40% da largura, com máscara nas bordas
+    expect(v.width).toBeGreaterThanOrEqual(s.width - 1)
+    expect(v.height).toBeGreaterThanOrEqual(s.height - 1)
+    await expect(slide.locator('.slide__name')).toBeVisible()
+  })
+
   test('dica de deslizar aparece no primeiro produto, fica acima do dock e some ao deslizar', async ({ page }) => {
     const hint = page.locator('.swipe-hint')
     await expect(hint).toBeVisible()
