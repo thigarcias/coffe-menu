@@ -1,12 +1,13 @@
 import type { Assistant, AssistantEvent } from './assistant'
 import type { Message } from './types'
+import { supabase } from '../../lib/adminAuth'
 
 /**
  * A IA de verdade: chama o servidor (`POST /api/admin-chat`), que roda o GPT-6 Luna com o
  * guardrail, consulta os dados e devolve a resposta aos poucos, uma linha de JSON por passo.
  * A chave da OpenAI nunca passa por aqui.
  */
-const URL = './api/admin-chat'
+const URL = '/api/admin-chat'
 
 /** Histórico enxuto para o servidor: o texto das perguntas e a receita das respostas. */
 function condense(history: Message[]) {
@@ -20,12 +21,14 @@ function condense(history: Message[]) {
 export const serverAssistant: Assistant = async function* (prompt, history, signal) {
   // a última mensagem do histórico é a pergunta atual (já gravada pelo executor)
   const past = history.slice(0, -2)
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) throw new Error('Entre novamente para usar o chat.')
   let res: Response
   try {
     res = await fetch(URL, {
       method: 'POST',
       signal,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
       body: JSON.stringify({ prompt, history: condense(past) }),
     })
   } catch (e) {

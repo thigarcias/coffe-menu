@@ -3,19 +3,22 @@ import { createServer } from 'node:http'
 import { readFile } from 'node:fs/promises'
 import { extname, join, normalize } from 'node:path'
 import { handleRecommend } from './ai.mjs'
-import { handleAdminChat } from './adminChat.mjs'
+import { handleProtectedAdminChat } from './protectedAdminChat.mjs'
+import { handleAuth } from './auth.mjs'
+import { fileURLToPath } from 'node:url'
 
 try { process.loadEnvFile(new URL('../.env', import.meta.url)) } catch { /* sem .env: usa o ambiente */ }
 
-const root = new URL('../dist/', import.meta.url).pathname
+const root = fileURLToPath(new URL('../dist/', import.meta.url))
 const menu = JSON.parse(await readFile(new URL('../src/data/menu.json', import.meta.url), 'utf8'))
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml' }
 
 createServer(async (req, res) => {
   if (req.method === 'POST' && req.url === '/api/recommend') return handleRecommend(req, res, menu)
-  if (req.method === 'POST' && req.url === '/api/admin-chat') return handleAdminChat(req, res)
+  if (req.url.startsWith('/auth/v1/')) return handleAuth(req, res)
+  if (req.method === 'POST' && req.url === '/api/admin-chat') return handleProtectedAdminChat(req, res)
   const path = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname)).replace(/^(\.\.[/\\])+/, '')
-  const file = join(root, path.endsWith('/') ? 'index.html' : path)
+  const file = join(root, (/^[/\\]admin[/\\]?$/.test(path) || path.endsWith('/')) ? 'index.html' : path)
   try {
     const data = await readFile(file)
     res.setHeader('Content-Type', types[extname(file)] || 'application/octet-stream')

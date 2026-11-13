@@ -1,4 +1,5 @@
-import { expect, test, type Locator, type Page, type Route } from '@playwright/test'
+import { test } from './adminSession'
+import { expect, type Locator, type Page, type Route } from '@playwright/test'
 
 // O chat falando com a IA de verdade: aqui a rota /api/admin-chat é simulada (a OpenAI não é chamada),
 // mas o navegador usa o caminho real: pedido, leitura da resposta em linhas de JSON e desenho dos blocos.

@@ -1,6 +1,6 @@
 // Função serverless da Vercel: POST /api/admin-chat (chat da IA do painel, resposta em NDJSON).
 // Usa a mesma OPENAI_API_KEY da outra rota. O tempo máximo está em vercel.json (são 3 chamadas ao modelo).
-import { handleAdminChat } from '../server/adminChat.mjs'
+import { handleProtectedAdminChat } from '../server/protectedAdminChat.mjs'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -8,5 +8,5 @@ export default async function handler(req, res) {
     res.setHeader('Allow', 'POST')
     return res.end()
   }
-  return handleAdminChat(req, res)
+  return handleProtectedAdminChat(req, res)
 }

@@ -80,7 +80,9 @@ type SectionId = (typeof SECTIONS)[number]['id']
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const fromHash = (): SectionId => SECTIONS.find((s) => s.id === window.location.hash.slice(1))?.id ?? 'visao'
 
-function Dashboard() {
+type AdminProps = { onSignOut: () => void; signingOut: boolean }
+
+function Dashboard({ onSignOut, signingOut }: AdminProps) {
   const [period, setPeriod] = useState<Period>('7d')
   const d = useMemo(() => build(period), [period])
   const [showTable, setShowTable] = useState(false)
@@ -187,6 +189,7 @@ function Dashboard() {
             ))}
           </nav>
           <div className="adm-top__actions">
+            <button className="adm-signout" type="button" disabled={signingOut} onClick={onSignOut}>Sair</button>
             <button className="adm-ask" onClick={() => openChat()} aria-expanded={chat.open} aria-haspopup="dialog">
               <Icon d="spark" />
               Perguntar à IA
@@ -595,7 +598,7 @@ function ChatOnly({ id }: { id: string }) {
   )
 }
 
-export default function Admin() {
+export default function Admin(props: AdminProps) {
   const chatId = new URLSearchParams(window.location.search).get('chat')
-  return chatId ? <ChatOnly id={chatId} /> : <Dashboard />
+  return chatId ? <ChatOnly id={chatId} /> : <Dashboard {...props} />
 }

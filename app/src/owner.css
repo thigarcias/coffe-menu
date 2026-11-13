@@ -1,0 +1,12 @@
+.owner { min-height: 100%; overflow: auto; display: grid; place-items: center; padding: 24px; background: var(--bg); color: var(--ink); }
+.owner__card { width: min(100%, 420px); padding: 32px; border-radius: 28px; background: var(--surface); box-shadow: var(--glass-shadow); }
+.owner__back { color: var(--sage); font-size: 14px; text-decoration: none; }
+.owner__eyebrow { margin: 36px 0 8px; color: var(--sage); font-size: 12px; font-weight: 700; letter-spacing: .08em; }
+.owner h1 { margin: 0; font-family: var(--font-display); font-size: 28px; }
+.owner p { line-height: 1.5; }
+.owner form { display: grid; gap: 8px; margin-top: 24px; }
+.owner label { margin-top: 8px; font-weight: 600; }
+.owner input { width: 100%; min-height: 48px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: white; font: inherit; }
+.owner button { min-height: 48px; margin-top: 16px; padding: 12px 20px; border: 0; border-radius: 12px; background: var(--sage); color: white; font: inherit; font-weight: 700; cursor: pointer; }
+.owner button:disabled { opacity: .6; cursor: wait; }
+.owner__error { color: #a33b30; }

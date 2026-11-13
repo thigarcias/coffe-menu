@@ -1,4 +1,7 @@
 {
-  "rewrites": [{ "source": "/admin", "destination": "/index.html" }],
+  "rewrites": [
+    { "source": "/admin", "destination": "/index.html" },
+    { "source": "/auth/v1/:path*", "destination": "/api/auth?auth_path=:path*" }
+  ],
   "functions": { "api/admin-chat.mjs": { "maxDuration": 60 } }
 }

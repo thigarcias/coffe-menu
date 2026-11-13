@@ -47,3 +47,23 @@ Os testes ficam em `e2e/layout.spec.ts` e rodam no Chromium com os tamanhos de i
 
 - `src/data/menu.json`: categorias, itens, preços, alérgenos, o texto de "com o que se parece" e as etiquetas de sabor.
 - `public/menu/`: as fotos recortadas do PDF.
+
+## Acesso ao painel /admin
+
+Configure SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY no .env e na Vercel.
+No Supabase Auth, mantenha o provedor de e-mail ativo e desative o autocadastro
+e o login anônimo em Authentication → Sign In / Providers.
+
+Após a venda, crie o usuário com e-mail e senha em Authentication → Users.
+Confirme o e-mail após validar o endereço com o cliente. No SQL Editor do
+Supabase, substitua o UUID pelo ID do usuário criado para liberar o painel:
+
+```sql
+update auth.users
+set raw_app_meta_data = coalesce(raw_app_meta_data, '{}'::jsonb) ||
+  '{"coffe_admin": true}'::jsonb
+where id = '00000000-0000-0000-0000-000000000000';
+```
+
+O cliente acessa /admin com as credenciais cadastradas. Se já tiver entrado
+antes da liberação, deve sair e entrar novamente. O painel usa dados de exemplo.

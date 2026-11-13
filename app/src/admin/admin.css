@@ -66,6 +66,7 @@
 }
 .adm-top__brand { display: flex; align-items: center; gap: 10px; min-width: 0; grid-column: 1; grid-row: 1; }
 .adm-top__actions { grid-column: 2; grid-row: 1; display: flex; align-items: center; gap: 14px; }
+.adm-signout { min-width: 44px; min-height: 44px; color: var(--a-sage); font-weight: 600; }
 .adm-top__logo {
   width: 36px; height: 36px; flex: none; border-radius: 12px; display: grid; place-items: center;
   color: var(--a-sage); background: var(--a-matcha);
