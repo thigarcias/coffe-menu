@@ -3,16 +3,28 @@ import { readFileSync } from 'node:fs'
 import { defineConfig, loadEnv, type Plugin } from 'vite'
 // @ts-expect-error módulo JS do servidor, sem tipos
 import { handleRecommend } from './server/ai.mjs'
+// @ts-expect-error módulo JS do servidor, sem tipos
+import { handleAdminChat } from './server/adminChat.mjs'
 
-/** Expõe /api/recommend no `npm run dev`, com a chave lida do .env (só no servidor). */
+/** Expõe /api/recommend e /api/admin-chat no `npm run dev` e no `vite preview`, com a chave lida do .env (só no servidor). */
 function aiApi(): Plugin {
   return {
     name: 'ai-api',
+    configurePreviewServer(server) {
+      server.middlewares.use('/api/admin-chat', (req, res, next) => {
+        if (req.method !== 'POST') return next()
+        void handleAdminChat(req, res)
+      })
+    },
     configureServer(server) {
       const env = loadEnv(server.config.mode, process.cwd(), '')
       for (const k of ['OPENAI_API_KEY']) {
         if (env[k] && !process.env[k]) process.env[k] = env[k]
       }
+      server.middlewares.use('/api/admin-chat', (req, res, next) => {
+        if (req.method !== 'POST') return next()
+        void handleAdminChat(req, res)
+      })
       server.middlewares.use('/api/recommend', (req, res, next) => {
         if (req.method !== 'POST') return next()
         const menu = JSON.parse(readFileSync('src/data/menu.json', 'utf8'))

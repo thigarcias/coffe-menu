@@ -128,3 +128,10 @@
   .adm-chat, .adm-scrim { animation: none; }
   .adm-chat__status i, .adm-chip i, .adm-tool__dot { animation: none; opacity: 1; }
 }
+
+.adm-chat__sugg--inline { margin-top: 0; }
+.adm-chat__sugg--inline button { min-height: 44px; padding: 8px 14px; border-radius: 18px; font-size: 13.5px; }
+.adm-chat__sugg--inline button:disabled { opacity: 0.5; cursor: default; }
+
+/* tabela do chat: os rótulos vêm prontos da IA, sem mexer nas maiúsculas */
+.adm-bk .adm-table td:first-child { text-transform: none; }

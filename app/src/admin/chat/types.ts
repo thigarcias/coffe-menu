@@ -8,6 +8,8 @@
  */
 export type Block =
   | { type: 'text'; text: string }
+  /** perguntas sugeridas: tocar numa delas envia a pergunta */
+  | { type: 'suggest'; items: string[] }
   | { type: 'kpis'; title?: string; items: { label: string; value: string; note?: string }[] }
   | {
       type: 'line'
@@ -19,9 +21,10 @@ export type Block =
       previous: number[]
       currentName: string
       previousName: string
-      format: 'money' | 'number'
+      /** vazio quando não há comparação */
+      format: 'money' | 'number' | 'percent'
     }
-  | { type: 'bars'; title: string; subtitle?: string; rows: { label: string; value: number; figure: string; note?: string }[] }
+  | { type: 'bars'; title: string; subtitle?: string; /** mostra a posição (1, 2, 3…): só para rankings */ ranked?: boolean; rows: { label: string; value: number; figure: string; note?: string }[] }
   | { type: 'funnel'; title: string; steps: { label: string; hint: string; value: number }[] }
   | { type: 'heat'; title: string; subtitle?: string; hours: number[]; rows: { label: string; cells: number[] }[] }
   | { type: 'table'; title: string; columns: string[]; rows: string[][] }
@@ -36,6 +39,10 @@ export interface Message {
   state: MessageState
   /** o que a IA está fazendo agora ("Consultando as vendas…"), só enquanto gera */
   status?: string
+  /** receita da resposta (blocos e consultas): volta ao servidor para pedidos como "troca por barras" */
+  plan?: unknown
+  /** motivo, quando a resposta falhou */
+  error?: string
 }
 
 export type SessionStatus = 'idle' | 'running' | 'interrupted' | 'error'

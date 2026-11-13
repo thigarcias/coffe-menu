@@ -1,3 +1,4 @@
 {
-  "rewrites": [{ "source": "/admin", "destination": "/index.html" }]
+  "rewrites": [{ "source": "/admin", "destination": "/index.html" }],
+  "functions": { "api/admin-chat.mjs": { "maxDuration": 60 } }
 }

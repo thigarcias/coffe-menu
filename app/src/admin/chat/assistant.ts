@@ -6,7 +6,7 @@ import type { Block, Message } from './types'
  * de verdade vai usar. Troque `assistant` por uma chamada ao servidor e o resto continua igual.
  */
 /** A IA "fala" em passos: um status (o que está fazendo) ou um bloco pronto da resposta. */
-export type AssistantEvent = { type: 'status'; text: string } | Block
+export type AssistantEvent = { type: 'status'; text: string } | { type: 'plan'; plan: unknown } | Block
 export type Assistant = (prompt: string, history: Message[], signal: AbortSignal) => AsyncGenerator<AssistantEvent>
 
 /** Nos testes (`cm.admin.fast = 1`) as pausas encolhem. */

@@ -45,6 +45,7 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 - A chave **nunca vai para o navegador.** O React chama `POST /api/recommend` e só o servidor fala com a OpenAI. A única variável de ambiente é **`OPENAI_API_KEY`**.
 - A rota existe em três lugares, todos usando `handleRecommend` de `server/ai.mjs`: o plugin no `vite.config.ts` (dev), `api/recommend.mjs` (Vercel) e `server/index.mjs` (Node próprio).
 - A saída é JSON estruturado (até 3 ids, cada um com um motivo), e ids que não existem no cardápio são descartados. Se a IA falhar ou não houver servidor, o quiz cai nas **regras** de `src/lib/recommend.ts` e mostra "Sugestão rápida".
+- **IA do chat do painel** (`POST /api/admin-chat`, `server/adminChat.mjs`): mesmo modelo e esforço (`callStructured` em `server/ai.mjs`), resposta em NDJSON (um passo por linha). Três etapas: **porteiro** (só aceita pergunta sobre os dados do painel; o resto, como script/Python, conversa, dados externos ou tentativa de burlar, recebe uma **recusa fixa escrita no servidor**), **planejador** (escolhe blocos e consultas; saída estrita com enums) e **redator** (escreve a análise só com os números que o motor devolveu; valor em R$ ou percentual que não está nos dados derruba o texto, e código na saída também). Há ainda um pré-filtro sem modelo (`precheck`). **Não afrouxe o guardrail sem rodar os testes de `e2e/server/guardrail.spec.ts` e `scripts/chat-smoke.mjs`.** A rota existe em três lugares: plugin do Vite (dev e preview), `server/index.mjs` e `api/admin-chat.mjs` (Vercel, com `maxDuration: 60` no `vercel.json`).
 
 ### Dados e conteúdo
 - `app/src/data/menu.json` usa o cardápio do **site da Starbucks Brasil** (162 itens, com preços, tamanhos e fotos oficiais) como **referência interna**. Não é para mostrar a terceiros como se fosse produto da Starbucks.
@@ -60,22 +61,24 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 - Gráficos seguem a skill `dataviz`: um tom (sálvia) para magnitude, cinza para "antes", sem eixo duplo, sem pizza, com tooltip e alternativa em tabela.
 - O painel é uma página de **abas** (Visão geral, Vendas, Produtos, IA e Parecidos, Tráfego): cada aba mostra só a sua seção, não há rolagem única. A aba ativa fica no hash da URL. O filtro de **período fica numa linha de filtros no começo da página** (vale para todas as abas), não no topo fixo. Cartão novo entra dentro de uma das seções (`SECTIONS` em `Admin.tsx`); cada seção cabe em ~1 tela no desktop, então não empilhe cartões demais numa aba.
 - Em `/admin`, o `body` continua com `overflow: hidden`: quem rola é o `.adm` (fixo à janela).
-- **Chat com a IA** (`app/src/admin/chat/`, detalhes em `docs/06-painel.md`): painel lateral, tela cheia e guia só do chat (`/admin?chat=ID`) mostram a mesma sessão; as sessões ficam no `localStorage` e o executor mora no módulo, então fechar o chat não para a resposta (só fechar a **guia** que a gerava interrompe, e há "Retomar"). A IA devolve **blocos** com dados já resolvidos, nunca número nem HTML; hoje é `mockAssistant`. Por enquanto só dados de exemplo e sem senha (pedido do usuário, é uma demo).
-- Testes: `app/e2e/admin.spec.ts` e `app/e2e/admin-chat.spec.ts` (celulares e desktop).
+- **Chat com a IA** (`app/src/admin/chat/`, detalhes em `docs/06-painel.md`): painel lateral, tela cheia e guia só do chat (`/admin?chat=ID`) mostram a mesma sessão; as sessões ficam no `localStorage` e o executor mora no módulo, então fechar o chat não para a resposta (só fechar a **guia** que a gerava interrompe, e há "Retomar"). A IA é o GPT-6 Luna pelo servidor (`serverAssistant.ts`) e devolve **blocos** com dados já resolvidos pelo motor, nunca número nem HTML. `cm.admin.mock = 1` no `localStorage` usa as respostas de exemplo do código (`mockAssistant`), e é o que os testes de `admin-chat.spec.ts` usam. Sem senha por enquanto (pedido do usuário, é uma demo).
+- **Dados do painel e do chat vêm de UMA tabela fictícia**: `app/shared/analytics.mjs` (61 dias de visitas e pedidos, determinística) com o motor `runQuery` (métrica × agrupamento × filtro × período). O painel (`src/admin/mock.ts`) lê dela, então painel e IA nunca se contradizem. Para dados reais, troque `getFacts()` lá. `7d`/`30d` são dias completos até ontem; só `today` é parcial (até as 16h).
+- Testes: `app/e2e/admin.spec.ts`, `admin-chat.spec.ts` (respostas de exemplo) e `admin-chat-ia.spec.ts` (a rota `/api/admin-chat` simulada), nos celulares e no desktop; e `app/e2e/server/*.spec.ts` (motor de consulta, guardrail e pipeline com um modelo falso), que rodam só no Node, no projeto `server` do Playwright.
 
 ## Comandos (dentro de `app/`)
 
 ```bash
 npm run dev -- --host     # app + rota da IA (precisa de OPENAI_API_KEY no .env)
 npm run build             # typecheck + build
-npm run test:e2e          # 495 testes em 5 celulares (layout, capturas, painel /admin e chat)
+npm run test:e2e          # 662 testes: 5 celulares (layout, capturas, painel e chat) + Node (motor e guardrail)
 npm run test:e2e:update   # aceita uma mudança visual feita de propósito
 npm run artifact          # gera app/artifact/ para publicar como Artifact do claude.ai
+node scripts/chat-smoke.mjs "pergunta"   # chama o GPT-6 Luna de verdade no pipeline do chat do painel (ver nota do proxy abaixo)
 ```
 
 ## Testes: obrigatórios antes de cada commit
 
-- Rode `npm run test:e2e` e **só commite se todos passarem**. Não encadeie `commit` depois de `| tail`: o pipe engole o erro. Já subiu um commit com teste vermelho por causa disso.
+- Rode `npm run test:e2e` e **só commite se todos passarem**. Os testes nunca chamam a OpenAI; para validar a IA de verdade (e o guardrail) use `scripts/chat-smoke.mjs`. Não encadeie `commit` depois de `| tail`: o pipe engole o erro. Já subiu um commit com teste vermelho por causa disso.
 - Os testes (`app/e2e/layout.spec.ts`) rodam no Chromium com os tamanhos de iPhone SE, iPhone 15, iPhone 15 Pro Max, Pixel 7 e Galaxy S9+. Toda correção de layout ganha um teste que reprova o bug antigo.
 - Mudou o visual de propósito? Atualize as capturas (`test:e2e:update`) e **olhe as imagens** de `e2e/__screenshots__/` antes de commitar.
 - A IA é simulada nos testes (`page.route('**/api/recommend')`), então eles não gastam a chave.

@@ -53,8 +53,10 @@ export function LineChart({ labels, tipLabels, cur, prev, curName, prevName, fmt
   const iw = w - m.l - m.r
   const ih = h - m.t - m.b
   const n = cur.length
-  const step = niceStep(Math.max(...cur, ...prev) * 1.05, 4)
-  const top = Math.ceil((Math.max(...cur, ...prev) * 1.05) / step) * step
+  const hasPrev = prev.length === n && n > 0
+  const peakAll = Math.max(...cur, ...(hasPrev ? prev : [0]), 1)
+  const step = niceStep(peakAll * 1.05, 4)
+  const top = Math.ceil((peakAll * 1.05) / step) * step
   const x = (i: number) => m.l + (n === 1 ? iw / 2 : (i * iw) / (n - 1))
   const y = (v: number) => m.t + ih - (v / top) * ih
   const path = (a: number[]) => a.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join('')
@@ -95,7 +97,7 @@ export function LineChart({ labels, tipLabels, cur, prev, curName, prevName, fmt
               ) : null,
             )}
             <path d={`${path(cur)}L${x(n - 1)},${y(0)}L${x(0)},${y(0)}Z`} fill={SAGE} opacity={0.1} />
-            <path d={path(prev)} fill="none" stroke={PREV} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+            {hasPrev && <path d={path(prev)} fill="none" stroke={PREV} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />}
             <path d={path(cur)} fill="none" stroke={SAGE} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
 
             {hover == null && (
@@ -116,8 +118,8 @@ export function LineChart({ labels, tipLabels, cur, prev, curName, prevName, fmt
             {hover != null && (
               <g>
                 <line x1={x(hover)} x2={x(hover)} y1={m.t} y2={m.t + ih} className="adm-cross" />
-                <circle cx={x(hover)} cy={y(prev[hover])} r={6} fill="#fff" />
-                <circle cx={x(hover)} cy={y(prev[hover])} r={4} fill={PREV} />
+                {hasPrev && <circle cx={x(hover)} cy={y(prev[hover])} r={6} fill="#fff" />}
+                {hasPrev && <circle cx={x(hover)} cy={y(prev[hover])} r={4} fill={PREV} />}
                 <circle cx={x(hover)} cy={y(cur[hover])} r={6} fill="#fff" />
                 <circle cx={x(hover)} cy={y(cur[hover])} r={4} fill={SAGE} />
               </g>
@@ -142,10 +144,12 @@ export function LineChart({ labels, tipLabels, cur, prev, curName, prevName, fmt
                 <i style={{ background: SAGE }} />
                 {curName} <b>{fmtValue(cur[hover])}</b>
               </span>
-              <span>
-                <i style={{ background: PREV }} />
-                {prevName} <b>{fmtValue(prev[hover])}</b>
-              </span>
+              {hasPrev && (
+                <span>
+                  <i style={{ background: PREV }} />
+                  {prevName} <b>{fmtValue(prev[hover])}</b>
+                </span>
+              )}
             </div>
           )}
         </>
@@ -204,10 +208,10 @@ export interface BarRow {
 }
 
 /** Lista de barras horizontais ranqueadas: nome, barra alinhada e número, uma linha por item. */
-export function RankedBars({ rows, max }: { rows: BarRow[]; max?: number }) {
-  const top = max ?? Math.max(...rows.map((r) => r.value))
+export function RankedBars({ rows, max, ranked = true }: { rows: BarRow[]; max?: number; ranked?: boolean }) {
+  const top = max ?? Math.max(...rows.map((r) => r.value), 1e-9)
   return (
-    <ol className="adm-bars">
+    <ol className={`adm-bars${ranked ? '' : ' adm-bars--plain'}`}>
       {rows.map((r, i) => (
         <li key={r.key} className={`adm-bar${r.thumb ? ' adm-bar--thumb' : ''}`}>
           <span className="adm-bar__rank">{i + 1}</span>

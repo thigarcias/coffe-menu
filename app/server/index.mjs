@@ -1,8 +1,9 @@
-// Servidor de produção: serve o build (dist/) e a rota /api/recommend.
+// Servidor de produção: serve o build (dist/) e as rotas /api/recommend e /api/admin-chat.
 import { createServer } from 'node:http'
 import { readFile } from 'node:fs/promises'
 import { extname, join, normalize } from 'node:path'
 import { handleRecommend } from './ai.mjs'
+import { handleAdminChat } from './adminChat.mjs'
 
 try { process.loadEnvFile(new URL('../.env', import.meta.url)) } catch { /* sem .env: usa o ambiente */ }
 
@@ -12,6 +13,7 @@ const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/cs
 
 createServer(async (req, res) => {
   if (req.method === 'POST' && req.url === '/api/recommend') return handleRecommend(req, res, menu)
+  if (req.method === 'POST' && req.url === '/api/admin-chat') return handleAdminChat(req, res)
   const path = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname)).replace(/^(\.\.[/\\])+/, '')
   const file = join(root, path.endsWith('/') ? 'index.html' : path)
   try {

@@ -1,4 +1,5 @@
 import { mockAssistant, type Assistant } from './assistant'
+import { serverAssistant } from './serverAssistant'
 import { allSessions, createSession, getSession, mutate, TAB_ID } from './store'
 import type { Message, Session } from './types'
 
@@ -10,10 +11,19 @@ import type { Message, Session } from './types'
  * Limite deste modelo (decisão: "plano A"): a resposta roda NESTA guia do navegador. Se a guia
  * que começou for fechada no meio, a sessão fica "interrompida" e dá para retomar.
  */
-let assistant: Assistant = mockAssistant
-export const setAssistant = (a: Assistant) => {
-  assistant = a
+/** A IA de verdade é a padrão. `cm.admin.mock = 1` (testes e trabalho offline) usa as respostas de exemplo do código. */
+let override: Assistant | null = null
+export const setAssistant = (a: Assistant | null) => {
+  override = a
 }
+const useMock = () => {
+  try {
+    return localStorage.getItem('cm.admin.mock') === '1'
+  } catch {
+    return false
+  }
+}
+const pickAssistant = (): Assistant => override ?? (useMock() ? mockAssistant : serverAssistant)
 
 const controllers = new Map<string, AbortController>()
 const newId = () => 'm-' + Math.random().toString(36).slice(2, 10)
@@ -69,15 +79,16 @@ async function run(sessionId: string, replyId: string, prompt: string) {
   const beat = setInterval(() => mutate(sessionId, (s) => ({ ...s, pulse: Date.now() }), false), 1000)
   try {
     const history = getSession(sessionId)?.messages ?? []
-    for await (const ev of assistant(prompt, history, ctl.signal)) {
+    for await (const ev of pickAssistant()(prompt, history, ctl.signal)) {
       if (ev.type === 'status') patchMessage(sessionId, replyId, (m) => ({ ...m, status: ev.text }))
+      else if (ev.type === 'plan') patchMessage(sessionId, replyId, (m) => ({ ...m, plan: ev.plan }))
       else patchMessage(sessionId, replyId, (m) => ({ ...m, blocks: [...m.blocks, ev], status: undefined }))
     }
     patchMessage(sessionId, replyId, (m) => ({ ...m, state: 'done', status: undefined }))
     mutate(sessionId, (s) => ({ ...s, status: 'idle', owner: undefined, pulse: undefined }))
   } catch (e) {
     const stopped = e instanceof DOMException && e.name === 'AbortError'
-    patchMessage(sessionId, replyId, (m) => ({ ...m, state: stopped ? 'stopped' : 'error', status: undefined }))
+    patchMessage(sessionId, replyId, (m) => ({ ...m, state: stopped ? 'stopped' : 'error', status: undefined, error: stopped ? undefined : e instanceof Error ? e.message : undefined }))
     mutate(sessionId, (s) => ({ ...s, status: stopped ? 'idle' : 'error', owner: undefined, pulse: undefined }))
   } finally {
     clearInterval(beat)

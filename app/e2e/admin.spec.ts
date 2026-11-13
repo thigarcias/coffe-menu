@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
+import { aiStatsOf, funnelOf, runQuery } from '../shared/analytics.mjs'
 
 const box = async (l: Locator) => {
   const b = await l.boundingBox()
@@ -205,6 +206,40 @@ test.describe('painel do dono (/admin) no celular', () => {
     await page.goto('/')
     await expect(page.locator('.slide').first()).toBeVisible()
     expect(reqs.filter((u) => /Admin-.*\.(js|css)/.test(u))).toEqual([])
+  })
+})
+
+test.describe('painel do dono: os números vêm da mesma tabela que a IA consulta', () => {
+  const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
+  const num = new Intl.NumberFormat('pt-BR')
+  const money0 = (v: number) => `R$ ${num.format(Math.round(v))}`
+
+  test('indicadores e funil do painel = consulta ao motor (7 dias)', async ({ page }) => {
+    await page.goto('/admin')
+    const k = page.locator('.adm-kpi .adm-kpi__value')
+    await expect(k.nth(0)).toHaveText(money0(runQuery({ metric: 'revenue', period: '7d' }).total))
+    await expect(k.nth(1)).toHaveText(num.format(runQuery({ metric: 'orders', period: '7d' }).total))
+    await expect(k.nth(2)).toHaveText(brl.format(runQuery({ metric: 'avg_ticket', period: '7d' }).total))
+    await goTab(page, 'Vendas')
+    const f = funnelOf('7d')
+    await expect(page.locator('.adm-funnel li').first().locator('.adm-funnel__num b')).toHaveText(num.format(f[0].value))
+    await expect(page.locator('.adm-funnel li').last().locator('.adm-funnel__num b')).toHaveText(num.format(f[4].value))
+  })
+
+  test('trocar para Hoje e 30 dias mostra os totais desses períodos', async ({ page }) => {
+    await page.goto('/admin')
+    const first = page.locator('.adm-kpi .adm-kpi__value').first()
+    await page.getByRole('button', { name: '30 dias' }).click()
+    await expect(first).toHaveText(money0(runQuery({ metric: 'revenue', period: '30d' }).total))
+    await page.getByRole('button', { name: 'Hoje' }).click()
+    await expect(first).toHaveText(money0(runQuery({ metric: 'revenue', period: 'today' }).total))
+  })
+
+  test('a ajuda da IA no painel = estatística do motor', async ({ page }) => {
+    await page.goto('/admin#ia')
+    const a = aiStatsOf('7d')
+    await expect(page.locator('.adm-stats dd').first()).toHaveText(num.format(a.opened))
+    await expect(page.locator('.adm-stats dd').nth(3)).toHaveText(num.format(a.ordered))
   })
 })
 

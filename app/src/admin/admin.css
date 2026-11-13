@@ -201,6 +201,9 @@
 
 /* --------------------------------------------------------- barras e listas */
 .adm-bars { display: grid; gap: 14px; }
+.adm-bars--plain .adm-bar__rank { display: none; }
+.adm-bars--plain .adm-bar { grid-template-columns: minmax(0, 1fr) auto; }
+.adm-bars--plain .adm-bar--thumb { grid-template-columns: auto minmax(0, 1fr) auto; }
 .adm-bar { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; }
 .adm-bar--thumb { grid-template-columns: auto auto minmax(0, 1fr) auto; }
 .adm-bar__rank { width: 16px; text-align: center; font-size: 12px; font-weight: 700; color: var(--a-ink-3); font-variant-numeric: tabular-nums; }

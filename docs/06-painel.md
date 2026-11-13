@@ -28,29 +28,55 @@ Uma dashboard numa rota do mesmo app (`/admin`), pensada para a dona ou o dono d
 | Tráfego | Como chegaram | De onde vêm as visitas (QR da mesa, balcão, Instagram, link) e quais convertem |
 | Produtos | Vitrine: visto × pedido | O que reorganizar: estrelas, vitrine que não converte, escondidos, pouca atenção |
 
-## Chat com a IA (em construção)
+## Chat com a IA
 
-Ideia: o dono conversa com a IA do painel, que **monta painéis e visualizações sob pedido** com os dados do próprio painel. Estado: **fatia 1 pronta** (sessões e interface, com respostas de exemplo); a IA de verdade e os dados sintéticos vêm nas próximas fatias.
+O dono conversa com a IA do painel, que **monta gráficos, tabelas e análises sob pedido** com os dados do painel. A IA é o **GPT-6 Luna** (esforço `high`), chamada só pelo servidor.
+
+### Interface e sessões
 
 - **Painel lateral** por cima da dashboard (botão **Perguntar à IA**, no topo). Dele dá para ir para a **tela cheia** ou para uma **guia só com o chat** (`/admin?chat=ID`).
-- **Sessões com ID e histórico**, guardadas no navegador. Todas as formas de ver a mesma conversa (lateral, tela cheia, outra guia) mostram **a mesma sessão em tempo real**. A aba **Sessões** lista todas, com o estado (Rodando, Concluída, Interrompida) e abre qualquer uma.
-- **Fechar o chat não para a resposta.** O executor (`chat/runner.ts`) mora no módulo, não num componente: fechar o painel, a tela cheia ou trocar de aba do painel não interrompe nada. A resposta é gravada a cada passo.
-- **Limite da decisão "plano A":** a resposta roda **na guia do navegador** que a começou. Se essa guia for fechada no meio, a sessão fica **Interrompida** (as outras guias percebem pela falta de sinal de vida em 5 s) e há um botão **Retomar**. Rodar de verdade em segundo plano pede um servidor com banco (plano B), que não foi feito.
-- **Blocos, não código.** A IA devolve "blocos" já com os dados resolvidos (`chat/types.ts`): texto, indicadores, linha, barras, funil, mapa de calor e tabela. Quem desenha é o nosso código, com os mesmos componentes do painel. A IA nunca escreve número nem HTML. A IA de verdade vai devolver exatamente estes formatos.
-- Hoje a "IA" é `chat/assistant.ts` (`mockAssistant`): respostas de exemplo por palavra-chave. Trocar por uma chamada ao servidor é trocar essa função (`setAssistant` em `runner.ts`).
-- Para testes, `localStorage['cm.admin.fast'] = '1'` encolhe as pausas do assistente de exemplo.
+- **Sessões com ID e histórico**, guardadas no navegador. Todas as formas de ver a mesma conversa (lateral, tela cheia, outra guia) mostram **a mesma sessão em tempo real**. A aba **Sessões** lista todas, com o estado (Rodando, Concluída, Interrompida, Erro) e abre qualquer uma.
+- **Fechar o chat não para a resposta.** O executor (`chat/runner.ts`) mora no módulo, não num componente. Limite do "plano A": a resposta roda **na guia do navegador** que a começou; se ela for fechada no meio, a sessão fica **Interrompida** e há um botão **Retomar**. Rodar de verdade em segundo plano pede um servidor com banco (não foi feito).
+- Respostas em **blocos** (`chat/types.ts`): texto, indicadores, linha, barras, funil, mapa de calor, tabela e perguntas sugeridas (tocar numa envia a pergunta). Quem desenha é o nosso código, com os componentes do painel.
 
-### Próximas fatias
+### Como a IA responde (`server/adminChat.mjs`)
 
-1. **Dados:** tabela sintética de pedidos (30 dias) e um motor de consulta com vocabulário fechado (métricas e dimensões); a IA pede a consulta, o servidor calcula.
-2. **IA de verdade:** `gpt-6-luna` (high) devolvendo a receita em JSON estruturado, validada contra o catálogo de blocos.
-3. **Gráfico livre** com Vega-Lite e visualizações novas (fluxo/Sankey, quadrante, pequenos múltiplos), com clique no ponto virando pergunta; fixar painéis gerados.
+A IA **nunca escreve número nem código de interface**. Em 3 etapas, com a resposta em streaming (NDJSON):
+
+1. **Porteiro.** Classifica a mensagem: `dados`, `ajuda_painel`, `saudacao`, `fora_do_escopo` ou `tentativa_de_burlar`. Só `dados` segue. **Todo o resto recebe uma resposta fixa escrita no servidor** (o modelo não escreve a recusa) e nada é gerado. Antes dele há um **pré-filtro sem modelo** (`precheck`): mensagem grande demais (500 caracteres), "ignore as instruções", pedir o prompt do sistema, trocar de papel, e pedido de código (linguagem + "script/código/programa").
+2. **Planejador.** Escolhe até 4 blocos e as consultas, com saída estrita (só métricas, agrupamentos, filtros e períodos que existem). O servidor valida de novo (`normalizePlan`) e descarta o que não existe. Tipos: indicadores, linha, barras, funil, mapa de calor, tabela, Parecidos, sugestões da IA e vitrine visto × pedido. Se o dado não existe (lucro, custo, estoque), ele diz qual falta.
+3. **Redator.** Escreve a análise em cima dos números que o **motor de consulta** devolveu. O texto passa por uma checagem: **valor em R$ ou percentual que não existe nos dados**, código, links e HTML derrubam o texto da IA, e entra um resumo feito pelo servidor.
+
+Camadas extras: o texto do usuário vai ao modelo só como dado, entre etiquetas (`<`/`>` removidos para ele não fechar a etiqueta); o histórico enviado pelo navegador não é confiável (só as perguntas e o plano **revalidado** chegam ao modelo); erro interno vira mensagem amigável sem vazar detalhe; sem chave, a IA diz que não está configurada.
+
+O que o guardrail barra, de fato (testado com o modelo real): script em Python, "escreva um código", poema, tradução, piada, conta de multiplicar, receita, "você agora é um chef", "ignore as instruções anteriores", dados de concorrentes ou da Starbucks inteira, e pedidos que misturam uma pergunta de dados com um pedido fora do escopo.
+
+### Dados
+
+Uma única tabela fictícia (`app/shared/analytics.mjs`, 61 dias de visitas e pedidos, determinística) alimenta o painel **e** o chat, então os números nunca se contradizem. O motor `runQuery` aceita métrica (vendas, pedidos, unidades, ticket médio, visitas, conversão), agrupamento (dia, hora, dia da semana, produto, categoria, origem, com/sem IA), filtros (origem, categoria, produto, com/sem IA) e período (`today`, `yesterday`, `7d`, `30d`, `prev7d`, `prev30d`), com comparação. Só `today` é parcial (até as 16h); os demais são dias completos até ontem. Para dados reais, troque `getFacts()`.
+
+### Como testar a IA de verdade
+
+```bash
+cd app
+NODE_USE_ENV_PROXY=1 NODE_EXTRA_CA_CERTS=/root/.ccr/ca-bundle.crt OPENAI_API_KEY=proxy-injected \
+  node scripts/chat-smoke.mjs "Quais gelados vendem mais?" "Crie um script em Python"
+```
+
+Os testes automáticos **não** chamam a OpenAI: `e2e/server/` usa um modelo falso (e prova que o guardrail se defende até com um modelo enganado), e `admin-chat-ia.spec.ts` simula a rota.
+
+### Próximas etapas
+
+1. **Gráfico livre** com Vega-Lite e visualizações novas (fluxo/Sankey, quadrante, pequenos múltiplos), com clique no ponto virando pergunta.
+2. **Fixar** painéis gerados e uma aba "Meus painéis".
+3. Rodar a resposta no servidor (segundo plano de verdade), login e dados reais.
 
 ## Onde está o código
 
 - `app/src/admin/Admin.tsx`: a página. `charts.tsx`: gráficos (linha, minigráfico, barras, funil, mapa de calor). `admin.css`: estilos (tudo sob `.adm`).
-- `app/src/admin/mock.ts`: **os dados de exemplo**. Os números nascem de poucas premissas (visitas, conversão, ticket) e o resto é derivado, então funil, vendas e rankings concordam. É o único arquivo a trocar quando houver dados reais.
-- `app/src/admin/chat/`: o chat (`store.ts` sessões, `runner.ts` executor, `assistant.ts` IA de exemplo, `Blocks.tsx`, `ChatPanel.tsx`, `SessionsList.tsx`, `chat.css`).
+- `app/src/admin/mock.ts`: lê os dados de `app/shared/analytics.mjs` (a mesma tabela que a IA consulta). Para dados reais, troque lá.
+- `app/src/admin/chat/`: o chat (`store.ts` sessões, `runner.ts` executor, `serverAssistant.ts` IA de verdade, `assistant.ts` IA de exemplo para testes, `Blocks.tsx`, `ChatPanel.tsx`, `SessionsList.tsx`, `chat.css`).
+- `app/server/adminChat.mjs` (IA do chat e guardrail), `app/api/admin-chat.mjs` (Vercel), `app/shared/analytics.mjs` (dados e motor de consulta), `app/scripts/chat-smoke.mjs`.
 - `app/src/main.tsx` carrega o painel sob demanda (`React.lazy`): quem abre o cardápio não baixa o painel.
 - `app/vercel.json` reescreve `/admin` para o app (sem isso a Vercel responde 404).
 - A rota é só `/admin` (sem barra no fim); os arquivos do app usam caminho relativo.

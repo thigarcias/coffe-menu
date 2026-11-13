@@ -164,7 +164,7 @@ export function ChatPanel({ mode, sessionId, onSession, onClose }: Props) {
             ) : (
               <div key={m.id} className="adm-msg adm-msg--assistant" data-state={m.state}>
                 {m.blocks.map((b, i) => (
-                  <BlockView key={i} block={b} />
+                  <BlockView key={i} block={b} onAsk={running ? undefined : (q) => submit(q)} />
                 ))}
                 {m.state === 'streaming' && (
                   <p className="adm-chat__status" role="status">
@@ -173,7 +173,11 @@ export function ChatPanel({ mode, sessionId, onSession, onClose }: Props) {
                   </p>
                 )}
                 {m.state === 'stopped' && <p className="adm-chat__note">Você parou esta resposta.</p>}
-                {m.state === 'error' && <p className="adm-chat__note adm-chat__note--warn">Não consegui terminar esta resposta.</p>}
+                {m.state === 'error' && (
+                  <p className="adm-chat__note adm-chat__note--warn" role="alert">
+                    {m.error ?? 'Não consegui terminar esta resposta.'}
+                  </p>
+                )}
               </div>
             ),
           )}

@@ -6,6 +6,11 @@ const box = async (l: Locator) => {
   return { ...b, right: b.x + b.width, bottom: b.y + b.height }
 }
 
+/** Estes testes usam as respostas de exemplo do código (`cm.admin.mock`), não a OpenAI. A IA de verdade é testada em admin-chat-ia.spec.ts. */
+test.beforeEach(async ({ context }) => {
+  await context.addInitScript(() => localStorage.setItem('cm.admin.mock', '1'))
+})
+
 /** Nos testes de "andamento" a IA de exemplo roda no ritmo normal (uns 3 s); nos demais, acelerada. */
 const fast = (page: Page) => page.addInitScript(() => localStorage.setItem('cm.admin.fast', '1'))
 
