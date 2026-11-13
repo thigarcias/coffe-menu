@@ -80,7 +80,7 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
         const fav = favorites.has(item.id)
         return (
           <section key={item.id} className="slide" data-item={item.id}>
-            <ProductImage src={item.image} alt={item.name} eager={i < 2} className="slide__img" />
+            <ProductImage src={item.image} video={item.video} alt={item.name} eager={i < 2} className="slide__img" />
             <div className="slide__shade" />
 
             <div className="slide__body">

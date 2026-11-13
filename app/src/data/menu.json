@@ -1326,7 +1326,8 @@
         "Espuma de leite"
       ],
       "story": "Conta-se que o nome vem dos frades capuchinhos, cujo hábito marrom lembra a cor da bebida; a versão mais aceita liga o nome ao capuz, o capuccio. A espuma de leite de hoje se firmou na Itália no século XX.",
-      "subcategory": "cafes"
+      "subcategory": "cafes",
+      "video": "video/cappuccino-tradicional.mp4"
     },
     {
       "id": "cappuccino-brigadeiro",
@@ -1770,7 +1771,8 @@
         "Gelo"
       ],
       "story": "Na Itália, o caffè freddo é tradição de verão, e há bebidas geladas de café típicas do sul do país. O latte gelado leva a ideia para o café com leite: combina em qualquer temperatura.",
-      "subcategory": "cafe-gelado"
+      "subcategory": "cafe-gelado",
+      "video": "video/cafe-latte-gelado.mp4"
     },
     {
       "id": "caramelo-macchiato-gelado",
@@ -2040,7 +2042,8 @@
         "Gelo"
       ],
       "story": "A extração a frio é antiga: no Japão, o café estilo Kyoto pinga gota a gota de uma torre de vidro, por horas. O cold brew usa a mesma ideia: ficando cerca de 20 horas em água fria, o café sai suave, com menos acidez e amargor.",
-      "subcategory": "cold-brew"
+      "subcategory": "cold-brew",
+      "video": "video/cold-brew.mp4"
     },
     {
       "id": "cold-brew-baunilha",
@@ -2361,7 +2364,8 @@
         "Cobertura de caramelo"
       ],
       "story": "O caramelo aparece na confeitaria desde que o homem aprendeu a queimar açúcar. Ele tem um ponto exato: se passar, amarga. O Frappuccino de caramelo é uma versão geladinha e cremosa dessa receita.",
-      "subcategory": "frappuccinos"
+      "subcategory": "frappuccinos",
+      "video": "video/caramelo-frappuccino.mp4"
     },
     {
       "id": "frappuccino-mocha",

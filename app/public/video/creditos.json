@@ -1,0 +1,22 @@
+{
+  "cappuccino-tradicional": {
+    "pexels": "https://www.pexels.com/video/close-up-view-of-a-barista-making-latte-art-13736548/",
+    "autor": "Mizuno K",
+    "kb": 795
+  },
+  "cold-brew": {
+    "pexels": "https://www.pexels.com/video/a-person-holding-a-drink-with-a-straw-25692386/",
+    "autor": "Esra Afşar",
+    "kb": 3825
+  },
+  "caramelo-frappuccino": {
+    "pexels": "https://www.pexels.com/video/iced-coffee-on-wooden-table-at-cafe-39219879/",
+    "autor": "Eman El Gohary",
+    "kb": 647
+  },
+  "cafe-latte-gelado": {
+    "pexels": "https://www.pexels.com/video/a-cold-beverage-and-a-slice-of-cake-5929444/",
+    "autor": "Charlotte May",
+    "kb": 1234
+  }
+}

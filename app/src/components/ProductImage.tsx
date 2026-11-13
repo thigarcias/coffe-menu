@@ -2,6 +2,7 @@ import { useState, type CSSProperties } from 'react'
 
 interface Props {
   src: string | null
+  video?: string
   alt: string
   eager?: boolean
   className?: string
@@ -13,7 +14,7 @@ interface Props {
  * A caixa da foto segue a proporção real dela, para a máscara esfumar
  * exatamente as bordas da foto e ela se fundir ao fundo.
  */
-export function ProductImage({ src, alt, eager, className = '' }: Props) {
+export function ProductImage({ src, video, alt, eager, className = '' }: Props) {
   const [ratio, setRatio] = useState(0.75)
   if (!src) return <div className={`pimg pimg--empty ${className}`} />
   const loading = eager ? 'eager' : 'lazy'
@@ -21,17 +22,32 @@ export function ProductImage({ src, alt, eager, className = '' }: Props) {
     <div className={`pimg ${className}`}>
       <img className="pimg__bg" src={src} alt="" aria-hidden loading={loading} />
       <div className="pimg__box">
-        <img
-          className="pimg__fg"
-          src={src}
-          alt={alt}
-          loading={loading}
-          style={{ '--ar': ratio } as CSSProperties}
-          onLoad={(e) => {
-            const { naturalWidth: w, naturalHeight: h } = e.currentTarget
-            if (w && h) setRatio(w / h)
-          }}
-        />
+        {video ? (
+          <video
+            className="pimg__fg"
+            src={video}
+            poster={src}
+            style={{ '--ar': 0.5625 } as CSSProperties}
+            aria-label={alt}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload={eager ? 'auto' : 'metadata'}
+          />
+        ) : (
+          <img
+            className="pimg__fg"
+            src={src}
+            alt={alt}
+            loading={loading}
+            style={{ '--ar': ratio } as CSSProperties}
+            onLoad={(e) => {
+              const { naturalWidth: w, naturalHeight: h } = e.currentTarget
+              if (w && h) setRatio(w / h)
+            }}
+          />
+        )}
       </div>
     </div>
   )
