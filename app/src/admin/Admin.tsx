@@ -2,6 +2,10 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { MenuItem } from '../types'
 import { build, cafeName, PERIODS, type Period } from './mock'
 import { Funnel, Heatmap, Legend, LineChart, PREV, RankedBars, SAGE, Sparkline } from './charts'
+import { ChatDrawer, ChatPanel, Icon, openInNewTab } from './chat/ChatPanel'
+import { sweep } from './chat/runner'
+import { SessionsList } from './chat/SessionsList'
+import { setChatUi, useChatUi, useSessions } from './chat/store'
 import './admin.css'
 
 const num = new Intl.NumberFormat('pt-BR')
@@ -69,13 +73,14 @@ const SECTIONS = [
   { id: 'produtos', label: 'Produtos', sub: 'O que mais vende e o que reorganizar no cardápio.' },
   { id: 'ia', label: 'IA e Parecidos', sub: 'O que a recomendação e os produtos parecidos geram.' },
   { id: 'trafego', label: 'Tráfego', sub: 'Quando e de onde as pessoas chegam.' },
+  { id: 'sessoes', label: 'Sessões', sub: 'Conversas com a IA. Continuam rodando mesmo com o chat fechado.' },
 ] as const
 type SectionId = (typeof SECTIONS)[number]['id']
 
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const fromHash = (): SectionId => SECTIONS.find((s) => s.id === window.location.hash.slice(1))?.id ?? 'visao'
 
-export default function Admin() {
+function Dashboard() {
   const [period, setPeriod] = useState<Period>('7d')
   const d = useMemo(() => build(period), [period])
   const [showTable, setShowTable] = useState(false)
@@ -128,6 +133,16 @@ export default function Admin() {
     navRef.current?.querySelector<HTMLElement>(`#tab-${id}`)?.focus()
   }
 
+  const chat = useChatUi()
+  const sessions = useSessions()
+  // guias que perderam o dono da resposta (guia fechada no meio) viram "interrompidas"
+  useEffect(() => {
+    sweep()
+    const t = setInterval(sweep, 2000)
+    return () => clearInterval(t)
+  }, [])
+  const openChat = (id?: string | null) => setChatUi({ open: true, sessionId: id === undefined ? (chat.sessionId ?? sessions[0]?.id ?? null) : id })
+
   const peakDay = d.heat.peak
   const topItem = d.top[0]
   const ai = d.ai
@@ -153,9 +168,6 @@ export default function Admin() {
               <h1>Painel</h1>
               <p>{cafeName}</p>
             </div>
-            <span className="adm-pill" title="Os números abaixo são exemplos, só para aprovar o design">
-              Dados de exemplo
-            </span>
           </div>
           {/* abas: cada uma mostra só a sua seção */}
           <nav className="adm-nav" role="tablist" aria-label="Seções do painel" ref={navRef} onKeyDown={onKeys}>
@@ -174,17 +186,25 @@ export default function Admin() {
               </button>
             ))}
           </nav>
-          <a className="adm-top__link" href="/">
-            Ver cardápio
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <path d="M4 2h6v6M10 2 3 9" />
-            </svg>
-          </a>
+          <div className="adm-top__actions">
+            <button className="adm-ask" onClick={() => openChat()} aria-expanded={chat.open} aria-haspopup="dialog">
+              <Icon d="spark" />
+              Perguntar à IA
+              {sessions.some((s) => s.status === 'running') && <span className="sr-only"> (há uma conversa rodando)</span>}
+            </button>
+            <a className="adm-top__link" href="/">
+              Ver cardápio
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M4 2h6v6M10 2 3 9" />
+              </svg>
+            </a>
+          </div>
         </div>
       </header>
 
       <main className="adm-main">
         {/* filtros: ficam no começo da página, não no topo fixo */}
+        {active !== 'sessoes' && (
         <div className="adm-filters">
           <div className="adm-filters__row">
             <span className="adm-filters__label" id="adm-period-label">
@@ -198,8 +218,14 @@ export default function Admin() {
               ))}
             </div>
           </div>
-          <p className="adm-note">Comparado com {periodName.prev}. Sexta, 13 de novembro de 2026, 16h40.</p>
+          <p className="adm-note">
+            <span className="adm-pill" title="Os números são exemplos, só para aprovar o design">
+              Dados de exemplo
+            </span>{' '}
+            Comparado com {periodName.prev}. Sexta, 13 de novembro de 2026, 16h40.
+          </p>
         </div>
+        )}
 
         {/* =================================================== visão geral */}
         {active === 'visao' && (
@@ -501,6 +527,34 @@ export default function Admin() {
         </section>
         )}
 
+        {/* ======================================================== sessões */}
+        {active === 'sessoes' && (
+          <section id="sessoes" className="adm-sec" role="tabpanel" aria-labelledby="tab-sessoes">
+            <header className="adm-sec__head">
+              <h2 id="h-sessoes">{SECTIONS[5].label}</h2>
+              <p>{SECTIONS[5].sub}</p>
+            </header>
+            <div className="adm-card adm-s12 adm-sess-card">
+              <header className="adm-card__head">
+                <div>
+                  <h2>Conversas com a IA</h2>
+                  <p>{sessions.length ? `${sessions.length} ${sessions.length === 1 ? 'conversa' : 'conversas'} · ${sessions.filter((s) => s.status === 'running').length} rodando` : 'Nenhuma ainda'}</p>
+                </div>
+                <button className="adm-btn adm-btn--solid" onClick={() => setChatUi({ open: true, sessionId: null })}>
+                  Nova conversa
+                </button>
+              </header>
+              <SessionsList
+                sessions={sessions}
+                currentId={chat.open ? chat.sessionId : null}
+                onOpen={(id) => openChat(id)}
+                onOpenTab={(id) => openInNewTab(id)}
+                onNew={() => setChatUi({ open: true, sessionId: null })}
+              />
+            </div>
+          </section>
+        )}
+
         <a className="adm-back" href="/">
           Voltar ao cardápio
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -508,6 +562,40 @@ export default function Admin() {
           </svg>
         </a>
       </main>
+      <ChatDrawer ui={chat} />
     </div>
   )
+}
+
+/** Guia só do chat (/admin?chat=ID): a mesma sessão, sem o painel. */
+function ChatOnly({ id }: { id: string }) {
+  const [sid, setSid] = useState<string | null>(id)
+  useEffect(() => {
+    sweep()
+    const t = setInterval(sweep, 2000)
+    return () => clearInterval(t)
+  }, [])
+  useEffect(() => {
+    const prev = document.title
+    document.title = `Chat · ${cafeName}`
+    return () => {
+      document.title = prev
+    }
+  }, [])
+  const change = (next: string | null) => {
+    setSid(next)
+    window.history.replaceState(null, '', next ? `?chat=${encodeURIComponent(next)}` : '?chat=nova')
+  }
+  return (
+    <div className="adm adm--chat">
+      <div className="adm-chat adm-chat--tab">
+        <ChatPanel mode="tab" sessionId={sid} onSession={change} />
+      </div>
+    </div>
+  )
+}
+
+export default function Admin() {
+  const chatId = new URLSearchParams(window.location.search).get('chat')
+  return chatId ? <ChatOnly id={chatId} /> : <Dashboard />
 }

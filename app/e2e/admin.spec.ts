@@ -6,8 +6,8 @@ const box = async (l: Locator) => {
   return { ...b, right: b.x + b.width, bottom: b.y + b.height }
 }
 
-const TABS = ['Visão geral', 'Vendas', 'Produtos', 'IA e Parecidos', 'Tráfego'] as const
-const IDS: Record<(typeof TABS)[number], string> = { 'Visão geral': 'visao', Vendas: 'vendas', Produtos: 'produtos', 'IA e Parecidos': 'ia', Tráfego: 'trafego' }
+const TABS = ['Visão geral', 'Vendas', 'Produtos', 'IA e Parecidos', 'Tráfego', 'Sessões'] as const
+const IDS: Record<(typeof TABS)[number], string> = { 'Visão geral': 'visao', Vendas: 'vendas', Produtos: 'produtos', 'IA e Parecidos': 'ia', Tráfego: 'trafego', Sessões: 'sessoes' }
 
 const tab = (page: Page, name: (typeof TABS)[number]) => page.getByRole('tab', { name, exact: true })
 const goTab = async (page: Page, name: (typeof TABS)[number]) => {
@@ -94,11 +94,11 @@ test.describe('painel do dono (/admin) no celular', () => {
     await expect(tab(page, 'Vendas')).toHaveAttribute('aria-selected', 'true')
     await expect(tab(page, 'Vendas')).toBeFocused()
     await page.keyboard.press('End')
-    await expect(tab(page, 'Tráfego')).toHaveAttribute('aria-selected', 'true')
+    await expect(tab(page, 'Sessões')).toHaveAttribute('aria-selected', 'true')
     await page.keyboard.press('ArrowRight')
     await expect(tab(page, 'Visão geral')).toHaveAttribute('aria-selected', 'true')
     await page.keyboard.press('ArrowLeft')
-    await expect(tab(page, 'Tráfego')).toHaveAttribute('aria-selected', 'true')
+    await expect(tab(page, 'Sessões')).toHaveAttribute('aria-selected', 'true')
   })
 
   test('a aba ativa fica inteira à vista dentro do menu (que rola de lado no celular)', async ({ page }) => {

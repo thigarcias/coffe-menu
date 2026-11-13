@@ -64,7 +64,8 @@
   gap: 10px 12px;
   align-items: center;
 }
-.adm-top__brand { display: flex; align-items: center; gap: 10px; min-width: 0; grid-column: 1 / -1; }
+.adm-top__brand { display: flex; align-items: center; gap: 10px; min-width: 0; grid-column: 1; grid-row: 1; }
+.adm-top__actions { grid-column: 2; grid-row: 1; display: flex; align-items: center; gap: 14px; }
 .adm-top__logo {
   width: 36px; height: 36px; flex: none; border-radius: 12px; display: grid; place-items: center;
   color: var(--a-sage); background: var(--a-matcha);
@@ -73,7 +74,7 @@
 .adm-top__brand p { font-size: 12px; color: var(--a-ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .adm-top__brand > div { min-width: 0; }
 .adm-pill {
-  margin-left: auto; flex: none; font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
+  display: inline-block; flex: none; margin-right: 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
   padding: 5px 10px; border-radius: 999px; color: var(--a-warn); background: #f8e7da;
 }
 .adm-seg {
@@ -262,8 +263,7 @@
 /* ----------------------------------------------------------------- tablet */
 @media (min-width: 640px) {
   .adm-top__inner { grid-template-columns: minmax(0, 1fr) auto; }
-  .adm-top__brand { grid-column: 1; grid-row: 1; }
-  .adm-top__link { display: inline-flex; grid-column: 2; grid-row: 1; }
+  .adm-top__link { display: inline-flex; }
   .adm-nav { grid-row: 2; }
   .adm-main { padding-left: 24px; padding-right: 24px; }
   .adm-filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 20px; }
@@ -287,7 +287,7 @@
   .adm-sec { margin-bottom: 36px; }
   .adm-top__inner { grid-template-columns: auto minmax(0, 1fr) auto; gap: 16px; padding-left: 32px; padding-right: 32px; }
   .adm-nav { grid-column: 2; grid-row: 1; justify-self: center; max-width: 100%; }
-  .adm-top__link { grid-column: 3; }
+  .adm-top__actions { grid-column: 3; }
   .adm-card { padding: 20px; }
   .adm-kpi { grid-column: span 2; padding: 16px; }
   .adm-kpi--hero { grid-column: span 4; padding: 20px; }
