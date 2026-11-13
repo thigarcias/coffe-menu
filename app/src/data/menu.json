@@ -1699,7 +1699,8 @@
         "cafe",
         "suave",
         "cremoso"
-      ]
+      ],
+      "video": "video/cafe-latte-gelado.mp4"
     },
     {
       "id": "cold-brew-tradicional",
@@ -1746,7 +1747,8 @@
         "gelado",
         "cafe",
         "intenso"
-      ]
+      ],
+      "video": "video/cold-brew-tradicional.mp4"
     },
     {
       "id": "cold-brew-baunilha",
@@ -2141,7 +2143,8 @@
         "quente",
         "cafe",
         "cremoso"
-      ]
+      ],
+      "video": "video/cappuccino-tradicional.mp4"
     },
     {
       "id": "cappuccino-doce-de-leite",
@@ -5143,7 +5146,8 @@
         "cremoso",
         "docinho",
         "sobremesa"
-      ]
+      ],
+      "video": "video/caramelo-frappuccino-base-cafe.mp4"
     },
     {
       "id": "caramelo-frappuccino-base-creme",

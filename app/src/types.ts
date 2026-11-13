@@ -24,6 +24,8 @@ export interface MenuItem {
   badges?: string[]
   allergens?: string[]
   image: string | null
+  /** vídeo de demonstração (mockup, Pexels); a foto vira o poster */
+  video?: string
   lookalike: string
   ingredients?: string[]
   story?: string

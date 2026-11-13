@@ -80,7 +80,7 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
         const n = counts.get(item.id) ?? 0
         return (
           <section key={item.id} className="slide" data-item={item.id}>
-            <ProductImage src={item.image} alt={item.name} eager={i < 2} className="slide__img" />
+            <ProductImage src={item.image} video={item.video} alt={item.name} eager={i < 2} className="slide__img" />
             <div className="slide__shade" />
 
             {/* ações sobre a foto, no canto inferior direito dela (estilo Reels) */}
