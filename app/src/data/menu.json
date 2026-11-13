@@ -214,7 +214,8 @@
         "avela",
         "cremoso",
         "docinho"
-      ]
+      ],
+      "video": "video/cappuccino-tradicional.mp4"
     },
     {
       "id": "avela-caramelo-frappuccino-base-creme",
@@ -274,7 +275,8 @@
         "cremoso",
         "docinho",
         "sobremesa"
-      ]
+      ],
+      "video": "video/cafe-latte-gelado.mp4"
     },
     {
       "id": "avela-caramelo-frappuccino-base-cafe",
@@ -334,7 +336,8 @@
         "cremoso",
         "docinho",
         "sobremesa"
-      ]
+      ],
+      "video": "video/cold-brew-tradicional.mp4"
     },
     {
       "id": "morango-mocha-latte",
@@ -391,7 +394,8 @@
         "frutas-vermelhas",
         "cremoso",
         "docinho"
-      ]
+      ],
+      "video": "video/caramelo-frappuccino-base-cafe.mp4"
     },
     {
       "id": "morango-mocha-latte-gelado",
@@ -449,7 +453,8 @@
         "frutas-vermelhas",
         "cremoso",
         "docinho"
-      ]
+      ],
+      "video": "video/chocolate-quente.mp4"
     },
     {
       "id": "morango-mocha-frappuccino-base-creme",
@@ -914,8 +919,7 @@
         "sem-cafe",
         "cremoso",
         "docinho"
-      ],
-      "video": "video/chocolate-quente.mp4"
+      ]
     },
     {
       "id": "doce-de-leite-latte",
@@ -1700,8 +1704,7 @@
         "cafe",
         "suave",
         "cremoso"
-      ],
-      "video": "video/cafe-latte-gelado.mp4"
+      ]
     },
     {
       "id": "cold-brew-tradicional",
@@ -1748,8 +1751,7 @@
         "gelado",
         "cafe",
         "intenso"
-      ],
-      "video": "video/cold-brew-tradicional.mp4"
+      ]
     },
     {
       "id": "cold-brew-baunilha",
@@ -2144,8 +2146,7 @@
         "quente",
         "cafe",
         "cremoso"
-      ],
-      "video": "video/cappuccino-tradicional.mp4"
+      ]
     },
     {
       "id": "cappuccino-doce-de-leite",
@@ -5147,8 +5148,7 @@
         "cremoso",
         "docinho",
         "sobremesa"
-      ],
-      "video": "video/caramelo-frappuccino-base-cafe.mp4"
+      ]
     },
     {
       "id": "caramelo-frappuccino-base-creme",
