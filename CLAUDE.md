@@ -93,4 +93,4 @@ node scripts/chat-smoke.mjs "pergunta"   # chama o GPT-6 Luna de verdade no pipe
 
 ## Pendências conhecidas
 
-Ver a tabela em `docs/03-entrevista-mvp.md` e o estado em `docs/04-mvp.md`. Resumo: fotos da coleção de Natal (fundo vermelho) e o painel do dono. O checkout (sacola e pedido simulado) está em `docs/05-checkout.md`.
+Ver a tabela em `docs/03-entrevista-mvp.md` e o estado em `docs/04-mvp.md`. Resumo: fotos da coleção de Natal (fundo vermelho); e a **próxima fase** (registrada em `docs/04-mvp.md`, ainda não começou): **banco de dados no Supabase** (sessões do chat, cardápio e toda a estatística), **separar back-end e front-end** dentro do projeto, a **integração com o Supabase** e um **painel do dono do produto** (check-up da plataforma, separado do painel do lojista). Enquanto isso não existe, os dados do painel são fictícios e nada é gravado de verdade. O checkout (sacola e pedido simulado) está em `docs/05-checkout.md`.

@@ -69,7 +69,7 @@ Os testes automáticos **não** chamam a OpenAI: `e2e/server/` usa um modelo fal
 
 1. **Gráfico livre** com Vega-Lite e visualizações novas (fluxo/Sankey, quadrante, pequenos múltiplos), com clique no ponto virando pergunta.
 2. **Fixar** painéis gerados e uma aba "Meus painéis".
-3. Rodar a resposta no servidor (segundo plano de verdade), login e dados reais.
+3. Rodar a resposta no servidor (segundo plano de verdade), login e dados reais. Isso depende da **próxima fase** (banco no Supabase, back-end separado e painel do dono do produto), descrita em `04-mvp.md`.
 
 ## Onde está o código
 
