@@ -58,6 +58,7 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 - Rota do mesmo app, carregada sob demanda (`React.lazy` em `main.tsx`). Código em `app/src/admin/`; **os dados são de exemplo** (`mock.ts`) até ligarmos o servidor de eventos. Detalhes em `docs/06-painel.md`.
 - Mesmo Liquid Glass do cardápio, mas sobre **branco**; mobile first e grade de 12 colunas no desktop (≥ 1024px). Os estilos ficam sob `.adm` em `admin.css`, não misture com o `index.css` do cardápio.
 - Gráficos seguem a skill `dataviz`: um tom (sálvia) para magnitude, cinza para "antes", sem eixo duplo, sem pizza, com tooltip e alternativa em tabela.
+- O painel é uma página de **abas** (Visão geral, Vendas, Produtos, IA e Parecidos, Tráfego): cada aba mostra só a sua seção, não há rolagem única. A aba ativa fica no hash da URL. O filtro de **período fica numa linha de filtros no começo da página** (vale para todas as abas), não no topo fixo. Cartão novo entra dentro de uma das seções (`SECTIONS` em `Admin.tsx`); cada seção cabe em ~1 tela no desktop, então não empilhe cartões demais numa aba.
 - Em `/admin`, o `body` continua com `overflow: hidden`: quem rola é o `.adm` (fixo à janela).
 - Testes: `app/e2e/admin.spec.ts` (celulares e desktop).
 
@@ -66,7 +67,7 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 ```bash
 npm run dev -- --host     # app + rota da IA (precisa de OPENAI_API_KEY no .env)
 npm run build             # typecheck + build
-npm run test:e2e          # 320 testes em 5 celulares (layout, capturas e painel /admin)
+npm run test:e2e          # 370 testes em 5 celulares (layout, capturas e painel /admin)
 npm run test:e2e:update   # aceita uma mudança visual feita de propósito
 npm run artifact          # gera app/artifact/ para publicar como Artifact do claude.ai
 ```

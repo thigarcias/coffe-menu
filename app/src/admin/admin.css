@@ -77,33 +77,50 @@
   padding: 5px 10px; border-radius: 999px; color: var(--a-warn); background: #f8e7da;
 }
 .adm-seg {
-  grid-column: 1 / -1;
   display: grid; grid-template-columns: repeat(3, 1fr); padding: 3px; border-radius: 999px;
-  background: rgba(46, 36, 32, 0.06); min-width: 0;
+  background: rgba(46, 36, 32, 0.06); min-width: 0; width: 100%;
 }
 .adm-seg button {
   min-height: 44px; padding: 0 14px; border-radius: 999px; font-weight: 600; color: var(--a-ink-2); white-space: nowrap;
   transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
 .adm-seg button.is-on { background: #fff; color: var(--a-ink); box-shadow: 0 1px 3px rgba(46, 36, 32, 0.16), 0 0 0 1px rgba(46, 36, 32, 0.04); }
+/* menu das seções: cápsula de vidro que rola de lado no celular */
+.adm-nav {
+  grid-column: 1 / -1; display: flex; gap: 2px; padding: 3px; border-radius: 999px; min-width: 0;
+  background: rgba(46, 36, 32, 0.06); overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
+}
+.adm-nav::-webkit-scrollbar { display: none; }
+.adm-nav button {
+  flex: none; min-height: 44px; padding: 0 16px; border-radius: 999px; font-weight: 600; color: var(--a-ink-2); white-space: nowrap;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.adm-nav button.is-on { background: #fff; color: var(--a-ink); box-shadow: 0 1px 3px rgba(46, 36, 32, 0.16), 0 0 0 1px rgba(46, 36, 32, 0.04); }
 .adm-top__link {
   display: none; align-items: center; gap: 6px; min-height: 44px; padding: 0 4px; font-weight: 600;
   color: var(--a-sage); text-decoration: none; white-space: nowrap;
 }
-.adm-back { grid-column: 1 / -1; justify-self: center; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; font-weight: 600; color: var(--a-sage); text-decoration: none; }
+.adm-back { display: flex; width: fit-content; margin: 0 auto; justify-content: center; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; font-weight: 600; color: var(--a-sage); text-decoration: none; }
 
 /* ------------------------------------------------------------------ grade */
+.adm-main {
+  position: relative; z-index: 1; max-width: 1280px; margin: 0 auto;
+  padding: 14px 16px calc(24px + env(safe-area-inset-bottom));
+}
+.adm-filters { display: grid; gap: 8px; margin-bottom: 20px; }
+.adm-filters__row { display: grid; gap: 6px; }
+.adm-filters__label { font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--a-ink-3); }
+.adm-sec { margin-bottom: 28px; animation: adm-in 0.22s ease-out; }
+@keyframes adm-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.adm-sec__head { margin: 0 2px 12px; }
+.adm-sec__head h2 { font-family: var(--font-display); font-size: 21px; font-weight: 800; letter-spacing: -0.2px; }
+.adm-sec__head p { margin-top: 1px; font-size: 13px; color: var(--a-ink-3); }
 .adm-grid {
-  position: relative;
-  z-index: 1;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 14px 16px calc(32px + env(safe-area-inset-bottom));
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
-.adm-note { grid-column: 1 / -1; font-size: 12px; color: var(--a-ink-3); }
+.adm-note { font-size: 12px; color: var(--a-ink-3); }
 .adm-card {
   min-width: 0;
   grid-column: 1 / -1;
@@ -244,11 +261,15 @@
 
 /* ----------------------------------------------------------------- tablet */
 @media (min-width: 640px) {
-  .adm-top__inner { grid-template-columns: minmax(0, 1fr) auto auto; }
-  .adm-top__brand { grid-column: auto; }
-  .adm-seg { grid-column: auto; width: 300px; }
-  .adm-top__link { display: inline-flex; }
-  .adm-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); padding-left: 24px; padding-right: 24px; gap: 14px; }
+  .adm-top__inner { grid-template-columns: minmax(0, 1fr) auto; }
+  .adm-top__brand { grid-column: 1; grid-row: 1; }
+  .adm-top__link { display: inline-flex; grid-column: 2; grid-row: 1; }
+  .adm-nav { grid-row: 2; }
+  .adm-main { padding-left: 24px; padding-right: 24px; }
+  .adm-filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 20px; }
+  .adm-filters__row { display: flex; align-items: center; gap: 12px; }
+  .adm-seg { width: 300px; }
+  .adm-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
   .adm-kpi { grid-column: span 3; }
   .adm-kpi--hero { grid-column: span 6; }
   .adm-why { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -261,8 +282,12 @@
 
 /* ---------------------------------------------------------------- desktop */
 @media (min-width: 1024px) {
-  .adm-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); padding: 20px 32px 48px; gap: 16px; }
-  .adm-top__inner { padding-left: 32px; padding-right: 32px; }
+  .adm-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+  .adm-main { padding: 20px 32px 48px; }
+  .adm-sec { margin-bottom: 36px; }
+  .adm-top__inner { grid-template-columns: auto minmax(0, 1fr) auto; gap: 16px; padding-left: 32px; padding-right: 32px; }
+  .adm-nav { grid-column: 2; grid-row: 1; justify-self: center; max-width: 100%; }
+  .adm-top__link { grid-column: 3; }
   .adm-card { padding: 20px; }
   .adm-kpi { grid-column: span 2; padding: 16px; }
   .adm-kpi--hero { grid-column: span 4; padding: 20px; }
@@ -280,5 +305,5 @@
   .adm-heat__cell { min-height: 20px; border-radius: 5px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .adm * { transition: none !important; }
+  .adm * { transition: none !important; animation: none !important; }
 }

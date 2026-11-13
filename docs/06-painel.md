@@ -6,21 +6,27 @@
 
 Uma dashboard numa rota do mesmo app (`/admin`), pensada para a dona ou o dono da cafeteria entender, sem jargão, **o que está vendendo e por quê**. Mobile first (320px) e com versão de desktop em grade de 12 colunas, que é onde deve ser mais usada. Visual: o mesmo Liquid Glass do cardápio, mas sobre branco.
 
+## Como está organizado
+
+- **Topo fixo (vidro):** a marca e as **abas** das seções. Cada aba mostra **só a sua seção** (a página não é uma rolagem única): clicou, mudou. A aba fica no endereço (`/admin#vendas`), então recarregar ou mandar o link abre na mesma aba; setas, Home e End do teclado trocam de aba. No celular as abas rolam de lado e mantêm a ativa à vista. O filtro de tempo **não fica no topo**.
+- **Filtros:** uma linha no começo da página, igual em todas as abas, com o **Período** (Hoje, 7 dias, 30 dias) e a data de referência. O que se escolhe vale para todas as abas. É onde entram novos filtros.
+- **Cinco abas**, cada uma com título e cabendo em pouco mais de uma tela no desktop: Visão geral, Vendas, Produtos, IA e Parecidos, Tráfego.
+
 ## O que mostra
 
-| Bloco | Pergunta que responde |
-| --- | --- |
-| Indicadores (vendas, pedidos, ticket médio, conversão, pedidos com a IA) | Como está o período, e melhor ou pior que o anterior? |
-| Por que vendeu | O que mais explica os números, em três frases |
-| Vendas no período | Quando vendi, comparado com o período anterior (com tabela alternativa) |
-| Do cardápio ao pedido (funil) | Onde as pessoas desistem pelo caminho |
-| Mais vendidos | Qual produto puxa as vendas |
-| Recomendação da IA | Quantos pedem ajuda, quantos clicam na sugestão, quantos pedem; o que a IA mais sugere |
-| Parecidos | Quantos abrem "Parecidos" e para qual produto vão (de → para, com pedidos gerados) |
-| Vendas por categoria | Onde está o dinheiro |
-| Horários de pico | Quais dias e horas concentram pedidos (mapa de calor) |
-| Como chegaram | De onde vêm as visitas (QR da mesa, balcão, Instagram, link) e quais convertem |
-| Vitrine: visto × pedido | O que reorganizar: estrelas, vitrine que não converte, escondidos, pouca atenção |
+| Seção | Bloco | Pergunta que responde |
+| --- | --- | --- |
+| Visão geral | Indicadores (vendas, pedidos, ticket médio, conversão, pedidos com a IA) | Como está o período, e melhor ou pior que o anterior? |
+| Visão geral | Por que vendeu | O que mais explica os números, em três frases |
+| Vendas | Vendas no período | Quando vendi, comparado com o período anterior (com tabela alternativa) |
+| Vendas | Do cardápio ao pedido (funil) | Onde as pessoas desistem pelo caminho |
+| Produtos | Mais vendidos | Qual produto puxa as vendas |
+| IA e Parecidos | Recomendação da IA | Quantos pedem ajuda, quantos clicam na sugestão, quantos pedem; o que a IA mais sugere |
+| IA e Parecidos | Parecidos | Quantos abrem "Parecidos" e para qual produto vão (de → para, com pedidos gerados) |
+| Produtos | Vendas por categoria | Onde está o dinheiro |
+| Tráfego | Horários de pico | Quais dias e horas concentram pedidos (mapa de calor) |
+| Tráfego | Como chegaram | De onde vêm as visitas (QR da mesa, balcão, Instagram, link) e quais convertem |
+| Produtos | Vitrine: visto × pedido | O que reorganizar: estrelas, vitrine que não converte, escondidos, pouca atenção |
 
 ## Onde está o código
 

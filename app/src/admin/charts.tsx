@@ -48,7 +48,7 @@ export function LineChart({ labels, tipLabels, cur, prev, curName, prevName, fmt
   const [ref, width] = useWidth<HTMLDivElement>()
   const [hover, setHover] = useState<number | null>(null)
   const w = Math.max(width, 240)
-  const h = w < 480 ? 210 : 300
+  const h = w < 480 ? 210 : w < 700 ? 280 : 360
   const m = { l: 44, r: 14, t: 22, b: 26 }
   const iw = w - m.l - m.r
   const ih = h - m.t - m.b
