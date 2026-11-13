@@ -7,6 +7,7 @@ import { sweep } from './chat/runner'
 import { SessionsList } from './chat/SessionsList'
 import { setChatUi, useChatUi, useSessions } from './chat/store'
 import './admin.css'
+import { Team } from './Team'
 
 const num = new Intl.NumberFormat('pt-BR')
 const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -73,6 +74,7 @@ const SECTIONS = [
   { id: 'produtos', label: 'Produtos', sub: 'O que mais vende e o que reorganizar no cardápio.' },
   { id: 'ia', label: 'IA e Parecidos', sub: 'O que a recomendação e os produtos parecidos geram.' },
   { id: 'trafego', label: 'Tráfego', sub: 'Quando e de onde as pessoas chegam.' },
+  { id: 'equipe', label: 'Equipe', sub: 'Pessoas e permissões da cafeteria.' },
   { id: 'sessoes', label: 'Sessões', sub: 'Conversas com a IA. Continuam rodando mesmo com o chat fechado.' },
 ] as const
 type SectionId = (typeof SECTIONS)[number]['id']
@@ -207,7 +209,7 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
 
       <main className="adm-main">
         {/* filtros: ficam no começo da página, não no topo fixo */}
-        {active !== 'sessoes' && (
+        {active !== 'sessoes' && active !== 'equipe' && (
         <div className="adm-filters">
           <div className="adm-filters__row">
             <span className="adm-filters__label" id="adm-period-label">
@@ -530,12 +532,14 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
         </section>
         )}
 
+        {active === 'equipe' && <Team />}
+
         {/* ======================================================== sessões */}
         {active === 'sessoes' && (
           <section id="sessoes" className="adm-sec" role="tabpanel" aria-labelledby="tab-sessoes">
             <header className="adm-sec__head">
-              <h2 id="h-sessoes">{SECTIONS[5].label}</h2>
-              <p>{SECTIONS[5].sub}</p>
+              <h2 id="h-sessoes">{SECTIONS.find((s) => s.id === 'sessoes')!.label}</h2>
+              <p>{SECTIONS.find((s) => s.id === 'sessoes')!.sub}</p>
             </header>
             <div className="adm-card adm-s12 adm-sess-card">
               <header className="adm-card__head">
@@ -602,3 +606,5 @@ export default function Admin(props: AdminProps) {
   const chatId = new URLSearchParams(window.location.search).get('chat')
   return chatId ? <ChatOnly id={chatId} /> : <Dashboard {...props} />
 }
+
+

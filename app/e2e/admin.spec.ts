@@ -8,8 +8,8 @@ const box = async (l: Locator) => {
   return { ...b, right: b.x + b.width, bottom: b.y + b.height }
 }
 
-const TABS = ['Visão geral', 'Vendas', 'Produtos', 'IA e Parecidos', 'Tráfego', 'Sessões'] as const
-const IDS: Record<(typeof TABS)[number], string> = { 'Visão geral': 'visao', Vendas: 'vendas', Produtos: 'produtos', 'IA e Parecidos': 'ia', Tráfego: 'trafego', Sessões: 'sessoes' }
+const TABS = ['Visão geral', 'Vendas', 'Produtos', 'IA e Parecidos', 'Tráfego', 'Equipe', 'Sessões'] as const
+const IDS: Record<(typeof TABS)[number], string> = { 'Visão geral': 'visao', Vendas: 'vendas', Produtos: 'produtos', 'IA e Parecidos': 'ia', Tráfego: 'trafego', Equipe: 'equipe', Sessões: 'sessoes' }
 
 const tab = (page: Page, name: (typeof TABS)[number]) => page.getByRole('tab', { name, exact: true })
 const goTab = async (page: Page, name: (typeof TABS)[number]) => {
@@ -67,7 +67,7 @@ test.describe('painel do dono (/admin) no celular', () => {
       await expect(page.getByRole('tabpanel')).toHaveCount(1)
       await expect(page.locator(`#${IDS[t]}`)).toBeVisible()
       for (const other of TABS) if (other !== t) await expect(page.locator(`#${IDS[other]}`)).toHaveCount(0)
-      await expect(page.locator(`#h-${IDS[t]}`)).toHaveText(t)
+      await expect(page.locator(`#h-${IDS[t]}`)).toHaveText(t === 'Equipe' ? 'Sua equipe, do seu jeito.' : t)
     }
   })
 
@@ -310,3 +310,5 @@ test.describe('painel do dono (/admin) no desktop', () => {
     expect(Math.max(...ys) - Math.min(...ys)).toBeLessThan(2)
   })
 })
+
+
