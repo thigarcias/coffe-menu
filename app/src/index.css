@@ -673,5 +673,18 @@ img { display: block; max-width: none; }
 .pimg--video .pimg__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 /* com vídeo por trás, o degradê creme sobe mais para o texto continuar legível em qualquer quadro */
 .slide:has(.pimg--video) .slide__shade {
-  background: linear-gradient(to top, rgba(245,239,230,.98) 0%, rgba(245,239,230,.93) 30%, rgba(245,239,230,.6) 46%, rgba(245,239,230,0) 64%);
+  /* só uma faixa embaixo, atrás do texto: o resto do vídeo fica limpo */
+  top: auto; height: calc(var(--dock-space) + 150px);
+  background: linear-gradient(to top, rgba(245,239,230,.97) 0%, rgba(245,239,230,.9) 55%, rgba(245,239,230,.5) 78%, rgba(245,239,230,0) 100%);
 }
+/* com vídeo: texto menor e mais perto do dock, para o vídeo aparecer mais */
+.slide:has(.pimg--video) { --dock-space: calc(var(--dock-h) + max(16px, env(safe-area-inset-bottom)) + 12px); }
+.slide:has(.pimg--video) .slide__body { gap: 2px; }
+.slide:has(.pimg--video) .slide__cat { font-size: 10px; letter-spacing: 1px; }
+.slide:has(.pimg--video) .badge { font-size: 9.5px; padding: 2px 7px; }
+.slide:has(.pimg--video) .slide__name { font-size: 22px; letter-spacing: -0.2px; }
+.slide:has(.pimg--video) .slide__name[data-size='l'] { font-size: 20px; }
+.slide:has(.pimg--video) .slide__name[data-size='xl'] { font-size: 18px; }
+.slide:has(.pimg--video) .slide__desc { font-size: 13px; }
+.slide:has(.pimg--video) .price { font-size: 14px; }
+.slide:has(.pimg--video) .price small { font-size: 12px; }
