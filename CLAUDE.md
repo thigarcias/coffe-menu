@@ -10,6 +10,7 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 - Buscas de discovery: `docs/02-discovery-notas.md`
 - Decisões das entrevistas e pendências: `docs/03-entrevista-mvp.md`
 - Escopo e estado do MVP: `docs/04-mvp.md`
+- Painel do dono (`/admin`, dados de exemplo): `docs/06-painel.md`
 - Código: `app/` (React + Vite + TypeScript). Deploy na Vercel (raiz do projeto: `app/`).
 
 ## Como trabalhar com o usuário
@@ -52,12 +53,20 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 - Foto de produto é sempre a **foto real**; nunca gerar produto com IA. Estender só o **fundo** está ok.
 - Alergia é dado sensível: o quiz não guarda as respostas e sempre avisa para confirmar com a equipe.
 
+## Painel do dono (`/admin`)
+
+- Rota do mesmo app, carregada sob demanda (`React.lazy` em `main.tsx`). Código em `app/src/admin/`; **os dados são de exemplo** (`mock.ts`) até ligarmos o servidor de eventos. Detalhes em `docs/06-painel.md`.
+- Mesmo Liquid Glass do cardápio, mas sobre **branco**; mobile first e grade de 12 colunas no desktop (≥ 1024px). Os estilos ficam sob `.adm` em `admin.css`, não misture com o `index.css` do cardápio.
+- Gráficos seguem a skill `dataviz`: um tom (sálvia) para magnitude, cinza para "antes", sem eixo duplo, sem pizza, com tooltip e alternativa em tabela.
+- Em `/admin`, o `body` continua com `overflow: hidden`: quem rola é o `.adm` (fixo à janela).
+- Testes: `app/e2e/admin.spec.ts` (celulares e desktop).
+
 ## Comandos (dentro de `app/`)
 
 ```bash
 npm run dev -- --host     # app + rota da IA (precisa de OPENAI_API_KEY no .env)
 npm run build             # typecheck + build
-npm run test:e2e          # 245 testes em 5 celulares (layout + capturas)
+npm run test:e2e          # 320 testes em 5 celulares (layout, capturas e painel /admin)
 npm run test:e2e:update   # aceita uma mudança visual feita de propósito
 npm run artifact          # gera app/artifact/ para publicar como Artifact do claude.ai
 ```

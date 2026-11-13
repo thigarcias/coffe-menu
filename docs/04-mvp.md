@@ -2,7 +2,7 @@
 
 12/11/2026 · estado do que está construído, do que falta e das decisões tomadas.
 
-O MVP é uma **demo de venda para donos de cafeteria**: um cardápio que o cliente abre pelo QR, entende e escolhe com ajuda de IA, e que registra o que despertou interesse. O lado do cliente está pronto e no ar na Vercel. O painel do dono ainda não foi construído, mas os dados que ele vai usar já estão sendo coletados.
+O MVP é uma **demo de venda para donos de cafeteria**: um cardápio que o cliente abre pelo QR, entende e escolhe com ajuda de IA, e que registra o que despertou interesse. O lado do cliente está pronto e no ar na Vercel. O painel do dono já existe como **design com dados de exemplo** em `/admin` (ver `06-painel.md`); falta ligá-lo a dados reais, e os eventos de interesse já estão sendo coletados no celular.
 
 ## Para quem e para quê
 
