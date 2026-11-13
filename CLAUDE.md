@@ -11,6 +11,7 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 - Decisões das entrevistas e pendências: `docs/03-entrevista-mvp.md`
 - Escopo e estado do MVP: `docs/04-mvp.md`
 - Painel do dono (`/admin`, dados de exemplo): `docs/06-painel.md`
+- **Passagem de sessão** (onde paramos, decisões já tomadas, o que fazer a seguir, armadilhas): `docs/07-passagem-de-sessao.md`. Para outros agentes (Codex etc.), o ponto de entrada é o `AGENTS.md`.
 - Código: `app/` (React + Vite + TypeScript). Deploy na Vercel (raiz do projeto: `app/`).
 
 ## Como trabalhar com o usuário
