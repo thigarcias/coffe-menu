@@ -333,7 +333,7 @@ test.describe('cardápio no celular', () => {
   test('quiz com IA mostra as sugestões', async ({ page }) => {
     await quizToFinal(page)
     await page.locator('#quiz-text').fill('algo cremoso')
-    await page.getByText('Nada, ver sugestões').click()
+    await page.getByRole('button', { name: 'Enviar', exact: true }).click()
     await expect(page.locator('.source')).toHaveText('Sugerido pela IA')
     await expect(page.locator('.sug')).toHaveCount(2)
   })

@@ -309,7 +309,7 @@ export function Quiz({ items, onPick, counts, onAdd }: Props) {
           </label>
           <p className="quiz__note">Suas respostas não ficam salvas.</p>
           <button className="cta" onClick={() => void finish()}>
-            {avoid.length ? 'Ver sugestões' : 'Nada, ver sugestões'}
+            {text.trim() ? 'Enviar' : avoid.length ? 'Ver sugestões' : 'Nada, ver sugestões'}
           </button>
         </>
       )}
