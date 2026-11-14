@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import menuData from './data/menu.json'
+import { themeVars } from './lib/theme'
 import type { Menu, MenuItem, OrderBy } from './types'
 import { Feed, type FeedHandle } from './components/Feed'
 import { CategoryBar } from './components/CategoryBar'
@@ -87,12 +88,7 @@ export function App({ menu: menuProp, storageScope, refreshMenu }: AppProps = {}
   const orderBy: OrderBy = menu.cafe.orderBy ?? 'nome'
   const cartScope = storageScope ?? (menuProp ? `preview:${menu.cafe.id ?? menu.cafe.slug ?? 'draft'}` : 'default')
   const tags = useMemo(() => tagIndex(menu.tagGroups), [menu.tagGroups])
-  const themeStyle = {
-    '--cafe-accent': menu.cafe.branding?.accent_color ?? 'var(--ink)',
-    '--cafe-secondary': menu.cafe.branding?.secondary_color ?? 'var(--ink-3)',
-    ...(menu.cafe.branding?.accent_color ? { '--sage': menu.cafe.branding.accent_color } : {}),
-    ...(menu.cafe.branding?.secondary_color ? { '--caramel': menu.cafe.branding.secondary_color } : {}),
-  } as CSSProperties
+  const themeStyle = themeVars(menu.cafe.branding) as CSSProperties
 
   // Itens na ordem das categorias, para o feed passar seção por seção.
   const items = useMemo(() => {

@@ -403,3 +403,31 @@
   .menu-editor__filter-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 .menu-editor__availability-list li > .menu-editor__stock-product { display: flex; flex: 1; align-items: center; gap: 10px; min-width: 0; }
+
+/* ---------- cores do cardápio e prévia ao vivo ---------- */
+.menu-editor__theme { display: grid; gap: 10px; }
+.menu-editor__theme-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.menu-editor__theme-head small { color: var(--me-muted); font-size: 12px; font-weight: 600; }
+.menu-editor__themes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.menu-editor__theme-chip { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 6px 12px 6px 8px; border: 1.5px solid var(--me-line); border-radius: 14px; background: #fff; color: inherit; font: inherit; font-size: 14px; font-weight: 700; text-align: left; cursor: pointer; }
+.menu-editor__theme-chip[aria-pressed='true'] { border-color: currentColor; box-shadow: 0 0 0 2px rgba(0, 0, 0, .08); }
+.menu-editor__swatch { display: grid; grid-template-columns: repeat(2, 14px); grid-template-rows: repeat(2, 14px); gap: 2px; flex: none; padding: 2px; border-radius: 10px; background: rgba(0, 0, 0, .04); }
+.menu-editor__swatch i { display: block; border-radius: 4px; border: 1px solid rgba(0, 0, 0, .1); }
+.menu-editor__theme-adv summary { min-height: 44px; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; cursor: pointer; list-style: none; }
+.menu-editor__theme-adv summary::-webkit-details-marker { display: none; }
+.menu-editor__theme-adv summary::before { content: '▸'; display: inline-block; transition: transform .15s; }
+.menu-editor__theme-adv[open] summary::before { transform: rotate(90deg); }
+.menu-editor__theme-fields { display: grid; gap: 12px; padding-bottom: 8px; }
+.menu-editor__theme-fields label { display: grid; gap: 3px; }
+.menu-editor__theme-fields small { color: var(--me-muted); font-size: 12px; }
+.menu-editor__theme-warn { margin: 0; padding: 8px 10px; border-radius: 10px; background: #fff4e5; color: #8a4b00; font-size: 12.5px; }
+.menu-editor__phone-wrap { display: grid; gap: 12px; justify-items: center; }
+.menu-editor__phone-col { display: grid; gap: 6px; justify-items: center; width: 100%; font-size: 13px; }
+.menu-editor__phone-col .menu-editor__phone { width: min(100%, 320px); }
+/* O transform cria o bloco de contenção do .app (que é position: fixed), então ele fica dentro do "celular". */
+.menu-editor__phone { position: relative; width: min(100%, 320px); height: 560px; overflow: hidden; border: 8px solid #1f1a17; border-radius: 34px; transform: translateZ(0); isolation: isolate; background: #fff; }
+.menu-editor__legend { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 12.5px; color: var(--me-muted); align-self: start; }
+@media (min-width: 900px) {
+  .menu-editor__themes { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .menu-editor__phone-wrap { grid-template-columns: 320px minmax(0, 1fr); align-items: start; justify-items: stretch; }
+}

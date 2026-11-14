@@ -12,6 +12,8 @@ const refSql=await readFile(new URL('../supabase/migrations/20261114210000_coffe
 await db.exec(refSql)
 const layoutSql=await readFile(new URL('../supabase/migrations/20261114220000_coffe_menu_dashboard_layout.sql', import.meta.url),'utf8')
 await db.exec(layoutSql)
+const themeSql=await readFile(new URL('../supabase/migrations/20261114230000_coffe_menu_tema.sql', import.meta.url),'utf8')
+await db.exec(themeSql)
 const owner='11111111-1111-4111-8111-111111111111', other='22222222-2222-4222-8222-222222222222', cafe='33333333-3333-4333-8333-333333333333'
 await db.query('insert into auth.users(id) values ($1),($2)', [owner,other])
 await db.query('insert into public.cafes(id,owner_id,slug,name) values ($1,$2,$3,$4)',[cafe,owner,'cafe-teste','Café'])
@@ -131,6 +133,22 @@ const peek=await db.query('select id from public.dashboard_layout_versions'); as
 await db.exec('reset role; set role anon')
 await assert.rejects(() => db.query('select public.get_dashboard_layouts($1)',[cafe]))
 await assert.rejects(() => db.query('select public.save_dashboard_layout($1,$2,$3,$4::jsonb,$5)',[cafe,'vendas',4,JSON.stringify([builtin('sales')]),'manual']))
+// tema do cardápio: cores novas e id do tema são validados
+await db.exec('reset role; set role authenticated')
+await db.query("select set_config('request.jwt.claim.sub',$1,false)",[owner])
+const brandMenu=(branding)=>JSON.stringify({...menu,cafe:{name:'Café',branding}})
+const publishWith=async (branding)=>{
+  const d=(await db.query('select public.create_menu_draft($1,$2,$3::jsonb) as data',[cafe,'Tema',brandMenu(branding)])).rows[0].data
+  return db.query('select public.publish_menu_draft($1,$2,$3)',[cafe,d.draft_id,d.version ?? 1])
+}
+await publishWith({theme:'uva',accent_color:'#6b3fa0',secondary_color:'#c0762f',background_color:'#f5f0f9',soft_color:'#e7dcf4'})
+for (const [why,branding] of [
+  ['fundo inválido',{background_color:'roxo'}],
+  ['chips inválidos',{soft_color:'#12345'}],
+  ['css no lugar da cor',{accent_color:'red;background:url(x)'}],
+  ['tema com texto livre',{theme:'uva; drop'}],
+  ['tema que não é texto',{theme:5}],
+]) await assert.rejects(() => publishWith(branding),`deveria recusar: ${why}`)
 console.log('Migração, isolamento, rascunho, publicação, restauração, disponibilidade, estoque, mídia de referência e personalização do painel passaram.')
 await db.close()
 

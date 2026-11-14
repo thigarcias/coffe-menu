@@ -103,6 +103,9 @@ export interface Menu {
       description?: string | null
       accent_color?: string | null
       secondary_color?: string | null
+      background_color?: string | null
+      soft_color?: string | null
+      theme?: string | null
     }
   }
   categories: Category[]

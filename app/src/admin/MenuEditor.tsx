@@ -4,6 +4,7 @@ import App from '../App'
 import menuReference from '../data/menu.json'
 import type { Category, Choice, Menu, MenuItem, OptionGroup, OptionSet, Price, TagGroup } from '../types'
 import { supabase } from '../lib/adminAuth'
+import { BrandTheme } from './BrandTheme'
 import './menu-editor.css'
 
 type Branding = {
@@ -11,6 +12,9 @@ type Branding = {
   logo_url?: string
   accent_color?: string | null
   secondary_color?: string | null
+  background_color?: string | null
+  soft_color?: string | null
+  theme?: string | null
 }
 
 type EditorMenu = Omit<Menu, 'cafe'> & {
@@ -359,6 +363,7 @@ export function MenuEditor() {
   const [selectedOptionSetId, setSelectedOptionSetId] = useState('')
   const [newOptionSetName, setNewOptionSetName] = useState('')
   const [previewOpen, setPreviewOpen] = useState(false)
+  const [liveBase, setLiveBase] = useState<Menu | null>(null)
   const [previewMenu, setPreviewMenu] = useState<Menu | null>(null)
   const [previewBusy, setPreviewBusy] = useState(false)
   const [previewError, setPreviewError] = useState('')
@@ -615,6 +620,23 @@ export function MenuEditor() {
     }
   }
 
+  /** Cardápio pronto para a prévia: fotos e logo privados viram URLs temporárias; disponibilidade vem do estoque. */
+  async function buildPreviewMenu(source: EditorMenu): Promise<Menu> {
+    if (!workspace) throw new Error('Sem unidade.')
+    const next = clone(source)
+    const availability = availabilityMap(workspace.availability)
+    next.items = next.items.map((item) => ({ ...item, available: availability.get(item.id) !== false }))
+    const privateKeys = new Set<string>()
+    for (const item of next.items) if (isPrivateKey(workspace.cafe.id, item.image)) privateKeys.add(item.image as string)
+    const logoKey = next.cafe.branding?.logo_key
+    if (isPrivateKey(workspace.cafe.id, logoKey)) privateKeys.add(logoKey as string)
+    const urls = new Map<string, string>()
+    await Promise.all([...privateKeys].map(async (key) => urls.set(key, await resolvePrivateImage(workspace.cafe.id, key))))
+    for (const item of next.items) if (item.image && urls.has(item.image)) item.image = urls.get(item.image) as string
+    if (next.cafe.branding?.logo_key && urls.has(next.cafe.branding.logo_key)) next.cafe.branding.logo_url = urls.get(next.cafe.branding.logo_key) as string
+    return next as Menu
+  }
+
   async function openPreview() {
     if (!workspace) return
     const source = workingMenu ?? workspace.published?.menu
@@ -623,24 +645,30 @@ export function MenuEditor() {
     setPreviewError('')
     setPreviewOpen(true)
     try {
-      const next = clone(source)
-      const availability = availabilityMap(workspace.availability)
-      next.items = next.items.map((item) => ({ ...item, available: availability.get(item.id) !== false }))
-      const privateKeys = new Set<string>()
-      for (const item of next.items) if (isPrivateKey(workspace.cafe.id, item.image)) privateKeys.add(item.image as string)
-      const logoKey = next.cafe.branding?.logo_key
-      if (isPrivateKey(workspace.cafe.id, logoKey)) privateKeys.add(logoKey as string)
-      const urls = new Map<string, string>()
-      await Promise.all([...privateKeys].map(async (key) => urls.set(key, await resolvePrivateImage(workspace.cafe.id, key))))
-      for (const item of next.items) if (item.image && urls.has(item.image)) item.image = urls.get(item.image) as string
-      if (next.cafe.branding?.logo_key && urls.has(next.cafe.branding.logo_key)) next.cafe.branding.logo_url = urls.get(next.cafe.branding.logo_key) as string
-      setPreviewMenu(next as Menu)
+      setPreviewMenu(await buildPreviewMenu(source))
     } catch (reason) {
       setPreviewError(editorFriendlyError(reason, 'Não foi possível preparar a prévia do cardápio.'))
     } finally {
       setPreviewBusy(false)
     }
   }
+
+  // Prévia ao vivo da aba Marca: as fotos e o logo são preparados uma vez (e de novo se o logo mudar);
+  // as cores e o nome vêm direto do rascunho, então mudam na hora.
+  const logoKeyNow = workingMenu?.cafe.branding?.logo_key ?? null
+  useEffect(() => {
+    if (activeTab !== 'marca' || !workspace || !workingMenu) return
+    let alive = true
+    buildPreviewMenu(workingMenu)
+      .then((m) => { if (alive) setLiveBase(m) })
+      .catch(() => { if (alive) setLiveBase(null) })
+    return () => { alive = false }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, workspace?.cafe.id, workingMenu?.cafe.id, logoKeyNow])
+  const liveMenu = useMemo<Menu | null>(() => {
+    if (!liveBase || !workingMenu) return null
+    return { ...liveBase, cafe: { ...liveBase.cafe, name: workingMenu.cafe.name, description: workingMenu.cafe.description, branding: { ...workingMenu.cafe.branding, logo_url: liveBase.cafe.branding?.logo_url } } } as Menu
+  }, [liveBase, workingMenu])
 
   function openProduct(item?: MenuItem) {
     if (!workingMenu) return
@@ -987,8 +1015,17 @@ export function MenuEditor() {
         {workingMenu && <div className="menu-editor__brand-grid">
           <label><span>Nome exibido</span><input value={workingMenu.cafe.name} maxLength={100} onChange={(event) => updateMenu((menu) => ({ ...menu, cafe: { ...menu.cafe, name: event.target.value } }))} /></label>
           <label className="menu-editor__wide"><span>Descrição curta</span><textarea value={workingMenu.cafe.description ?? ''} maxLength={240} rows={3} placeholder="Conte em poucas palavras sobre a cafeteria." onChange={(event) => updateMenu((menu) => ({ ...menu, cafe: { ...menu.cafe, description: event.target.value } }))} /></label>
-          <label><span>Cor principal</span><div className="menu-editor__color-field"><input type="color" aria-label="Escolher cor principal" value={workingMenu.cafe.branding?.accent_color || '#4f7f64'} onChange={(event) => updateMenu((menu) => ({ ...menu, cafe: { ...menu.cafe, branding: { ...menu.cafe.branding, accent_color: event.target.value } } }))} /><input aria-label="Código da cor principal" value={workingMenu.cafe.branding?.accent_color ?? ''} maxLength={7} placeholder="#4F7F64" onChange={(event) => updateMenu((menu) => ({ ...menu, cafe: { ...menu.cafe, branding: { ...menu.cafe.branding, accent_color: event.target.value } } }))} /></div></label>
-          <label><span>Cor secundária</span><div className="menu-editor__color-field"><input type="color" aria-label="Escolher cor secundária" value={workingMenu.cafe.branding?.secondary_color || '#dcebe2'} onChange={(event) => updateMenu((menu) => ({ ...menu, cafe: { ...menu.cafe, branding: { ...menu.cafe.branding, secondary_color: event.target.value } } }))} /><input aria-label="Código da cor secundária" value={workingMenu.cafe.branding?.secondary_color ?? ''} maxLength={7} placeholder="#DCEBE2" onChange={(event) => updateMenu((menu) => ({ ...menu, cafe: { ...menu.cafe, branding: { ...menu.cafe.branding, secondary_color: event.target.value } } }))} /></div></label>
+          <BrandTheme branding={workingMenu.cafe.branding} onChange={(patch) => updateMenu((menu) => ({ ...menu, cafe: { ...menu.cafe, branding: { ...menu.cafe.branding, ...patch } } }))} />
+          <div className="menu-editor__phone-wrap menu-editor__wide">
+            <div className="menu-editor__phone-col"><strong>Prévia ao vivo</strong><div className="menu-editor__phone" aria-label="Prévia ao vivo do cardápio">
+              {liveMenu ? <PreviewApp menu={liveMenu} /> : <p className="menu-editor__preview-status" role="status">Preparando a prévia…</p>}
+            </div></div>
+            <ol className="menu-editor__legend">
+              <li><b>Topo:</b> o logo (quadradinho) e o nome da cafeteria. A descrição vai logo abaixo, na cor secundária.</li>
+              <li><b>Fundo e fotos:</b> a cor de fundo também tinge o fundo suave atrás de cada foto.</li>
+              <li><b>Botões e etiquetas:</b> usam a cor principal e a cor dos chips.</li>
+            </ol>
+          </div>
           <div className="menu-editor__logo menu-editor__wide"><div><strong>Logo</strong><small>JPG, PNG ou WebP · até 3 MB</small>{workingMenu.cafe.branding?.logo_key && <small>Arquivo atual: {workingMenu.cafe.branding.logo_key.split('/').at(-1)}</small>}</div><label className="menu-editor__secondary menu-editor__file-button">{imageBusy ? 'Enviando…' : workingMenu.cafe.branding?.logo_key ? 'Trocar logo' : 'Enviar logo'}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void uploadLogo(event.target.files?.[0])} disabled={imageBusy} /></label>{workingMenu.cafe.branding?.logo_key && <button type="button" className="menu-editor__text-button" onClick={() => updateMenu((menu) => ({ ...menu, cafe: { ...menu.cafe, branding: { ...menu.cafe.branding, logo_key: null } } }))}>Remover logo</button>}</div>
           <p className="menu-editor__note menu-editor__wide">As cores e o logo são guardados junto com a versão do cardápio. A prévia usa uma URL temporária apenas para exibir o arquivo.</p>
           <section className="menu-editor__qr menu-editor__wide" aria-labelledby="menu-editor-qr-title"><div><h4 id="menu-editor-qr-title">QR da unidade</h4><p>O código abre o cardápio em <code>/?unidade={workspace.cafe.slug}</code>.</p></div><div className="menu-editor__qr-actions"><button type="button" className="menu-editor__secondary" onClick={() => void generateQr()} disabled={qrBusy}>{qrBusy ? 'Gerando…' : qrDataUrl ? 'Atualizar QR' : 'Gerar QR'}</button>{qrDataUrl && <><a className="menu-editor__secondary" href={qrDataUrl} download={`qr-${workspace.cafe.slug}.png`}>Baixar PNG</a><button type="button" className="menu-editor__secondary" onClick={() => void copyMenuUrl()}>Copiar endereço</button></>}</div>{qrError && <p className="menu-editor__error" role="alert">{qrError}</p>}{qrDataUrl && <img src={qrDataUrl} alt={`Código QR para o cardápio de ${workingMenu?.cafe.name ?? workspace.cafe.name}`} />}</section>
