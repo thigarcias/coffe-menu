@@ -1,4 +1,5 @@
 import { test } from './adminSession'
+import { goSection } from './adminNav'
 import { expect, type Locator, type Page } from '@playwright/test'
 
 const box = async (l: Locator) => {
@@ -98,7 +99,7 @@ test.describe('chat da IA: conversa e andamento', () => {
     await expect(dialog(page).locator('.adm-chat__status')).toBeVisible()
     await page.getByRole('button', { name: 'Fechar chat' }).click()
     await expect(dialog(page)).toHaveCount(0)
-    await page.getByRole('tab', { name: 'Sessões' }).click()
+    await goSection(page, 'Sessões')
     const row = page.locator('[data-session]').first()
     await expect(row.locator('.adm-chip')).toHaveText('Rodando')
     await expect(row.locator('.adm-chip')).toHaveText('Concluída', { timeout: 15_000 })
@@ -140,7 +141,7 @@ test.describe('chat da IA: conversa e andamento', () => {
     await ask(page, 'Quais horários vendem mais?')
     await expect(dialog(page).locator('.adm-heat')).toBeVisible()
     await page.getByRole('button', { name: 'Fechar chat' }).click()
-    await page.getByRole('tab', { name: 'Sessões' }).click()
+    await goSection(page, 'Sessões')
     await expect(page.locator('[data-session]')).toHaveCount(2)
     await expect(page.getByText('2 conversas · 0 rodando')).toBeVisible()
     // abrir a mais antiga mostra o histórico dela, não o da outra
@@ -296,7 +297,7 @@ test.describe('chat da IA: layout no celular', () => {
     await ask(page, 'Quais horários vendem mais?')
     await expect(page.getByRole('button', { name: 'Enviar' })).toBeVisible()
     await page.getByRole('button', { name: 'Fechar chat' }).click()
-    await page.getByRole('tab', { name: 'Sessões' }).click()
+    await goSection(page, 'Sessões')
     const over = await page.evaluate(() => {
       const a = document.querySelector('.adm') as HTMLElement
       return a.scrollWidth - a.clientWidth
@@ -360,7 +361,7 @@ test.describe('chat da IA no desktop', () => {
     await ask(page, 'Onde as pessoas desistem?')
     await expect(dialog(page).locator('.adm-funnel')).toBeVisible()
     await page.keyboard.press('Escape')
-    await page.getByRole('tab', { name: 'Sessões' }).click()
+    await goSection(page, 'Sessões')
     const popup = context.waitForEvent('page')
     await page.locator('[data-session]').first().getByRole('button', { name: /^Abrir em nova guia/ }).click()
     const tab = await popup

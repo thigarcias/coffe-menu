@@ -1,5 +1,6 @@
 import { test } from './adminSession'
 import { expect, type Locator, type Page } from '@playwright/test'
+import { goSection, navItem, openMenu } from './adminNav'
 import { aiStatsOf, funnelOf, runQuery } from '../shared/analytics.mjs'
 
 const box = async (l: Locator) => {
@@ -8,14 +9,11 @@ const box = async (l: Locator) => {
   return { ...b, right: b.x + b.width, bottom: b.y + b.height }
 }
 
-const TABS = ['Visão geral', 'Vendas', 'Produtos', 'IA e Parecidos', 'Tráfego', 'Cardápio', 'Equipe', 'Sessões'] as const
-const IDS: Record<(typeof TABS)[number], string> = { 'Visão geral': 'visao', Vendas: 'vendas', Produtos: 'produtos', 'IA e Parecidos': 'ia', Tráfego: 'trafego', Cardápio: 'cardapio', Equipe: 'equipe', Sessões: 'sessoes' }
+const TABS = ['Visão geral', 'Vendas', 'Produtos', 'IA e Parecidos', 'Tráfego', 'Personalizar cardápio', 'Equipe', 'Sessões'] as const
+const IDS: Record<(typeof TABS)[number], string> = { 'Visão geral': 'visao', Vendas: 'vendas', Produtos: 'produtos', 'IA e Parecidos': 'ia', Tráfego: 'trafego', 'Personalizar cardápio': 'cardapio', Equipe: 'equipe', Sessões: 'sessoes' }
 
-const tab = (page: Page, name: (typeof TABS)[number]) => page.getByRole('tab', { name, exact: true })
-const goTab = async (page: Page, name: (typeof TABS)[number]) => {
-  await tab(page, name).click()
-  await expect(tab(page, name)).toHaveAttribute('aria-selected', 'true')
-}
+const tab = (page: Page, name: (typeof TABS)[number]) => navItem(page, name)
+const goTab = (page: Page, name: (typeof TABS)[number]) => goSection(page, name)
 
 test.describe('painel do dono (/admin) no celular', () => {
   test.beforeEach(async ({ page }) => {
@@ -44,7 +42,7 @@ test.describe('painel do dono (/admin) no celular', () => {
   })
 
   test('abre na Visão geral: cinco indicadores, o de vendas na linha toda e os outros quatro em 2 × 2', async ({ page }) => {
-    await expect(tab(page, 'Visão geral')).toHaveAttribute('aria-selected', 'true')
+    await expect(tab(page, 'Visão geral')).toHaveAttribute('aria-current', 'page')
     const k = page.locator('.adm-kpi')
     await expect(k).toHaveCount(5)
     const [hero, a, b, c, d] = await Promise.all([0, 1, 2, 3, 4].map((i) => box(k.nth(i))))
@@ -59,16 +57,29 @@ test.describe('painel do dono (/admin) no celular', () => {
     }
   })
 
-  test('menu em abas: cada item mostra só a sua seção', async ({ page }) => {
-    await expect(page.getByRole('tablist', { name: 'Seções do painel' }).getByRole('tab')).toHaveText([...TABS])
+  test('menu lateral: cada item mostra só a sua seção', async ({ page }) => {
+    await openMenu(page)
+    await expect(page.getByRole('navigation', { name: 'Seções do painel' }).getByRole('button')).toHaveText(['Dashboard', ...TABS])
     for (const t of TABS) {
       await goTab(page, t)
-      // só um painel existe por vez: as outras seções saem da tela e do código
-      await expect(page.getByRole('tabpanel')).toHaveCount(1)
+      // só uma seção existe por vez: as outras saem da tela e do código
       await expect(page.locator(`#${IDS[t]}`)).toBeVisible()
       for (const other of TABS) if (other !== t) await expect(page.locator(`#${IDS[other]}`)).toHaveCount(0)
-      await expect(page.locator(`#h-${IDS[t]}`)).toHaveText(t === 'Equipe' ? 'Sua equipe, do seu jeito.' : t)
+      await expect(page.locator(`#h-${IDS[t]}`)).toHaveText(t === 'Equipe' ? 'Sua equipe, do seu jeito.' : t === 'Personalizar cardápio' ? 'Cardápio' : t)
     }
+  })
+
+  test('menu lateral: "Dashboard" abre e fecha a lista das cinco seções de dados', async ({ page }) => {
+    await openMenu(page)
+    const group = page.getByRole('button', { name: 'Dashboard', exact: true })
+    await expect(group).toHaveAttribute('aria-expanded', 'true')
+    await expect(tab(page, 'Vendas')).toBeVisible()
+    await group.click()
+    await expect(group).toHaveAttribute('aria-expanded', 'false')
+    await expect(tab(page, 'Vendas')).toBeHidden()
+    await expect(tab(page, 'Equipe')).toBeVisible()
+    await group.click()
+    await expect(tab(page, 'Vendas')).toBeVisible()
   })
 
   test('trocar de aba volta ao alto da página', async ({ page }) => {
@@ -83,38 +94,35 @@ test.describe('painel do dono (/admin) no celular', () => {
     await goTab(page, 'IA e Parecidos')
     expect(page.url()).toContain('#ia')
     await page.goto('/admin#vendas')
-    await expect(tab(page, 'Vendas')).toHaveAttribute('aria-selected', 'true')
+    await expect(tab(page, 'Vendas')).toHaveAttribute('aria-current', 'page')
     await expect(page.locator('#vendas')).toBeVisible()
     // endereço desconhecido cai na Visão geral
     await page.goto('/admin#nada')
-    await expect(tab(page, 'Visão geral')).toHaveAttribute('aria-selected', 'true')
+    await expect(tab(page, 'Visão geral')).toHaveAttribute('aria-current', 'page')
   })
 
-  test('teclado: setas, Home e End trocam de aba', async ({ page }) => {
-    await tab(page, 'Visão geral').focus()
-    await page.keyboard.press('ArrowRight')
-    await expect(tab(page, 'Vendas')).toHaveAttribute('aria-selected', 'true')
-    await expect(tab(page, 'Vendas')).toBeFocused()
-    await page.keyboard.press('End')
-    await expect(tab(page, 'Sessões')).toHaveAttribute('aria-selected', 'true')
-    await page.keyboard.press('ArrowRight')
-    await expect(tab(page, 'Visão geral')).toHaveAttribute('aria-selected', 'true')
-    await page.keyboard.press('ArrowLeft')
-    await expect(tab(page, 'Sessões')).toHaveAttribute('aria-selected', 'true')
-  })
-
-  test('a aba ativa fica inteira à vista dentro do menu (que rola de lado no celular)', async ({ page }) => {
-    const nav = page.getByRole('tablist', { name: 'Seções do painel' })
-    for (const t of ['Tráfego', 'IA e Parecidos', 'Visão geral'] as const) {
-      await goTab(page, t)
-      await expect
-        .poll(async () => {
-          const n = await box(nav)
-          const b = await box(tab(page, t))
-          return b.x >= n.x - 1 && b.right <= n.right + 1
-        })
-        .toBe(true)
-    }
+  test('no celular o menu é uma gaveta: abre pelo botão Menu, fecha ao escolher, com Esc e tocando fora', async ({ page }) => {
+    const side = page.locator('#adm-side')
+    const btn = page.getByRole('button', { name: 'Menu', exact: true })
+    await expect(side).toBeHidden()
+    await btn.click()
+    await expect(side).toBeVisible()
+    // a gaveta fica inteira na tela, abaixo da barra do topo (nada escondido atrás dela)
+    const s = await box(side)
+    const top = await box(page.locator('.adm-top'))
+    expect(s.y).toBeGreaterThanOrEqual(top.bottom - 1)
+    expect(s.right).toBeLessThanOrEqual(page.viewportSize()!.width)
+    await expect(page.getByRole('button', { name: 'Dashboard', exact: true })).toBeInViewport()
+    await page.keyboard.press('Escape')
+    await expect(side).toBeHidden()
+    await expect(btn).toBeFocused()
+    await btn.click()
+    await tab(page, 'Vendas').click()
+    await expect(side).toBeHidden()
+    await expect(page.locator('#vendas')).toBeVisible()
+    await btn.click()
+    await page.mouse.click(page.viewportSize()!.width - 8, page.viewportSize()!.height / 2)
+    await expect(side).toBeHidden()
   })
 
   test('o filtro de período fica no começo da página, não no topo fixo, e vale para todas as abas', async ({ page }) => {
@@ -137,7 +145,9 @@ test.describe('painel do dono (/admin) no celular', () => {
   })
 
   test('alvos de toque com pelo menos 44px (abas, período, tabela e link)', async ({ page }) => {
+    await openMenu(page)
     for (const t of TABS) expect((await box(tab(page, t))).height).toBeGreaterThanOrEqual(43.5)
+    for (const n of ['Dashboard', 'Sair']) expect((await box(page.getByRole('button', { name: n, exact: true }))).height).toBeGreaterThanOrEqual(43.5)
     for (const n of ['Hoje', '7 dias', '30 dias']) expect((await box(page.getByRole('button', { name: n }))).height).toBeGreaterThanOrEqual(43.5)
     expect((await box(page.getByRole('link', { name: 'Voltar ao cardápio' }))).height).toBeGreaterThanOrEqual(43.5)
     await goTab(page, 'Vendas')
@@ -283,16 +293,22 @@ test.describe('painel do dono (/admin) no desktop', () => {
     expect(await page.locator('.adm').evaluate((e) => e.scrollWidth - e.clientWidth)).toBe(0)
   })
 
-  test('topo numa linha só: marca, abas centralizadas e link do cardápio', async ({ page }) => {
+  test('menu lateral fixo à esquerda, sem botão Menu, e o conteúdo ao lado dele', async ({ page }) => {
+    await expect(page.getByRole('button', { name: 'Menu', exact: true })).toBeHidden()
+    const side = await box(page.locator('#adm-side'))
+    const main = await box(page.locator('.adm-main'))
     const top = await box(page.locator('.adm-top'))
     expect(top.height).toBeLessThanOrEqual(80)
-    const brand = await box(page.locator('.adm-top__brand'))
-    const nav = await box(page.locator('.adm-nav'))
-    const link = await box(page.getByRole('link', { name: 'Ver cardápio' }))
-    expect(Math.abs(nav.y - brand.y)).toBeLessThan(30)
-    expect(nav.x).toBeGreaterThan(brand.right)
-    expect(link.x).toBeGreaterThan(nav.right)
-    expect(await page.locator('.adm-nav').evaluate((e) => e.scrollWidth - e.clientWidth)).toBe(0)
+    expect(side.x).toBeLessThanOrEqual(1)
+    expect(side.width).toBeLessThan(300)
+    expect(main.x).toBeGreaterThanOrEqual(side.right - 1)
+    expect(side.y).toBeGreaterThanOrEqual(top.bottom - 1)
+    await expect(page.getByRole('link', { name: 'Ver cardápio' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Sair', exact: true })).toBeVisible()
+    // continua à vista quando a página rola
+    await goTab(page, 'Produtos')
+    await page.locator('.adm').evaluate((el) => el.scrollTo(0, el.scrollHeight))
+    await expect(page.getByRole('button', { name: 'Dashboard', exact: true })).toBeInViewport()
   })
 
   test('IA e Parecidos: os dois cartões ficam lado a lado', async ({ page }) => {

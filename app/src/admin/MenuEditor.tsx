@@ -285,13 +285,14 @@ export function MenuEditor() {
   const [workspace, setWorkspace] = useState<EditorWorkspace | null>(null)
   const [selectedDraftId, setSelectedDraftId] = useState('')
   const [workingMenu, setWorkingMenu] = useState<EditorMenu | null>(null)
-  const [activeTab, setActiveTab] = useState<'conteudo' | 'marca' | 'opcoes' | 'disponibilidade' | 'historico'>('conteudo')
+  const [activeTab, setActiveTab] = useState<'conteudo' | 'marca' | 'disponibilidade' | 'avancado'>('conteudo')
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [newDraftName, setNewDraftName] = useState('')
   const [search, setSearch] = useState('')
+  const [addingCategory, setAddingCategory] = useState(false)
   const [productEditorOpen, setProductEditorOpen] = useState(false)
   const [productForm, setProductForm] = useState<ProductForm | null>(null)
   const [productIsNew, setProductIsNew] = useState(false)
@@ -499,7 +500,7 @@ export function MenuEditor() {
       await callRpc('publish_menu_draft', { p_cafe_id: workspace.cafe.id, p_draft_id: selectedDraft.id, p_expected_version: expectedVersion })
       await reloadWorkspace(selectedDraft.id)
       setNotice('Cardápio publicado.')
-      setActiveTab('historico')
+      setActiveTab('avancado')
     } catch (reason) {
       setError(editorFriendlyError(reason, 'Não foi possível publicar o cardápio.'))
     } finally {
@@ -783,56 +784,73 @@ export function MenuEditor() {
   if (!cafes.length && !loading) return <section className="adm-sec menu-editor" aria-labelledby="menu-editor-title"><div className="menu-editor__intro"><div><p className="menu-editor__eyebrow">CARDÁPIO DA CAFETERIA</p><h2 id="menu-editor-title">Seu cardápio, do seu jeito.</h2><p>Quando uma cafeteria estiver vinculada à sua conta, ela aparecerá aqui para edição.</p></div></div><div className="adm-card menu-editor__empty"><h3>Nenhuma cafeteria vinculada</h3><p>A conta não tem uma cafeteria disponível para editar. Peça à equipe para vincular uma unidade ao seu acesso.</p></div></section>
 
   return <section className="adm-sec menu-editor" aria-labelledby="menu-editor-title">
-    <div className="menu-editor__intro">
-      <div><p className="menu-editor__eyebrow">CARDÁPIO DA CAFETERIA</p><h2 id="menu-editor-title">Seu cardápio, do seu jeito.</h2><p>Edite em rascunho, confira a prévia e publique quando estiver pronto.</p></div>
-      <div className="menu-editor__intro-actions">
-        <label className="menu-editor__cafe-select"><span>Cafeteria</span><select value={cafeId} disabled={cafes.length < 2 || busy} onChange={(event) => { if (dirty && !window.confirm('Há mudanças sem salvar. Descartar essas mudanças e trocar de cafeteria?')) return; setQrDataUrl(''); setPreviewOpen(false); setCafeId(event.target.value) }}>{cafes.map((cafe) => <option key={cafe.id} value={cafe.id}>{cafe.id === cafeId && workspace?.published ? workspace.published.menu.cafe.name : cafe.name}</option>)}</select></label>
-        <button type="button" className="menu-editor__secondary" onClick={() => void openPreview()} disabled={!workspace || (!workingMenu && !workspace.published) || previewBusy}>{previewBusy ? 'Preparando prévia…' : 'Abrir prévia'}</button>
-      </div>
-    </div>
-
     {error && <p className="menu-editor__error" role="alert">{error}</p>}
     {notice && <p className="menu-editor__notice" role="status">{notice}</p>}
     {loading && <p className="menu-editor__loading" role="status">Carregando dados da cafeteria…</p>}
     {!loading && workspace && <>
-      <section className="adm-card menu-editor__draft-card" aria-label="Rascunhos e publicação">
-        <div className="menu-editor__draft-head">
-          <div><span className="menu-editor__caption">RASCUNHO ATUAL</span><h3>{selectedDraft?.name ?? 'Nenhum rascunho aberto'}</h3><p>{selectedDraft ? `Versão ${selectedDraft.current_version} · salva ${dateLabel(selectedDraft.updated_at)}` : 'Crie um rascunho para começar a editar.'}</p></div>
-          <div className="menu-editor__publish-state"><span className={workspace.published ? 'is-published' : 'is-unpublished'}>{workspace.published ? `Publicado · v${workspace.published.version}` : 'Ainda não publicado'}</span>{workspace.published && <small>{dateLabel(workspace.published.published_at)}</small>}</div>
+      <header className="menu-editor__bar">
+        <div className="menu-editor__bar-title">
+          <h2 id="menu-editor-title">{selectedDraft?.name ?? 'Cardápio'}</h2>
+          <p>
+            <span className={workspace.published ? 'menu-editor__chip is-published' : 'menu-editor__chip is-unpublished'}>{workspace.published ? `No ar · v${workspace.published.version}` : 'Ainda não publicado'}</span>
+            {selectedDraft && <span className={dirty ? 'menu-editor__dirty' : 'menu-editor__saved'}>{dirty ? 'Há mudanças sem salvar' : 'Tudo salvo'}</span>}
+          </p>
         </div>
-        <div className="menu-editor__draft-controls">
-          {workspace.drafts.length > 0 && <label className="menu-editor__draft-select"><span>Rascunhos</span><select value={selectedDraftId} disabled={busy} onChange={(event) => selectDraft(event.target.value)}>{workspace.drafts.map((draft) => <option key={draft.id} value={draft.id}>{draft.name} · v{draft.current_version}</option>)}</select></label>}
+        <div className="menu-editor__bar-actions">
+          <button type="button" className="menu-editor__secondary" onClick={() => void openPreview()} disabled={!workspace || (!workingMenu && !workspace.published) || previewBusy}>{previewBusy ? 'Preparando…' : 'Abrir prévia'}</button>
+          {selectedDraft && <button type="button" className="menu-editor__secondary" onClick={() => void saveCurrentDraft()} disabled={busy || !dirty}>{busy ? 'Salvando…' : 'Salvar rascunho'}</button>}
+          {selectedDraft && <button type="button" className="menu-editor__primary" onClick={() => void publishDraft()} disabled={busy || !workingMenu}>{busy ? 'Publicando…' : 'Publicar cardápio'}</button>}
+        </div>
+      </header>
+
+      <details className="menu-editor__drafts" open={!selectedDraft || undefined}>
+        <summary>Cafeteria e rascunhos</summary>
+        <div className="menu-editor__drafts-body">
+          <label className="menu-editor__cafe-select"><span>Cafeteria</span><select value={cafeId} disabled={cafes.length < 2 || busy} onChange={(event) => { if (dirty && !window.confirm('Há mudanças sem salvar. Descartar essas mudanças e trocar de cafeteria?')) return; setQrDataUrl(''); setPreviewOpen(false); setCafeId(event.target.value) }}>{cafes.map((cafe) => <option key={cafe.id} value={cafe.id}>{cafe.id === cafeId && workspace?.published ? workspace.published.menu.cafe.name : cafe.name}</option>)}</select></label>
+          {workspace.drafts.length > 0 && <label className="menu-editor__draft-select"><span>Rascunho aberto</span><select value={selectedDraftId} disabled={busy} onChange={(event) => selectDraft(event.target.value)}>{workspace.drafts.map((draft) => <option key={draft.id} value={draft.id}>{draft.name} · v{draft.current_version}</option>)}</select></label>}
           <form className="menu-editor__new-draft" onSubmit={(event) => void createDraft(event)}><label><span>Novo rascunho</span><input value={newDraftName} maxLength={80} placeholder="Nome do rascunho" onChange={(event) => setNewDraftName(event.target.value)} /></label><button type="submit" className="menu-editor__secondary" disabled={busy || !newDraftName.trim()}>{busy ? 'Aguarde…' : 'Criar'}</button></form>
+          {selectedDraft && <div className="menu-editor__drafts-actions"><button type="button" className="menu-editor__secondary" onClick={() => void renameDraft()} disabled={busy}>Renomear</button><button type="button" className="menu-editor__secondary menu-editor__danger" onClick={() => void deleteDraft()} disabled={busy}>Excluir rascunho</button></div>}
         </div>
-        {selectedDraft && <div className="menu-editor__draft-actions">
-          <span className={dirty ? 'menu-editor__dirty' : 'menu-editor__saved'}>{dirty ? 'Há mudanças sem salvar' : 'Todas as mudanças estão salvas'}</span>
-          <div><button type="button" className="menu-editor__secondary" onClick={() => void renameDraft()} disabled={busy}>Renomear</button><button type="button" className="menu-editor__secondary menu-editor__danger" onClick={() => void deleteDraft()} disabled={busy}>Excluir rascunho</button><button type="button" className="menu-editor__secondary" onClick={() => void saveCurrentDraft()} disabled={busy || !dirty}>{busy ? 'Salvando…' : 'Salvar rascunho'}</button><button type="button" className="menu-editor__primary" onClick={() => void publishDraft()} disabled={busy || !workingMenu}>{busy ? 'Publicando…' : 'Publicar cardápio'}</button></div>
-        </div>}
-      </section>
+      </details>
 
       <nav className="menu-editor__tabs" role="tablist" aria-label="Editor de cardápio">
-        {([['conteudo', 'Categorias e produtos'], ['marca', 'Marca'], ['opcoes', 'Opções'], ['disponibilidade', 'Disponibilidade'], ['historico', 'Histórico']] as const).map(([id, label]) => <button key={id} type="button" role="tab" aria-selected={activeTab === id} className={activeTab === id ? 'is-on' : ''} onClick={() => setActiveTab(id)}>{label}</button>)}
+        {([['conteudo', 'Produtos'], ['marca', 'Marca'], ['disponibilidade', 'Disponibilidade'], ['avancado', 'Avançado']] as const).map(([id, label]) => <button key={id} type="button" role="tab" aria-selected={activeTab === id} className={activeTab === id ? 'is-on' : ''} onClick={() => setActiveTab(id)}>{label}</button>)}
       </nav>
 
-      {activeTab === 'conteudo' && <div className="menu-editor__layout">
-        <section className="adm-card menu-editor__categories">
-          <header className="menu-editor__section-head"><div><h3>Categorias</h3><p>Organize os grupos que aparecem no cardápio.</p></div><span>{workingMenu?.categories.length ?? 0}</span></header>
-          <form className="menu-editor__category-add" onSubmit={addCategory}><label><span>Nova categoria</span><input value={categoryName} maxLength={60} placeholder="Ex.: Cafés" onChange={(event) => setCategoryName(event.target.value)} disabled={!workingMenu} /></label><button type="submit" className="menu-editor__secondary" disabled={!workingMenu || !categoryName.trim()}>Adicionar</button></form>
-          {!workingMenu?.categories.length && <p className="menu-editor__empty-note">Ainda não há categorias neste rascunho.</p>}
-          <ul className="menu-editor__category-list">{(workingMenu?.categories ?? []).map((category, index) => {
-            const count = workingMenu?.items.filter((item) => item.category === category.id).length ?? 0
-            return <li key={category.id}><label><span className="menu-editor__sr-only">Nome da categoria</span><input value={category.name} maxLength={60} onChange={(event) => editCategory(category.id, (current) => ({ ...current, name: event.target.value }))} /></label><small>{count} {count === 1 ? 'produto' : 'produtos'}</small><button type="button" className="menu-editor__secondary" aria-label={`Mover ${category.name} para cima`} onClick={() => moveCategory(index, -1)} disabled={index === 0}>↑</button><button type="button" className="menu-editor__secondary" aria-label={`Mover ${category.name} para baixo`} onClick={() => moveCategory(index, 1)} disabled={index === (workingMenu?.categories.length ?? 1) - 1}>↓</button><button type="button" className="menu-editor__text-button" onClick={() => removeCategory(category)} disabled={count > 0} title={count ? 'Mova os produtos para outra categoria antes de excluir.' : undefined}>Remover</button></li>
-          })}</ul>
-        </section>
-        <section className="adm-card menu-editor__products">
-          <header className="menu-editor__section-head"><div><h3>Produtos</h3><p>Nome, descrição, preço, etiquetas e foto.</p></div><button type="button" className="menu-editor__primary" onClick={() => openProduct()} disabled={!selectedDraft}>Adicionar produto</button></header>
-          {!workingMenu?.categories.length && <p className="menu-editor__empty-note">Crie uma categoria antes de adicionar produtos.</p>}
-          <label className="menu-editor__search"><span>Buscar produto</span><input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Nome ou categoria" /></label>
-          {!workingMenu?.items.length && <p className="menu-editor__empty-note">Este rascunho ainda não tem produtos.</p>}
-          {workingMenu?.items.length && !shownItems.length && <p className="menu-editor__empty-note">Nenhum produto corresponde à busca.</p>}
-          <ul className="menu-editor__product-list">{shownItems.map((item) => <li key={item.id}><div className="menu-editor__product-copy"><strong>{item.name}</strong><small>{workingMenu?.categories.find((category) => category.id === item.category)?.name ?? 'Categoria removida'} · {item.prices?.[0]?.price == null ? 'Preço não definido' : brl.format(item.prices[0].price)}</small></div><button type="button" className="menu-editor__secondary" onClick={() => openProduct(item)} disabled={!selectedDraft}>Editar</button><button type="button" className="menu-editor__text-button" onClick={() => deleteProduct(item)} disabled={!selectedDraft}>Remover</button></li>)}</ul>
-        </section>
-      </div>}
+      {activeTab === 'conteudo' && <section className="adm-card menu-editor__products" aria-label="Produtos do cardápio">
+        <div className="menu-editor__toolbar">
+          <label className="menu-editor__search"><span className="menu-editor__sr-only">Buscar produto</span><input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar produto" aria-label="Buscar produto" /></label>
+          <button type="button" className="menu-editor__secondary" onClick={() => setAddingCategory((open) => !open)} disabled={!workingMenu} aria-expanded={addingCategory || !workingMenu?.categories.length}>Nova categoria</button>
+          <button type="button" className="menu-editor__primary" onClick={() => openProduct()} disabled={!selectedDraft || !workingMenu?.categories.length}>Adicionar produto</button>
+        </div>
+        {(addingCategory || !workingMenu?.categories.length) && <form className="menu-editor__category-add" onSubmit={(event) => { addCategory(event); setAddingCategory(false) }}><label><span>Nova categoria</span><input value={categoryName} maxLength={60} placeholder="Ex.: Cafés" onChange={(event) => setCategoryName(event.target.value)} disabled={!workingMenu} /></label><button type="submit" className="menu-editor__secondary" disabled={!workingMenu || !categoryName.trim()}>Adicionar</button></form>}
+        {!workingMenu?.categories.length && <p className="menu-editor__empty-note">Comece criando uma categoria, como “Cafés”. Depois é só adicionar os produtos.</p>}
+        {(workingMenu?.categories ?? []).map((category, index) => {
+          const count = workingMenu?.items.filter((item) => item.category === category.id).length ?? 0
+          const rows = shownItems.filter((item) => item.category === category.id)
+          if (search.trim() && !rows.length) return null
+          return <section key={category.id} className="menu-editor__group" aria-label={`Categoria ${category.name}`}>
+            <header className="menu-editor__group-head">
+              <h3>{category.name}</h3>
+              <span className="menu-editor__count">{count}</span>
+              <details className="menu-editor__cat-menu">
+                <summary>Editar categoria</summary>
+                <div className="menu-editor__cat-body">
+                  <label><span>Nome da categoria</span><input value={category.name} maxLength={60} onChange={(event) => editCategory(category.id, (current) => ({ ...current, name: event.target.value }))} /></label>
+                  <div>
+                    <button type="button" className="menu-editor__secondary" aria-label={`Mover ${category.name} para cima`} onClick={() => moveCategory(index, -1)} disabled={index === 0}>↑ Subir</button>
+                    <button type="button" className="menu-editor__secondary" aria-label={`Mover ${category.name} para baixo`} onClick={() => moveCategory(index, 1)} disabled={index === (workingMenu?.categories.length ?? 1) - 1}>↓ Descer</button>
+                    <button type="button" className="menu-editor__secondary menu-editor__danger" onClick={() => removeCategory(category)} disabled={count > 0} title={count ? 'Mova os produtos para outra categoria antes de excluir.' : undefined}>Remover</button>
+                  </div>
+                </div>
+              </details>
+            </header>
+            {!rows.length && <p className="menu-editor__empty-note">Nenhum produto aqui ainda.</p>}
+            <ul className="menu-editor__product-list">{rows.map((item) => <li key={item.id}><div className="menu-editor__product-copy"><strong>{item.name}</strong><small>{item.prices?.[0]?.price == null ? 'Preço não definido' : brl.format(item.prices[0].price)}</small></div><button type="button" className="menu-editor__secondary" onClick={() => openProduct(item)} disabled={!selectedDraft}>Editar</button><button type="button" className="menu-editor__text-button" onClick={() => deleteProduct(item)} disabled={!selectedDraft}>Remover</button></li>)}</ul>
+          </section>
+        })}
+        {workingMenu?.items.length ? !shownItems.length && <p className="menu-editor__empty-note">Nenhum produto corresponde à busca.</p> : null}
+      </section>}
 
       {activeTab === 'marca' && <section className="adm-card menu-editor__brand">
         <header className="menu-editor__section-head"><div><h3>Marca da cafeteria</h3><p>Esses campos entram no mesmo rascunho e só aparecem depois da publicação.</p></div></header>
@@ -848,7 +866,18 @@ export function MenuEditor() {
         </div>}
       </section>}
 
-      {activeTab === 'opcoes' && <div className="menu-editor__options-layout">
+      {activeTab === 'disponibilidade' && <section className="adm-card menu-editor__availability">
+        <header className="menu-editor__section-head"><div><h3>Disponibilidade</h3><p>Esses ajustes valem para os produtos já publicados e entram no cardápio imediatamente.</p></div></header>
+        {!workspace.published && <p className="menu-editor__empty-note">Publique o primeiro cardápio para controlar a disponibilidade dos produtos.</p>}
+        {workspace.published && !availablePublishedItems.length && <p className="menu-editor__empty-note">O cardápio publicado não tem produtos.</p>}
+        <ul className="menu-editor__availability-list">{availablePublishedItems.map((item) => {
+          const isAvailable = availability.get(item.id) !== false
+          return <li key={item.id}><div><strong>{item.name}</strong><small>{workspace.published?.draft_name} · versão {workspace.published?.version}</small></div><button type="button" className={isAvailable ? 'menu-editor__availability-button is-available' : 'menu-editor__availability-button is-unavailable'} aria-pressed={isAvailable} onClick={() => void setAvailability(item.id, !isAvailable)} disabled={busy}>{isAvailable ? 'Disponível' : 'Indisponível'}</button></li>
+        })}</ul>
+      </section>}
+
+      {activeTab === 'avancado' && <div className="menu-editor__advanced">
+      <details className="menu-editor__more" open={!!selectedOptionSetId || undefined}><summary>Opções de personalização</summary><div className="menu-editor__options-layout">
         <section className="adm-card menu-editor__options-list"><header className="menu-editor__section-head"><div><h3>Conjuntos de opções</h3><p>Personalizações disponíveis nos produtos.</p></div><span>{Object.keys(optionSets).length}</span></header>
           <form className="menu-editor__category-add" onSubmit={(event) => void createOptionSet(event)}><label><span>Novo conjunto</span><input value={newOptionSetName} maxLength={60} placeholder="Ex.: Personalização de bebidas" onChange={(event) => setNewOptionSetName(event.target.value)} disabled={!workingMenu} /></label><button type="submit" className="menu-editor__secondary" disabled={!workingMenu || !newOptionSetName.trim()}>Criar</button></form>
           {!Object.keys(optionSets).length && <p className="menu-editor__empty-note">Ainda não há conjuntos de opções neste rascunho.</p>}
@@ -860,19 +889,9 @@ export function MenuEditor() {
           {!optionSets[selectedOptionSetId].groups.length && <p className="menu-editor__empty-note">Este conjunto ainda não tem grupos.</p>}
           <button type="button" className="menu-editor__secondary" onClick={() => addOptionGroup(selectedOptionSetId)}>Adicionar grupo</button>
         </section> : <section className="adm-card menu-editor__option-detail"><p className="menu-editor__empty-note">Selecione um conjunto para editar ou crie um novo.</p></section>}
-      </div>}
+      </div></details>
 
-      {activeTab === 'disponibilidade' && <section className="adm-card menu-editor__availability">
-        <header className="menu-editor__section-head"><div><h3>Disponibilidade</h3><p>Esses ajustes valem para os produtos já publicados e entram no cardápio imediatamente.</p></div></header>
-        {!workspace.published && <p className="menu-editor__empty-note">Publique o primeiro cardápio para controlar a disponibilidade dos produtos.</p>}
-        {workspace.published && !availablePublishedItems.length && <p className="menu-editor__empty-note">O cardápio publicado não tem produtos.</p>}
-        <ul className="menu-editor__availability-list">{availablePublishedItems.map((item) => {
-          const isAvailable = availability.get(item.id) !== false
-          return <li key={item.id}><div><strong>{item.name}</strong><small>{workspace.published?.draft_name} · versão {workspace.published?.version}</small></div><button type="button" className={isAvailable ? 'menu-editor__availability-button is-available' : 'menu-editor__availability-button is-unavailable'} aria-pressed={isAvailable} onClick={() => void setAvailability(item.id, !isAvailable)} disabled={busy}>{isAvailable ? 'Disponível' : 'Indisponível'}</button></li>
-        })}</ul>
-      </section>}
-
-      {activeTab === 'historico' && <div className="menu-editor__history-layout">
+      <details className="menu-editor__more"><summary>Histórico de versões</summary><div className="menu-editor__history-layout">
         <section className="adm-card menu-editor__history-card"><header className="menu-editor__section-head"><div><h3>Publicações</h3><p>Versões que já foram colocadas no ar.</p></div><span>{workspace.publications.length}</span></header>
           {!workspace.publications.length && <p className="menu-editor__empty-note">Nenhuma versão foi publicada ainda.</p>}
           <ol className="menu-editor__timeline">{workspace.publications.map((publication) => <li key={publication.publication_id}><span className="menu-editor__timeline-dot" /><div><strong>{publication.draft_name} · versão {publication.version}</strong><small>{dateLabel(publication.published_at)}{publication.published_by ? ' · publicada pela equipe' : ''}</small></div><button type="button" className="menu-editor__secondary" disabled={busy} onClick={() => void restoreVersion(publication.version_id, publication.version, publication.draft_id)}>Restaurar</button></li>)}</ol>
@@ -882,6 +901,7 @@ export function MenuEditor() {
           {selectedDraft && !selectedDraft.versions.length && <p className="menu-editor__empty-note">Este rascunho ainda não tem versões salvas.</p>}
           <ol className="menu-editor__versions">{[...(selectedDraft?.versions ?? [])].sort((a, b) => b.version - a.version).map((version) => <li key={version.id}><div><strong>Versão {version.version}{version.version === selectedDraft?.current_version ? ' · atual' : ''}</strong><small>{dateLabel(version.saved_at)}</small></div>{version.version !== selectedDraft?.current_version && <button type="button" className="menu-editor__secondary" onClick={() => void restoreVersion(version.id, version.version)} disabled={busy}>Restaurar</button>}</li>)}</ol>
         </section>
+      </div></details>
       </div>}
     </>}
 

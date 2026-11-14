@@ -80,8 +80,11 @@ const SECTIONS = [
   { id: 'sessoes', label: 'Sessões', sub: 'Conversas com a IA. Continuam rodando mesmo com o chat fechado.' },
 ] as const
 type SectionId = (typeof SECTIONS)[number]['id']
+// o menu lateral agrupa as cinco seções de dados sob "Dashboard"; o resto fica solto
+const DASH_IDS = ['visao', 'vendas', 'produtos', 'ia', 'trafego'] as const
+const SIDE_LINKS = ['cardapio', 'equipe', 'sessoes'] as const
+const sectionLabel = (id: SectionId) => SECTIONS.find((x) => x.id === id)!.label
 
-const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const fromHash = (): SectionId => SECTIONS.find((s) => s.id === window.location.hash.slice(1))?.id ?? 'visao'
 
 type AdminProps = { onSignOut: () => void; signingOut: boolean }
@@ -93,7 +96,9 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
   // o painel é uma página de abas: cada item do menu mostra só a sua seção
   const [active, setActive] = useState<SectionId>(fromHash)
   const rootRef = useRef<HTMLDivElement>(null)
-  const navRef = useRef<HTMLElement>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [dashOpen, setDashOpen] = useState(true)
+  const menuBtnRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     const prev = document.title
@@ -118,25 +123,27 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
-  // no celular o menu rola de lado: mantém a aba ativa à vista
+  // entrar numa seção do Dashboard abre o grupo
   useEffect(() => {
-    const nav = navRef.current
-    const btn = nav?.querySelector<HTMLElement>('[aria-selected="true"]')
-    if (nav && btn) nav.scrollTo({ left: btn.offsetLeft - (nav.clientWidth - btn.offsetWidth) / 2, behavior: reduceMotion() ? 'auto' : 'smooth' })
+    if (DASH_IDS.includes(active as (typeof DASH_IDS)[number])) setDashOpen(true)
   }, [active])
+  // no celular o menu é uma gaveta: Esc fecha e devolve o foco ao botão "Menu"
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false)
+        menuBtnRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [menuOpen])
 
   const go = (id: SectionId) => {
     setActive(id)
-    rootRef.current?.scrollTo({ top: 0 }) // a aba nova começa do alto
-  }
-  const onKeys = (e: React.KeyboardEvent) => {
-    const i = SECTIONS.findIndex((s) => s.id === active)
-    const next = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? SECTIONS.length - 1 : null
-    if (next == null) return
-    e.preventDefault()
-    const id = SECTIONS[(next + SECTIONS.length) % SECTIONS.length].id
-    go(id)
-    navRef.current?.querySelector<HTMLElement>(`#tab-${id}`)?.focus()
+    setMenuOpen(false)
+    rootRef.current?.scrollTo({ top: 0 }) // a seção nova começa do alto
   }
 
   const chat = useChatUi()
@@ -162,6 +169,19 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
     <div className="adm" ref={rootRef}>
       <header className="adm-top">
         <div className="adm-top__inner">
+          <button
+            ref={menuBtnRef}
+            type="button"
+            className="adm-menu-btn"
+            aria-expanded={menuOpen}
+            aria-controls="adm-side"
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+            Menu
+          </button>
           <div className="adm-top__brand">
             <span className="adm-top__logo" aria-hidden>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -175,40 +195,66 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
               <p>{cafeName}</p>
             </div>
           </div>
-          {/* abas: cada uma mostra só a sua seção */}
-          <nav className="adm-nav" role="tablist" aria-label="Seções do painel" ref={navRef} onKeyDown={onKeys}>
-            {SECTIONS.map((s) => (
-              <button
-                key={s.id}
-                id={`tab-${s.id}`}
-                role="tab"
-                aria-selected={s.id === active}
-                aria-controls={s.id}
-                tabIndex={s.id === active ? 0 : -1}
-                className={s.id === active ? 'is-on' : ''}
-                onClick={() => go(s.id)}
-              >
-                {s.label}
-              </button>
-            ))}
-          </nav>
           <div className="adm-top__actions">
-            <button className="adm-signout" type="button" disabled={signingOut} onClick={onSignOut}>Sair</button>
             <button className="adm-ask" onClick={() => openChat()} aria-expanded={chat.open} aria-haspopup="dialog">
               <Icon d="spark" />
-              Perguntar à IA
+              Perguntar<span className="adm-ask__more"> à IA</span>
               {sessions.some((s) => s.status === 'running') && <span className="sr-only"> (há uma conversa rodando)</span>}
             </button>
-            <a className="adm-top__link" href="/">
-              Ver cardápio
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d="M4 2h6v6M10 2 3 9" />
-              </svg>
-            </a>
           </div>
         </div>
       </header>
 
+      <div className="adm-shell">
+        {menuOpen && <div className="adm-side-scrim" onClick={() => setMenuOpen(false)} aria-hidden />}
+        <aside id="adm-side" className={menuOpen ? 'adm-side is-open' : 'adm-side'}>
+          <nav aria-label="Seções do painel">
+            <div className="adm-side__group">
+              <button
+                type="button"
+                className={'adm-side__item adm-side__item--group' + (DASH_IDS.includes(active as (typeof DASH_IDS)[number]) ? ' has-active' : '')}
+                aria-expanded={dashOpen}
+                aria-controls="adm-side-dash"
+                onClick={() => setDashOpen((o) => !o)}
+              >
+                <Icon d="chart" />
+                <span>Dashboard</span>
+                <svg className="adm-side__chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+              <ul id="adm-side-dash" hidden={!dashOpen}>
+                {DASH_IDS.map((id) => (
+                  <li key={id}>
+                    <button type="button" className={'adm-side__item adm-side__item--sub' + (id === active ? ' is-on' : '')} aria-current={id === active ? 'page' : undefined} onClick={() => go(id)}>
+                      {sectionLabel(id)}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <ul className="adm-side__links">
+              {SIDE_LINKS.map((id) => (
+                <li key={id}>
+                  <button type="button" className={'adm-side__item' + (id === active ? ' is-on' : '')} aria-current={id === active ? 'page' : undefined} onClick={() => go(id)}>
+                    <Icon d={id === 'cardapio' ? 'menu' : id === 'equipe' ? 'team' : 'chat'} />
+                    <span>{id === 'cardapio' ? 'Personalizar cardápio' : sectionLabel(id)}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="adm-side__foot">
+            <a className="adm-side__item" href="/">
+              <span>Ver cardápio</span>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M4 2h6v6M10 2 3 9" />
+              </svg>
+            </a>
+            <button className="adm-side__item adm-signout" type="button" disabled={signingOut} onClick={onSignOut}>Sair</button>
+          </div>
+        </aside>
+        <div className="adm-content">
       <main className="adm-main">
         {/* filtros: ficam no começo da página, não no topo fixo */}
         {active !== 'sessoes' && active !== 'equipe' && active !== 'cardapio' && (
@@ -236,7 +282,7 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
 
         {/* =================================================== visão geral */}
         {active === 'visao' && (
-        <section id="visao" className="adm-sec" role="tabpanel" aria-labelledby="tab-visao">
+        <section id="visao" className="adm-sec"  role="region" aria-labelledby="h-visao">
           <header className="adm-sec__head">
             <h2 id="h-visao">{SECTIONS[0].label}</h2>
             <p>{SECTIONS[0].sub}</p>
@@ -279,7 +325,7 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
 
         {/* ========================================================== vendas */}
         {active === 'vendas' && (
-        <section id="vendas" className="adm-sec" role="tabpanel" aria-labelledby="tab-vendas">
+        <section id="vendas" className="adm-sec"  role="region" aria-labelledby="h-vendas">
           <header className="adm-sec__head">
             <h2 id="h-vendas">{SECTIONS[1].label}</h2>
             <p>{SECTIONS[1].sub}</p>
@@ -354,7 +400,7 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
 
         {/* ======================================================== produtos */}
         {active === 'produtos' && (
-        <section id="produtos" className="adm-sec" role="tabpanel" aria-labelledby="tab-produtos">
+        <section id="produtos" className="adm-sec"  role="region" aria-labelledby="h-produtos">
           <header className="adm-sec__head">
             <h2 id="h-produtos">{SECTIONS[2].label}</h2>
             <p>{SECTIONS[2].sub}</p>
@@ -417,7 +463,7 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
 
         {/* ========================================================= IA e parecidos */}
         {active === 'ia' && (
-        <section id="ia" className="adm-sec" role="tabpanel" aria-labelledby="tab-ia">
+        <section id="ia" className="adm-sec"  role="region" aria-labelledby="h-ia">
           <header className="adm-sec__head">
             <h2 id="h-ia">{SECTIONS[3].label}</h2>
             <p>{SECTIONS[3].sub}</p>
@@ -508,7 +554,7 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
 
         {/* ======================================================== tráfego */}
         {active === 'trafego' && (
-        <section id="trafego" className="adm-sec" role="tabpanel" aria-labelledby="tab-trafego">
+        <section id="trafego" className="adm-sec"  role="region" aria-labelledby="h-trafego">
           <header className="adm-sec__head">
             <h2 id="h-trafego">{SECTIONS[4].label}</h2>
             <p>{SECTIONS[4].sub}</p>
@@ -535,11 +581,11 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
         )}
 
         {active === 'equipe' && <Team />}
-        {active === 'cardapio' && <div id="cardapio" role="tabpanel" aria-labelledby="tab-cardapio"><h2 id="h-cardapio" className="sr-only">Cardápio</h2><MenuEditor /></div>}
+        {active === 'cardapio' && <div id="cardapio"  role="region" aria-labelledby="h-cardapio"><h2 id="h-cardapio" className="sr-only">Cardápio</h2><MenuEditor /></div>}
 
         {/* ======================================================== sessões */}
         {active === 'sessoes' && (
-          <section id="sessoes" className="adm-sec" role="tabpanel" aria-labelledby="tab-sessoes">
+          <section id="sessoes" className="adm-sec"  role="region" aria-labelledby="h-sessoes">
             <header className="adm-sec__head">
               <h2 id="h-sessoes">{SECTIONS.find((s) => s.id === 'sessoes')!.label}</h2>
               <p>{SECTIONS.find((s) => s.id === 'sessoes')!.sub}</p>
@@ -572,6 +618,8 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
           </svg>
         </a>
       </main>
+        </div>
+      </div>
       <ChatDrawer ui={chat} />
     </div>
   )

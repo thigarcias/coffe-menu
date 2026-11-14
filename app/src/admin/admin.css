@@ -56,17 +56,16 @@
   padding-top: env(safe-area-inset-top);
 }
 .adm-top__inner {
-  max-width: 1280px;
   margin: 0 auto;
-  padding: 10px 16px 12px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px 12px;
+  min-height: 64px;
+  padding: 8px 16px;
+  display: flex;
   align-items: center;
+  gap: 8px;
 }
-.adm-top__brand { display: flex; align-items: center; gap: 10px; min-width: 0; grid-column: 1; grid-row: 1; }
-.adm-top__actions { grid-column: 2; grid-row: 1; display: flex; align-items: center; gap: 14px; }
-.adm-signout { min-width: 44px; min-height: 44px; color: var(--a-sage); font-weight: 600; }
+.adm-top__brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+.adm-top__actions { margin-left: auto; display: flex; align-items: center; gap: 14px; flex: none; }
+.adm-menu-btn { display: inline-flex; align-items: center; gap: 6px; flex: none; min-height: 44px; padding: 0 12px; border-radius: 12px; font-weight: 700; color: var(--a-ink); background: rgba(46, 36, 32, 0.06); }
 .adm-top__logo {
   width: 36px; height: 36px; flex: none; border-radius: 12px; display: grid; place-items: center;
   color: var(--a-sage); background: var(--a-matcha);
@@ -87,17 +86,6 @@
   transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
 .adm-seg button.is-on { background: #fff; color: var(--a-ink); box-shadow: 0 1px 3px rgba(46, 36, 32, 0.16), 0 0 0 1px rgba(46, 36, 32, 0.04); }
-/* menu das seções: cápsula de vidro que rola de lado no celular */
-.adm-nav {
-  grid-column: 1 / -1; display: flex; gap: 2px; padding: 3px; border-radius: 999px; min-width: 0;
-  background: rgba(46, 36, 32, 0.06); overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
-}
-.adm-nav::-webkit-scrollbar { display: none; }
-.adm-nav button {
-  flex: none; min-height: 44px; padding: 0 16px; border-radius: 999px; font-weight: 600; color: var(--a-ink-2); white-space: nowrap;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-}
-.adm-nav button.is-on { background: #fff; color: var(--a-ink); box-shadow: 0 1px 3px rgba(46, 36, 32, 0.16), 0 0 0 1px rgba(46, 36, 32, 0.04); }
 .adm-top__link {
   display: none; align-items: center; gap: 6px; min-height: 44px; padding: 0 4px; font-weight: 600;
   color: var(--a-sage); text-decoration: none; white-space: nowrap;
@@ -266,9 +254,6 @@
 
 /* ----------------------------------------------------------------- tablet */
 @media (min-width: 640px) {
-  .adm-top__inner { grid-template-columns: minmax(0, 1fr) auto; }
-  .adm-top__link { display: inline-flex; }
-  .adm-nav { grid-row: 2; }
   .adm-main { padding-left: 24px; padding-right: 24px; }
   .adm-filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 20px; }
   .adm-filters__row { display: flex; align-items: center; gap: 12px; }
@@ -289,9 +274,8 @@
   .adm-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
   .adm-main { padding: 20px 32px 48px; }
   .adm-sec { margin-bottom: 36px; }
-  .adm-top__inner { grid-template-columns: auto minmax(0, 1fr) auto; gap: 16px; padding-left: 32px; padding-right: 32px; }
-  .adm-nav { grid-column: 2; grid-row: 1; justify-self: center; max-width: 100%; }
-  .adm-top__actions { grid-column: 3; }
+  .adm-top__inner { gap: 16px; padding-left: 24px; padding-right: 32px; }
+  .adm-menu-btn { display: none; }
   .adm-card { padding: 20px; }
   .adm-kpi { grid-column: span 2; padding: 16px; }
   .adm-kpi--hero { grid-column: span 4; padding: 20px; }
@@ -312,3 +296,50 @@
   .adm * { transition: none !important; animation: none !important; }
 }
 
+
+/* ------------------------------------------------- menu lateral (gaveta no celular) */
+.adm-shell { position: relative; z-index: 1; }
+.adm-content { min-width: 0; }
+.adm-side-scrim { position: fixed; inset: 0; z-index: 29; background: rgba(46, 36, 32, 0.28); }
+.adm-side {
+  position: fixed; z-index: 30; top: calc(64px + env(safe-area-inset-top)); bottom: 0; left: 0; width: min(84vw, 300px);
+  display: flex; flex-direction: column; justify-content: space-between; gap: 16px;
+  padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
+  overflow-y: auto; overscroll-behavior: contain;
+  background: rgba(255, 255, 255, 0.96); -webkit-backdrop-filter: blur(22px) saturate(1.5); backdrop-filter: blur(22px) saturate(1.5);
+  border-right: 1px solid var(--a-line); box-shadow: 8px 0 40px rgba(46, 36, 32, 0.14);
+  transform: translateX(-102%); visibility: hidden; transition: transform 0.22s ease, visibility 0s linear 0.22s;
+}
+.adm-side.is-open { transform: none; visibility: visible; transition: transform 0.22s ease; }
+.adm-side ul { display: grid; gap: 2px; }
+.adm-side ul[hidden] { display: none; }
+.adm-side__links { margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--a-line); }
+.adm-side__item {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 0 12px; border-radius: 12px;
+  font: inherit; font-weight: 600; color: var(--a-ink-2); text-align: left; text-decoration: none; background: transparent;
+}
+.adm-side__item:hover { background: rgba(46, 36, 32, 0.05); }
+.adm-side__item.is-on { background: var(--a-matcha); color: var(--a-ink); box-shadow: inset 0 0 0 1px rgba(79, 127, 100, 0.16); }
+.adm-side__item--group.has-active { color: var(--a-ink); }
+.adm-side__item--group span { flex: 1; }
+.adm-side__chev { transition: transform 0.2s; }
+.adm-side__item--group[aria-expanded='false'] .adm-side__chev { transform: rotate(-90deg); }
+.adm-side__item--sub { padding-left: 38px; min-height: 44px; font-weight: 500; }
+.adm-side__foot { display: grid; gap: 2px; padding-top: 8px; border-top: 1px solid var(--a-line); }
+.adm-side__foot .adm-side__item { color: var(--a-sage); }
+.adm-side__foot a span { flex: 1; }
+/* telas muito estreitas (320px): Menu, "Painel" e "Perguntar" precisam caber na mesma linha */
+@media (max-width: 399px) {
+  .adm-top__logo, .adm-top__brand p { display: none; }
+  .adm-menu-btn { padding: 0 10px; gap: 4px; }
+  .adm-ask__more { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+@media (min-width: 1024px) {
+  .adm-shell { display: grid; grid-template-columns: 248px minmax(0, 1fr); align-items: start; }
+  .adm-side-scrim { display: none; }
+  .adm-side {
+    position: sticky; top: 64px; z-index: 2; width: auto; height: calc(100dvh - 64px - env(safe-area-inset-top)); padding: 16px 12px 16px 20px;
+    transform: none; visibility: visible; transition: none; box-shadow: none; background: transparent; border-right: 1px solid var(--a-line);
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+}

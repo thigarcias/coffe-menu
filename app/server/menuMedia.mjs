@@ -1,5 +1,12 @@
 import { randomUUID } from 'node:crypto'
 import { readJson } from './menuData.mjs'
+import { clientIp, createLimiter } from './rateLimit.mjs'
+// imagens públicas: 240 por minuto por IP (um cardápio carrega dezenas de fotos de uma vez)
+const readLimiter = createLimiter({ max: 240, windowMs: 60 * 1000 })
+// o cardápio publicado muda raramente: guarda a consulta por 20 s para não repeti-la a cada foto
+const menuCache = new Map()
+const MENU_TTL = 20 * 1000
+export function clearMediaCache() { menuCache.clear() }
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const keyPattern = /^([0-9a-f-]{36})\/([0-9a-f-]{36})\.(jpg|png|webp)$/i
 const mime = { jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp' }
@@ -50,14 +57,23 @@ export async function handleMenuMedia(req, res) {
     const params = new URL(req.url, 'http://localhost').searchParams; const slug = params.get('slug'); const path = params.get('key'); const match = keyPattern.exec(path ?? '')
     if (!slug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length > 80 || !match || !uuid.test(match[1]) || !uuid.test(match[2])) return fail(400, 'Imagem inválida.')
     try {
-      const menu = await fetch(new URL('/rest/v1/rpc/get_published_menu', url), { method: 'POST', headers: { apikey: key, 'Content-Type': 'application/json' }, body: JSON.stringify({ p_slug: slug }), signal: AbortSignal.timeout(8000) })
-      if (!menu.ok) return fail(503, 'Imagens indisponíveis.')
-      const data = await menu.json()
+      const wait = readLimiter(clientIp(req))
+      if (wait) { res.setHeader('Retry-After', String(wait)); return fail(429, 'Muitas requisições. Tente de novo em instantes.') }
+      let data; const cached = menuCache.get(slug)
+      if (cached && Date.now() - cached.at < MENU_TTL) data = cached.data
+      else {
+        const menu = await fetch(new URL('/rest/v1/rpc/get_published_menu', url), { method: 'POST', headers: { apikey: key, 'Content-Type': 'application/json' }, body: JSON.stringify({ p_slug: slug }), signal: AbortSignal.timeout(8000) })
+        if (!menu.ok) return fail(503, 'Imagens indisponíveis.')
+        data = await menu.json()
+        if (menuCache.size > 200) menuCache.clear()
+        menuCache.set(slug, { at: Date.now(), data })
+      }
       if (!data?.menu || data?.cafe?.id !== match[1] || !containsKey(data.menu, path)) return fail(404, 'Imagem não encontrada.')
       const upstream = await fetch(new URL(`/storage/v1/object/authenticated/coffe-menu-media/${path}`, url), { headers: { apikey: key }, signal: AbortSignal.timeout(10000) })
       if (!upstream.ok) return fail(404, 'Imagem não encontrada.')
       const bytes = Buffer.from(await upstream.arrayBuffer()); if (bytes.length > 3145728 || sniff(bytes) !== match[3].toLowerCase()) return fail(502, 'Imagem inválida.')
-      res.setHeader('Content-Type', mime[match[3].toLowerCase()]); res.setHeader('X-Content-Type-Options', 'nosniff'); return res.end(bytes)
+      // o nome do arquivo é um UUID novo a cada envio (nunca reescrito): a foto pode ficar em cache
+      res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600'); res.setHeader('Content-Type', mime[match[3].toLowerCase()]); res.setHeader('X-Content-Type-Options', 'nosniff'); return res.end(bytes)
     } catch { return fail(503, 'Imagens indisponíveis.') }
   }
   return fail(405, 'Método não permitido.')

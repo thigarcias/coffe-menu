@@ -16,6 +16,10 @@ const I = {
   tab: <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />,
   close: <path d="M6 6l12 12M18 6 6 18" />,
   back: <path d="M15 5l-7 7 7 7" />,
+  chart: <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />,
+  menu: <path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3" />,
+  team: <path d="M16 20v-1a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v1M10 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM20 20v-1a4 4 0 0 0-3-3.9M15 4.2a3.5 3.5 0 0 1 0 6.6" />,
+  chat: <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" />,
   spark: <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z" />,
 }
 const Icon = ({ d }: { d: keyof typeof I }) => (

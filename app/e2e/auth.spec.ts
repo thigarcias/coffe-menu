@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { openMenu } from './adminNav'
 
 test('a área da cafeteria exige login e trata credenciais inválidas', async ({ page }) => {
   await page.route('**/auth/v1/token?grant_type=password', (route) => route.fulfill({
@@ -40,7 +41,8 @@ test('a conta autenticada mantém a sessão ao recarregar e pode sair', async ({
   await page.reload()
   await expect(page.getByRole('heading', { name: 'Painel', exact: true })).toBeVisible()
   const logout = page.waitForResponse('**/auth/v1/logout?scope=local')
-  await page.getByRole('button', { name: 'Sair' }).click()
+  await openMenu(page)
+  await page.getByRole('button', { name: 'Sair', exact: true }).click()
   expect((await logout).status()).toBe(204)
 
   await page.reload()

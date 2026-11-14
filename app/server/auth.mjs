@@ -1,4 +1,7 @@
 // Proxy de Auth: a chave publishable fica configurada apenas no servidor.
+import { clientIp, createLimiter } from './rateLimit.mjs'
+// 10 tentativas de senha a cada 5 minutos por IP (renovar sessão não conta)
+export const passwordLimiter = createLimiter({ max: 10, windowMs: 5 * 60 * 1000 })
 export async function handleAuth(req, res) {
   res.setHeader('Cache-Control', 'no-store')
   const incoming = new URL(req.url, 'http://localhost')
@@ -10,6 +13,16 @@ export async function handleAuth(req, res) {
   if (req.method !== 'POST' || (!tokenRequest && path !== 'logout')) {
     res.statusCode = 404
     return res.end()
+  }
+
+  if (grantType === 'password' && path === 'token') {
+    const wait = passwordLimiter(clientIp(req))
+    if (wait) {
+      res.statusCode = 429
+      res.setHeader('Retry-After', String(wait))
+      res.setHeader('Content-Type', 'application/json')
+      return res.end(JSON.stringify({ message: 'Muitas tentativas de entrada. Aguarde alguns minutos e tente de novo.' }))
+    }
   }
 
   const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL

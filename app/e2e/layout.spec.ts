@@ -851,6 +851,8 @@ test.describe('sacola e pedido: layout', () => {
 // Capturas de referência: qualquer mudança visual não intencional quebra o teste.
 // Para aceitar uma mudança de propósito: npx playwright test --update-snapshots
 test.describe('visual', () => {
+  // as capturas de referência são do Linux (fontes e emojis mudam entre sistemas): em Windows/macOS não comparam
+  test.skip(process.platform !== 'linux', 'capturas de referência geradas no Linux')
   test.beforeEach(async ({ page }) => open(page, { clock: true }))
 
   test('feed', async ({ page }) => {
