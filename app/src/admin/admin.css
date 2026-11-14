@@ -71,7 +71,7 @@
   width: 36px; height: 36px; flex: none; border-radius: 12px; display: grid; place-items: center;
   color: var(--a-sage); background: var(--a-matcha);
 }
-.adm-top__brand h1 { font-family: var(--font-display); font-size: 18px; font-weight: 800; line-height: 1.1; }
+.adm-top__brand h1 { font-family: var(--font-display); font-size: 18px; font-weight: 800; line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .adm-top__brand p { font-size: 12px; color: var(--a-ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .adm-top__brand > div { min-width: 0; }
 .adm-pill {
@@ -311,3 +311,4 @@
 @media (prefers-reduced-motion: reduce) {
   .adm * { transition: none !important; animation: none !important; }
 }
+

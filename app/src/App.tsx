@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 import menuData from './data/menu.json'
 import type { Menu, MenuItem, OrderBy } from './types'
 import { Feed, type FeedHandle } from './components/Feed'
@@ -34,9 +35,7 @@ import {
   type Stage,
 } from './lib/cart'
 
-const menu = menuData as Menu
-const orderBy: OrderBy = menu.cafe.orderBy ?? 'nome'
-const tags = tagIndex(menu.tagGroups)
+const defaultMenu = menuData as Menu
 
 type From = 'feed' | 'grid' | 'detail' | 'quiz'
 type Panel =
@@ -73,25 +72,56 @@ function useStage(order: Order | null): Stage | null {
   return order ? stageOf(order, now) : null
 }
 
-export default function App() {
+export interface AppProps {
+  /** Menu por instância, usado no cardápio publicado e na prévia do painel. */
+  menu?: Menu
+  /** Namespace da sacola e do pedido; omitido, usa o estado legado da raiz. */
+  storageScope?: string
+  refreshMenu?: () => Promise<Menu>
+}
+
+const available = (item: MenuItem) => item.available !== false
+
+export function App({ menu: menuProp, storageScope, refreshMenu }: AppProps = {}) {
+  const menu = menuProp ?? defaultMenu
+  const orderBy: OrderBy = menu.cafe.orderBy ?? 'nome'
+  const cartScope = storageScope ?? (menuProp ? `preview:${menu.cafe.id ?? menu.cafe.slug ?? 'draft'}` : 'default')
+  const tags = useMemo(() => tagIndex(menu.tagGroups), [menu.tagGroups])
+  const themeStyle = {
+    '--cafe-accent': menu.cafe.branding?.accent_color ?? 'var(--ink)',
+    '--cafe-secondary': menu.cafe.branding?.secondary_color ?? 'var(--ink-3)',
+    ...(menu.cafe.branding?.accent_color ? { '--sage': menu.cafe.branding.accent_color } : {}),
+    ...(menu.cafe.branding?.secondary_color ? { '--caramel': menu.cafe.branding.secondary_color } : {}),
+  } as CSSProperties
+
   // Itens na ordem das categorias, para o feed passar seção por seção.
   const items = useMemo(() => {
     const order = new Map(menu.categories.map((c, i) => [c.id, i]))
     return [...menu.items].sort((a, b) => (order.get(a.category) ?? 99) - (order.get(b.category) ?? 99))
-  }, [])
-  const byId = useMemo(() => new Map(items.map((i) => [i.id, i])), [items])
+  }, [menu])
+  // Um produto removido enquanto está na sacola continua visível para remoção,
+  // marcado como indisponível; não volta a aparecer no cardápio.
+  const previousItems = useRef(new Map<string, MenuItem>())
+  const byId = useMemo(() => {
+    const current = new Map(items.map((item) => [item.id, item]))
+    for (const [id, item] of previousItems.current) if (!current.has(id)) current.set(id, { ...item, available: false })
+    previousItems.current = current
+    return current
+  }, [items])
+  const availableItems = useMemo(() => items.filter(available), [items])
   const categories = useMemo(
     () => menu.categories.filter((c) => items.some((i) => i.category === c.id)),
-    [items],
+    [items, menu.categories],
   )
   const catName = useCallback(
     (id: string) => (menu.subcategories ?? []).find((c) => c.id === id)?.name ?? menu.categories.find((c) => c.id === id)?.name ?? id,
-    [],
+    [menu],
   )
 
   const feed = useRef<FeedHandle>(null)
   const [mode, setMode] = useState<'feed' | 'grid'>('feed')
   const [activeCat, setActiveCat] = useState<string | null>(categories[0]?.id ?? null)
+  useEffect(() => setActiveCat(categories[0]?.id ?? null), [categories])
   const [panel, setPanel] = useState<Panel>(null)
   // filtro por tag na grade ("tudo com caramelo")
   const [tagFilter, setTagFilter] = useState<string | null>(null)
@@ -99,14 +129,14 @@ export default function App() {
   const gridCats = useMemo(() => categories.filter((c) => gridItems.some((i) => i.category === c.id)), [categories, gridItems])
 
   // Sacola e pedido ficam guardados no celular.
-  const [cart, setCart] = useState<CartLine[]>(() => loadCart(items))
-  const [order, setOrder] = useState<Order | null>(() => loadOrder(items))
-  useEffect(() => saveCart(cart), [cart])
-  useEffect(() => saveOrder(order), [order])
+  const [cart, setCart] = useState<CartLine[]>(() => loadCart(items, cartScope))
+  const [order, setOrder] = useState<Order | null>(() => loadOrder(items, cartScope))
+  useEffect(() => saveCart(cart, cartScope), [cart, cartScope])
+  useEffect(() => saveOrder(order, cartScope), [order, cartScope])
   const stage = useStage(order)
 
   const count = cartCount(cart)
-  const total = cartTotal(cart, byId)
+  const total = cartTotal(cart, byId, menu)
   const counts = useMemo(() => {
     const m = new Map<string, number>()
     for (const l of cart) m.set(l.itemId, (m.get(l.itemId) ?? 0) + l.qty)
@@ -122,8 +152,10 @@ export default function App() {
   }, [panel?.kind]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const changeQty = useCallback((key: string, delta: number) => {
+    const line = cartRef.current.find((item) => item.key === key)
+    if (delta > 0 && line && byId.get(line.itemId)?.available === false) return
     setCart((prev) => prev.map((l) => (l.key === key ? { ...l, qty: Math.max(1, Math.min(20, l.qty + delta)) } : l)))
-  }, [])
+  }, [byId])
 
   // o aviso guarda funções criadas antes; a ref dá a elas a sacola de agora
   const cartRef = useRef(cart)
@@ -148,7 +180,8 @@ export default function App() {
 
   const addToCart = useCallback(
     (item: MenuItem, from: From) => {
-      const set = optionSetOf(item)
+      if (!available(item) || !byId.has(item.id) || !available(byId.get(item.id)!)) return
+      const set = optionSetOf(item, menu)
       const line = makeLine(item, defaultChoices(item, set))
       setCart((prev) => upsert(prev, line))
       track({ type: 'cart_add', itemId: item.id, from, customized: false })
@@ -172,7 +205,7 @@ export default function App() {
         })
       }
     },
-    [undoAdd],
+    [menu, undoAdd, byId],
   )
 
   const saveCustom = (choices: Choices, note: string) => {
@@ -180,7 +213,11 @@ export default function App() {
     const { key, fromAdd, back } = panel
     const line = cart.find((l) => l.key === key)
     if (line) {
-      const item = byId.get(line.itemId)!
+      const item = byId.get(line.itemId)
+      if (!item || !available(item)) {
+        setPanel(back ? { kind: 'cart' } : null)
+        return
+      }
       track({ type: 'cart_customize', itemId: item.id, choices })
       setCart((prev) => {
         const cur = prev.find((l) => l.key === key)
@@ -200,12 +237,36 @@ export default function App() {
 
   const closePanel = () => setPanel(panel?.kind === 'customize' && panel.back ? { kind: 'cart' } : null)
 
-  const sendOrder = (name: string, table: string) => {
+  const sendingOrder = useRef(false)
+  const sendOrder = async (name: string, table: string) => {
+    if (sendingOrder.current) return
+    sendingOrder.current = true
+    let currentItems = byId
+    if (refreshMenu) {
+      try {
+        const latest = await refreshMenu()
+        currentItems = new Map(latest.items.map((item) => [item.id, item]))
+        if (cart.some((line) => JSON.stringify(byId.get(line.itemId)?.prices) !== JSON.stringify(currentItems.get(line.itemId)?.prices) || JSON.stringify(menu.optionSets?.[byId.get(line.itemId)?.options ?? '']) !== JSON.stringify(latest.optionSets?.[currentItems.get(line.itemId)?.options ?? '']))) {
+          window.alert('O cardápio mudou. Revise os itens e os preços antes de enviar o pedido.')
+          setPanel({ kind: 'cart' }); sendingOrder.current = false; return
+        }
+      } catch {
+        window.alert('Não foi possível confirmar a disponibilidade. Tente novamente quando estiver conectado.')
+        sendingOrder.current = false; return
+      }
+    }
+    if (cart.some((line) => !currentItems.has(line.itemId) || currentItems.get(line.itemId)?.available === false)) {
+      window.alert('Um item da sacola ficou indisponível. Revise sua sacola antes de enviar.')
+      setPanel({ kind: 'cart' })
+      sendingOrder.current = false
+      return
+    }
     const sent: Order = { code: newCode(), name, table, lines: cart, total, sentAt: Date.now() }
     track({ type: 'order_sent', items: count, total, by: orderBy })
     setOrder(sent)
     setCart([])
     setPanel({ kind: 'order' })
+    sendingOrder.current = false
   }
 
   // Dica "deslize": aparece enquanto a pessoa está no primeiro produto.
@@ -297,9 +358,17 @@ export default function App() {
   const editing = panel?.kind === 'customize' ? cart.find((l) => l.key === panel.key) : undefined
 
   return (
-    <div className="app">
+    <div className="app" style={themeStyle}>
       <header className="top">
-        <span className="brand">{menu.cafe.name}</span>
+        {menuProp ? <div className="brand brand--custom">
+          {menu.cafe.branding?.logo_url && <img className="brand__logo" src={menu.cafe.branding.logo_url} alt="" />}
+          <span className="brand__copy">
+            <span className="brand__name">{menu.cafe.name}</span>
+            {(menu.cafe.description ?? menu.cafe.branding?.description) && (
+              <small className="brand__description">{menu.cafe.description ?? menu.cafe.branding?.description}</small>
+            )}
+          </span>
+        </div> : <span className="brand">{menu.cafe.name}</span>}
         <CategoryBar categories={categories} active={activeCat} onPick={pickCategory} />
       </header>
 
@@ -365,8 +434,10 @@ export default function App() {
       <Sheet open={panel?.kind === 'detail'} onClose={closePanel} title="Detalhes" fixed>
         {panel?.kind === 'detail' && (
           <DetailSheet
+            reviewAllergens={menuProp !== undefined}
             key={panel.item.id}
             item={panel.item}
+            menu={menu}
             onAdd={(item) => {
               addToCart(item, 'detail')
               setPanel(null)
@@ -374,19 +445,29 @@ export default function App() {
             storyNote={menu.cafe.storyNote}
             label={catName(panel.item.subcategory ?? panel.item.category)}
             tags={(panel.item.labels ?? []).flatMap((t) => tags.get(t) ?? [])}
-            related={related(panel.item, items, tags)}
+            related={related(panel.item, availableItems, tags)}
             onTag={pickTag}
             onOpenItem={openRelated}
           />
         )}
       </Sheet>
       <Sheet open={panel?.kind === 'quiz'} onClose={closePanel} title="Me ajuda a escolher">
-        <Quiz items={items} onPick={goToItem} counts={counts} onAdd={(item) => addToCart(item, 'quiz')} />
+        <Quiz
+          items={availableItems}
+          onPick={goToItem}
+          counts={counts}
+          onAdd={(item) => addToCart(item, 'quiz')}
+          tagGroups={menu.tagGroups}
+          localOnly={menuProp !== undefined}
+        />
       </Sheet>
       <Sheet open={panel?.kind === 'cart'} onClose={closePanel} title="Sacola" tall>
         <CartSheet
+          reviewAllergens={menuProp !== undefined}
           lines={cart}
           byId={byId}
+          menu={menu}
+          scope={cartScope}
           orderBy={orderBy}
           order={order}
           stage={stage}
@@ -404,6 +485,7 @@ export default function App() {
           <CustomizeSheet
             key={panel.key}
             item={byId.get(editing.itemId)!}
+            menu={menu}
             initial={{ choices: editing.choices, note: editing.note }}
             qty={panel.fromAdd ? 1 : editing.qty}
             onSave={saveCustom}
@@ -415,6 +497,7 @@ export default function App() {
           <OrderSheet
             order={order}
             stage={stage}
+            menu={menu}
             byId={byId}
             onMore={() => {
               setOrder(null)
@@ -426,3 +509,6 @@ export default function App() {
     </div>
   )
 }
+
+export default App
+

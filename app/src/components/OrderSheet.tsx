@@ -1,4 +1,4 @@
-import type { MenuItem } from '../types'
+import type { Menu, MenuItem } from '../types'
 import { linePrice, STAGES, summary, type Order, type Stage } from '../lib/cart'
 import { money } from '../lib/format'
 import { Check } from './Icons'
@@ -6,6 +6,7 @@ import { Check } from './Icons'
 interface Props {
   order: Order
   stage: Stage
+  menu: Menu
   byId: Map<string, MenuItem>
   onMore: () => void
 }
@@ -13,7 +14,7 @@ interface Props {
 const HINT = ['Seu pedido chegou na cozinha', 'Estamos preparando com carinho', 'Pode retirar no balcão'] as const
 
 /** Andamento simulado do pedido: Recebido, Preparando, Pronto. */
-export function OrderSheet({ order, stage, byId, onMore }: Props) {
+export function OrderSheet({ order, stage, menu, byId, onMore }: Props) {
   const ready = stage === 2
   return (
     <div className="cart order">
@@ -54,7 +55,7 @@ export function OrderSheet({ order, stage, byId, onMore }: Props) {
           {order.lines.map((l) => {
             const item = byId.get(l.itemId)
             if (!item) return null
-            const sum = summary(item, l.choices)
+            const sum = summary(item, l.choices, menu)
             return (
               <li key={l.key}>
                 <span>
@@ -62,7 +63,7 @@ export function OrderSheet({ order, stage, byId, onMore }: Props) {
                   {sum && <small>{sum}</small>}
                   {l.note && <small>“{l.note}”</small>}
                 </span>
-                <span>{money(linePrice(item, l))}</span>
+                <span>{money(linePrice(item, l, menu))}</span>
               </li>
             )
           })}
@@ -83,3 +84,4 @@ export function OrderSheet({ order, stage, byId, onMore }: Props) {
     </div>
   )
 }
+

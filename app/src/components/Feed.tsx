@@ -101,6 +101,7 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
                 {item.badges?.map((b) => (
                   <span key={b} className="badge">{b}</span>
                 ))}
+                {item.available === false && <span className="badge badge--unavailable">Indisponível</span>}
               </div>
               <h2 className="slide__name" data-size={nameSize(item.name) || undefined}>{item.name}</h2>
               {price && (
@@ -117,3 +118,4 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
     </div>
   )
 })
+

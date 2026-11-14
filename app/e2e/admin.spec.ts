@@ -8,8 +8,8 @@ const box = async (l: Locator) => {
   return { ...b, right: b.x + b.width, bottom: b.y + b.height }
 }
 
-const TABS = ['Visão geral', 'Vendas', 'Produtos', 'IA e Parecidos', 'Tráfego', 'Equipe', 'Sessões'] as const
-const IDS: Record<(typeof TABS)[number], string> = { 'Visão geral': 'visao', Vendas: 'vendas', Produtos: 'produtos', 'IA e Parecidos': 'ia', Tráfego: 'trafego', Equipe: 'equipe', Sessões: 'sessoes' }
+const TABS = ['Visão geral', 'Vendas', 'Produtos', 'IA e Parecidos', 'Tráfego', 'Cardápio', 'Equipe', 'Sessões'] as const
+const IDS: Record<(typeof TABS)[number], string> = { 'Visão geral': 'visao', Vendas: 'vendas', Produtos: 'produtos', 'IA e Parecidos': 'ia', Tráfego: 'trafego', Cardápio: 'cardapio', Equipe: 'equipe', Sessões: 'sessoes' }
 
 const tab = (page: Page, name: (typeof TABS)[number]) => page.getByRole('tab', { name, exact: true })
 const goTab = async (page: Page, name: (typeof TABS)[number]) => {

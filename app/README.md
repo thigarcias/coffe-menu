@@ -67,3 +67,13 @@ where id = '00000000-0000-0000-0000-000000000000';
 
 O cliente acessa /admin com as credenciais cadastradas. Se já tiver entrado
 antes da liberação, deve sair e entrar novamente. O painel usa dados de exemplo.
+
+## Editor de cardápio por unidade
+
+O editor em `/admin#cardapio` requer o esquema de `supabase/migrations/20261114015222_coffe_menu_personalizacao.sql` e uma unidade vinculada ao usuário. A migração foi aplicada ao projeto Supabase configurado e validada com rascunho temporário em transação revertida; valide também o envio e a leitura de imagens com uma unidade de teste. Não exponha o schema `coffe_menu_private` na Data API. Execute os advisors de segurança após a aplicação.
+
+Configure `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `OPENAI_API_KEY`. Uma política de Storage libera ao público apenas imagens referenciadas pela versão publicada; as demais permanecem privadas. A equipe provisiona unidades pelo SQL administrativo, vinculando `owner_id` ao usuário já criado em `auth.users` e usando slug único (letras minúsculas, números e hífens simples). A conta também precisa da liberação existente para `/admin` (`coffe_admin` em `app_metadata`). Nenhum cadastro público de unidades ou funcionário é habilitado.
+
+O link de cada unidade é `/?unidade=<slug>`; o painel gera o QR. O arquivo de referência permanece na raiz sem o parâmetro. Publicações e rascunhos são separados, e o estoque é independente. A recomendação do quiz em unidades usa regras locais: a API de IA atual conhece apenas o menu de referência. Quando o cliente informa restrições ou texto livre, nenhuma sugestão automática é apresentada; é necessário consultar a equipe. Os pedidos continuam simulados no navegador.
+`nExecute `npm run test:menu-db` para verificar a migração e fluxos de isolamento em PostgreSQL local isolado (PGlite). Esse teste não substitui a validação no Supabase com Storage e Auth reais.
+

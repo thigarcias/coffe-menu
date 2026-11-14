@@ -1,12 +1,14 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import type { MenuItem } from '../types'
+import type { Menu, MenuItem } from '../types'
 import { money, nameSize, priceParts } from '../lib/format'
 import { defaultChoices, optionSetOf, unitPrice } from '../lib/cart'
 import type { TagInfo } from '../lib/related'
 import { BagPlus } from './Icons'
 
 interface Props {
+  reviewAllergens?: boolean
   item: MenuItem
+  menu: Menu
   onAdd: (item: MenuItem) => void
   storyNote?: string
   label?: string
@@ -31,12 +33,12 @@ type Tab = (typeof TABS)[number]['id']
  * Se um texto não couber (tela pequena, texto longo), a fonte do painel diminui
  * aos poucos até caber, sem cortar nada.
  */
-export function DetailSheet({ item, onAdd, storyNote, label, tags, related, onTag, onOpenItem }: Props) {
+export function DetailSheet({ item, menu, reviewAllergens = false, onAdd, storyNote, label, tags, related, onTag, onOpenItem }: Props) {
   const [tab, setTab] = useState<Tab>('parece')
   const panel = useRef<HTMLDivElement>(null)
   const prices = item.prices.filter((p) => p.price != null)
   // o botão adiciona o padrão (Tall, café padrão, leite integral); a personalização vem depois, no aviso ou na sacola
-  const base = unitPrice(item, defaultChoices(item, optionSetOf(item)))
+  const base = unitPrice(item, defaultChoices(item, optionSetOf(item, menu)), menu)
 
   useLayoutEffect(() => {
     const el = panel.current
@@ -105,7 +107,11 @@ export function DetailSheet({ item, onAdd, storyNote, label, tags, related, onTa
                 <li key={ing}>{ing}</li>
               ))}
             </ul>
-            {!!item.allergens?.length && <p className="allergens">Contém: {item.allergens.join(', ')}</p>}
+            {reviewAllergens ? <p className="allergens">
+              {item.allergens?.length
+                ? `${item.allergensVerified ? 'Alérgenos registrados' : 'Alérgenos informados (não verificados)'}: ${item.allergens.join(', ')}.`
+                : 'Não há alérgenos informados para este produto.'}
+            </p> : !!item.allergens?.length && <p className="allergens">Contém: {item.allergens.join(', ')}</p>}
             <p className="detail__desc">{item.description}</p>
           </div>
         )}
@@ -146,10 +152,14 @@ export function DetailSheet({ item, onAdd, storyNote, label, tags, related, onTa
             ))}
           </div>
         )}
-        <button className="cta" onClick={() => onAdd(item)}>
-          <BagPlus size={20} /> Adicionar · {money(base)}
+        {reviewAllergens && <p className="allergen-note">
+          Informações de ingredientes e alérgenos podem estar incompletas. Confirme com a equipe; ausência no cardápio não garante ausência de traços.
+        </p>}
+        <button className="cta" disabled={item.available === false} onClick={() => onAdd(item)}>
+          {item.available === false ? 'Indisponível' : <><BagPlus size={20} /> Adicionar · {money(base)}</>}
         </button>
       </footer>
     </div>
   )
 }
+

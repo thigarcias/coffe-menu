@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import type { MenuItem, OrderBy } from '../types'
+import { useEffect, useState } from 'react'
+import type { Menu, MenuItem, OrderBy } from '../types'
 import {
   allergensOf,
   cartCount,
@@ -18,8 +18,11 @@ import { money } from '../lib/format'
 import { Bag, Minus, Pencil, Plus, Trash } from './Icons'
 
 interface Props {
+  reviewAllergens?: boolean
   lines: CartLine[]
   byId: Map<string, MenuItem>
+  menu: Menu
+  scope: string
   orderBy: OrderBy
   /** pedido em andamento (aparece como um aviso no topo) */
   order: Order | null
@@ -34,17 +37,22 @@ interface Props {
 }
 
 /** A sacola e o fechamento do pedido (nome ou mesa, aviso de alérgeno, envio). */
-export function CartSheet({ lines, byId, orderBy, order, stage, onQty, onRemove, onEdit, onOpenItem, onOpenOrder, onCheckout, onSend }: Props) {
+export function CartSheet({ lines, byId, menu, scope, reviewAllergens = false, orderBy, order, stage, onQty, onRemove, onEdit, onOpenItem, onOpenOrder, onCheckout, onSend }: Props) {
   const [step, setStep] = useState<'bag' | 'checkout'>('bag')
-  const [name, setName] = useState(loadName)
+  const [name, setName] = useState(() => loadName(scope))
   const [table, setTable] = useState(tableFromUrl)
 
-  const total = cartTotal(lines, byId)
+  useEffect(() => setName(loadName(scope)), [scope])
+
+  const total = cartTotal(lines, byId, menu)
   const count = cartCount(lines)
   const allergens = allergensOf(lines, byId)
+  const unavailable = lines.filter((line) => byId.get(line.itemId)?.available === false)
+  const hasUnavailable = unavailable.length > 0
+  const hasUnverifiedAllergens = lines.some((line) => !byId.get(line.itemId)?.allergensVerified)
   const needName = orderBy !== 'mesa'
   const needTable = orderBy !== 'nome'
-  const ready = (!needName || name.trim().length > 0) && (!needTable || table.trim().length > 0)
+  const ready = !hasUnavailable && (!needName || name.trim().length > 0) && (!needTable || table.trim().length > 0)
 
   if (step === 'checkout' && lines.length) {
     return (
@@ -58,8 +66,11 @@ export function CartSheet({ lines, byId, orderBy, order, stage, onQty, onRemove,
               const item = byId.get(l.itemId)!
               return (
                 <li key={l.key}>
-                  <span>{l.qty}× {item.name}</span>
-                  <span>{money(linePrice(item, l))}</span>
+                  <span>
+                    {l.qty}× {item.name}
+                    {item.available === false && <small>Indisponível nesta unidade</small>}
+                  </span>
+                  <span>{money(linePrice(item, l, menu))}</span>
                 </li>
               )
             })}
@@ -94,11 +105,13 @@ export function CartSheet({ lines, byId, orderBy, order, stage, onQty, onRemove,
             </label>
           )}
 
-          {allergens.length > 0 && (
-            <p className="alert" role="note">
-              Contém {allergens.join(', ')}. Confirme com a equipe.
-            </p>
-          )}
+          {hasUnavailable && <p className="alert" role="alert">Remova os itens indisponíveis antes de enviar o pedido.</p>}
+          {reviewAllergens ? <p className="alert" role="note">
+            {allergens.length > 0
+              ? `${hasUnverifiedAllergens ? 'Alérgenos informados (não verificados)' : 'Alérgenos registrados'}: ${allergens.join(', ')}. `
+              : 'O cardápio não informa alérgenos para estes itens. '}
+            A informação pode estar incompleta e não garante ausência de ingredientes ou traços. Confirme com a equipe.
+          </p> : allergens.length > 0 && <p className="alert" role="note">Contém {allergens.join(', ')}. Confirme com a equipe.</p>}
         </div>
         <footer className="foot">
           <div className="foot__total">
@@ -109,7 +122,7 @@ export function CartSheet({ lines, byId, orderBy, order, stage, onQty, onRemove,
             className="cta"
             disabled={!ready}
             onClick={() => {
-              saveName(name.trim())
+              saveName(name.trim(), scope)
               onSend(name.trim(), table.trim())
             }}
           >
@@ -147,7 +160,7 @@ export function CartSheet({ lines, byId, orderBy, order, stage, onQty, onRemove,
         <ul className="bag">
           {lines.map((l) => {
             const item = byId.get(l.itemId)!
-            const sum = summary(item, l.choices)
+            const sum = summary(item, l.choices, menu)
             return (
               <li key={l.key} className="bagrow">
                 <button className="bagrow__main" onClick={() => onOpenItem(item)}>
@@ -155,12 +168,13 @@ export function CartSheet({ lines, byId, orderBy, order, stage, onQty, onRemove,
                   <div className="bagrow__txt">
                     <strong>{item.name}</strong>
                     {sum && <span className="bagrow__sum">{sum}</span>}
+                    {item.available === false && <span className="bagrow__unavailable">Indisponível nesta unidade</span>}
                     {l.note && <span className="bagrow__note">“{l.note}”</span>}
                   </div>
                 </button>
-                <span className="bagrow__price">{money(linePrice(item, l))}</span>
+                <span className="bagrow__price">{money(linePrice(item, l, menu))}</span>
                 <div className="bagrow__act">
-                  <button className="tool" onClick={() => onEdit(l.key)} aria-label={`Editar ${item.name}`}>
+                  <button className="tool" disabled={item.available === false} onClick={() => onEdit(l.key)} aria-label={`Editar ${item.name}`}>
                     <Pencil size={15} /> Editar
                   </button>
                   <button className="tool tool--warn" onClick={() => onRemove(l.key)} aria-label={`Remover ${item.name}`}>
@@ -171,7 +185,7 @@ export function CartSheet({ lines, byId, orderBy, order, stage, onQty, onRemove,
                       <Minus size={16} />
                     </button>
                     <span className="stepper__n" aria-label={`Quantidade: ${l.qty}`}>{l.qty}</span>
-                    <button className="step" aria-label={`Mais ${item.name}`} disabled={l.qty >= 20} onClick={() => onQty(l.key, 1)}>
+                    <button className="step" aria-label={`Mais ${item.name}`} disabled={l.qty >= 20 || item.available === false} onClick={() => onQty(l.key, 1)}>
                       <Plus size={16} />
                     </button>
                   </div>
@@ -190,6 +204,7 @@ export function CartSheet({ lines, byId, orderBy, order, stage, onQty, onRemove,
           </div>
           <button
             className="cta"
+            disabled={hasUnavailable}
             onClick={() => {
               onCheckout()
               setStep('checkout')
@@ -202,3 +217,4 @@ export function CartSheet({ lines, byId, orderBy, order, stage, onQty, onRemove,
     </div>
   )
 }
+

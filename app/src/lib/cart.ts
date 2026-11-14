@@ -33,13 +33,17 @@ const ORDER_KEY = 'cm.order'
 const NAME_KEY = 'cm.name'
 const FAV_KEY = 'cm.favorites' // legado: migrado uma vez para a sacola
 
+/** A raiz mantém as chaves legadas; cada unidade isola a própria sacola e pedido. */
+const keyFor = (key: string, scope: string) => (scope === 'default' ? key : `${key}:${encodeURIComponent(scope)}`)
+
 /** Andamento simulado do pedido, em ms desde o envio (curto de propósito, para a demo). */
 export const PREPARING_AT = 3_000
 export const READY_AT = 8_000
 
 // ---------- conjuntos de opções ----------
 
-export const optionSetOf = (item: MenuItem): OptionSet | null => (item.options && menu.optionSets?.[item.options]) || null
+export const optionSetOf = (item: MenuItem, source: Menu = menu): OptionSet | null =>
+  (item.options && source.optionSets?.[item.options]) || null
 
 export const sizesOf = (item: MenuItem) => item.prices.filter((p) => p.price != null)
 
@@ -96,8 +100,8 @@ export function makeLine(item: MenuItem, choices: Choices, note = '', qty = 1): 
 // ---------- preço e resumo ----------
 
 /** Preço de uma unidade: tamanho + acréscimos das opções. */
-export function unitPrice(item: MenuItem, choices: Choices): number {
-  const set = optionSetOf(item)
+export function unitPrice(item: MenuItem, choices: Choices, source: Menu = menu): number {
+  const set = optionSetOf(item, source)
   const sizes = sizesOf(item)
   const wanted = typeof choices.tamanho === 'string' ? choices.tamanho : defaultSize(item)
   let total = (sizes.find((s) => s.size === wanted) ?? sizes.find((s) => s.size === defaultSize(item)))?.price ?? 0
@@ -111,11 +115,12 @@ export function unitPrice(item: MenuItem, choices: Choices): number {
   return Math.round(total * 100) / 100
 }
 
-export const linePrice = (item: MenuItem, line: CartLine) => Math.round(unitPrice(item, line.choices) * line.qty * 100) / 100
+export const linePrice = (item: MenuItem, line: CartLine, source: Menu = menu) =>
+  Math.round(unitPrice(item, line.choices, source) * line.qty * 100) / 100
 
 /** "Grande · Leite de aveia · +1 dose": só o que foge do padrão (e o tamanho, quando há mais de um). */
-export function summary(item: MenuItem, choices: Choices): string {
-  const set = optionSetOf(item)
+export function summary(item: MenuItem, choices: Choices, source: Menu = menu): string {
+  const set = optionSetOf(item, source)
   if (!set) return ''
   const parts: string[] = []
   for (const g of groupsOf(item, set)) {
@@ -137,8 +142,8 @@ export function summary(item: MenuItem, choices: Choices): string {
 
 export const cartCount = (lines: CartLine[]) => lines.reduce((n, l) => n + l.qty, 0)
 
-export const cartTotal = (lines: CartLine[], byId: Map<string, MenuItem>) =>
-  Math.round(lines.reduce((t, l) => t + (byId.get(l.itemId) ? linePrice(byId.get(l.itemId)!, l) : 0), 0) * 100) / 100
+export const cartTotal = (lines: CartLine[], byId: Map<string, MenuItem>, source: Menu = menu) =>
+  Math.round(lines.reduce((t, l) => t + (byId.get(l.itemId) ? linePrice(byId.get(l.itemId)!, l, source) : 0), 0) * 100) / 100
 
 /** Alérgenos de tudo o que está na sacola, sem repetir. */
 export const allergensOf = (lines: CartLine[], byId: Map<string, MenuItem>): string[] => [
@@ -183,13 +188,15 @@ const write = (key: string, value: unknown) => {
 }
 
 /** Sacola guardada; na primeira vez, os favoritos antigos entram nela com o padrão. */
-export function loadCart(items: MenuItem[]): CartLine[] {
+export function loadCart(items: MenuItem[], scope = 'default'): CartLine[] {
   const byId = new Map(items.map((i) => [i.id, i]))
-  const saved = read<CartLine[]>(CART_KEY)
+  const cartKey = keyFor(CART_KEY, scope)
+  const saved = read<CartLine[]>(cartKey)
   let lines = Array.isArray(saved)
     ? saved.filter((l) => l && byId.has(l.itemId) && l.qty > 0 && typeof l.key === 'string')
     : []
-  const favs = read<string[]>(FAV_KEY)
+  const favKey = keyFor(FAV_KEY, scope)
+  const favs = read<string[]>(favKey)
   if (Array.isArray(favs)) {
     for (const id of favs) {
       const item = byId.get(id)
@@ -197,35 +204,35 @@ export function loadCart(items: MenuItem[]): CartLine[] {
       const line = makeLine(item, defaultChoices(item, optionSetOf(item)))
       if (!lines.some((l) => l.key === line.key)) lines = [...lines, line]
     }
-    write(CART_KEY, lines)
+    write(cartKey, lines)
     try {
-      localStorage.removeItem(FAV_KEY)
+      localStorage.removeItem(favKey)
     } catch {
       /* ignora */
     }
   }
   return lines
 }
-export const saveCart = (lines: CartLine[]) => write(CART_KEY, lines.length ? lines : null)
+export const saveCart = (lines: CartLine[], scope = 'default') => write(keyFor(CART_KEY, scope), lines.length ? lines : null)
 
-export const loadOrder = (items: MenuItem[]): Order | null => {
-  const o = read<Order>(ORDER_KEY)
+export const loadOrder = (items: MenuItem[], scope = 'default'): Order | null => {
+  const o = read<Order>(keyFor(ORDER_KEY, scope))
   if (!o || typeof o.sentAt !== 'number' || !Array.isArray(o.lines)) return null
   const ids = new Set(items.map((i) => i.id))
   return { ...o, lines: o.lines.filter((l) => ids.has(l.itemId)) }
 }
-export const saveOrder = (order: Order | null) => write(ORDER_KEY, order)
+export const saveOrder = (order: Order | null, scope = 'default') => write(keyFor(ORDER_KEY, scope), order)
 
-export const loadName = (): string => {
+export const loadName = (scope = 'default'): string => {
   try {
-    return localStorage.getItem(NAME_KEY) ?? ''
+    return localStorage.getItem(keyFor(NAME_KEY, scope)) ?? ''
   } catch {
     return ''
   }
 }
-export const saveName = (name: string) => {
+export const saveName = (name: string, scope = 'default') => {
   try {
-    localStorage.setItem(NAME_KEY, name)
+    localStorage.setItem(keyFor(NAME_KEY, scope), name)
   } catch {
     /* ignora */
   }
@@ -239,3 +246,4 @@ export const tableFromUrl = (): string => {
     return ''
   }
 }
+

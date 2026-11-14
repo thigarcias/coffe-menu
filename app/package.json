@@ -11,14 +11,18 @@
     "artifact": "vite build && node scripts/artifact.mjs",
     "start": "node server/index.mjs",
     "test:e2e": "playwright test --trace off",
-    "test:e2e:update": "playwright test --trace off --update-snapshots"
+    "test:e2e:update": "playwright test --trace off --update-snapshots",
+    "test:menu-db": "node scripts/test-menu-db.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.119.0",
+    "@types/qrcode": "1.5.5",
+    "qrcode": "1.5.4",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.3.14",
     "@playwright/test": "^1.63.0",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
@@ -29,3 +33,4 @@
     "vite": "^8.3.6"
   }
 }
+

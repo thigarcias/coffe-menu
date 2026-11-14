@@ -1,4 +1,4 @@
-import type { MenuItem } from '../types'
+import type { MenuItem, TagGroup } from '../types'
 import { reasonOf, recommend, type QuizAnswers } from './recommend'
 
 export interface Pick {
@@ -18,7 +18,23 @@ export interface PickResult {
  * escolhe os 3 finais entre os melhores. Sem servidor (ex.: página estática) ou se algo falhar,
  * cai no mesmo algoritmo por etiquetas, rodando aqui.
  */
-export async function suggest(items: MenuItem[], answers: QuizAnswers, text: string): Promise<PickResult> {
+export async function suggest(
+  items: MenuItem[],
+  answers: QuizAnswers,
+  text: string,
+  options: { localOnly?: boolean; tagGroups?: TagGroup[] } = {},
+): Promise<PickResult> {
+  const localSuggestions = (): PickResult => ({
+    picks: recommend(items, answers, 3, options.tagGroups).map((s) => ({ item: s.item, why: reasonOf(s), matched: s.reasons })),
+    source: 'regras',
+  })
+  // A rota atual usa apenas o menu de referência; unidade e rascunho ficam no algoritmo local.
+  // Não presumir que etiquetas opcionais ou texto livre confirmem ausência de alérgenos.
+  if (options.localOnly && (answers.avoid.length > 0 || text.trim())) return { picks: [], source: 'regras' }
+  if (options.localOnly) {
+    const candidates = answers.caffeine === 'sem' ? items.filter((item) => item.labels?.includes('sem-cafe')) : items
+    return { picks: recommend(candidates, answers, 3, options.tagGroups).map((s) => ({ item: s.item, why: reasonOf(s), matched: s.reasons })), source: 'regras' }
+  }
   try {
     const ctrl = new AbortController()
     const timer = setTimeout(() => ctrl.abort(), 65000)
@@ -38,7 +54,7 @@ export async function suggest(items: MenuItem[], answers: QuizAnswers, text: str
     if (!picks.length) throw new Error('vazio')
     return { picks, source: data.source === 'regras' ? 'regras' : 'ia' }
   } catch {
-    const picks = recommend(items, answers).map((s) => ({ item: s.item, why: reasonOf(s), matched: s.reasons }))
-    return { picks, source: 'regras' }
+    return localSuggestions()
   }
 }
+

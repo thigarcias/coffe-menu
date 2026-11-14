@@ -7,6 +7,14 @@ import { handleRecommend } from './server/ai.mjs'
 import { handleProtectedAdminChat } from './server/protectedAdminChat.mjs'
 // @ts-expect-error módulo JS do servidor, sem tipos
 import { handleAuth } from './server/auth.mjs'
+// @ts-expect-error módulo JS do servidor, sem tipos
+import { handlePublicMenu } from './server/menuPublic.mjs'
+// @ts-expect-error módulo JS do servidor, sem tipos
+import { handleMenuData } from './server/menuData.mjs'
+// @ts-expect-error módulo JS do servidor, sem tipos
+import { handleMenuSuggest } from './server/menuSuggestApi.mjs'
+// @ts-expect-error módulo JS do servidor, sem tipos
+import { handleMenuMedia } from './server/menuMedia.mjs'
 
 /** Expõe /api/recommend e /api/admin-chat no `npm run dev` e no `vite preview`, com a chave lida do .env (só no servidor). */
 function aiApi(): Plugin {
@@ -17,6 +25,10 @@ function aiApi(): Plugin {
     }
     server.middlewares.use((req, res, next) => {
       if (req.url?.startsWith('/auth/v1/')) return void handleAuth(req, res)
+      if (req.url?.startsWith('/api/menu-public')) return void handlePublicMenu(req, res)
+      if (req.url?.startsWith('/api/menu-data')) return void handleMenuData(req, res)
+      if (req.url?.startsWith('/api/menu-suggest')) return void handleMenuSuggest(req, res)
+      if (req.url?.startsWith('/api/menu-media')) return void handleMenuMedia(req, res)
       next()
     })
   }
@@ -50,3 +62,4 @@ export default defineConfig({
   base: './',
   plugins: [react(), aiApi()],
 })
+

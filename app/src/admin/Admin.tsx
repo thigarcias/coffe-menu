@@ -8,6 +8,7 @@ import { SessionsList } from './chat/SessionsList'
 import { setChatUi, useChatUi, useSessions } from './chat/store'
 import './admin.css'
 import { Team } from './Team'
+import { MenuEditor } from './MenuEditor'
 
 const num = new Intl.NumberFormat('pt-BR')
 const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -74,6 +75,7 @@ const SECTIONS = [
   { id: 'produtos', label: 'Produtos', sub: 'O que mais vende e o que reorganizar no cardápio.' },
   { id: 'ia', label: 'IA e Parecidos', sub: 'O que a recomendação e os produtos parecidos geram.' },
   { id: 'trafego', label: 'Tráfego', sub: 'Quando e de onde as pessoas chegam.' },
+  { id: 'cardapio', label: 'Cardápio', sub: 'Personalize e publique o cardápio da unidade.' },
   { id: 'equipe', label: 'Equipe', sub: 'Pessoas e permissões da cafeteria.' },
   { id: 'sessoes', label: 'Sessões', sub: 'Conversas com a IA. Continuam rodando mesmo com o chat fechado.' },
 ] as const
@@ -209,7 +211,7 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
 
       <main className="adm-main">
         {/* filtros: ficam no começo da página, não no topo fixo */}
-        {active !== 'sessoes' && active !== 'equipe' && (
+        {active !== 'sessoes' && active !== 'equipe' && active !== 'cardapio' && (
         <div className="adm-filters">
           <div className="adm-filters__row">
             <span className="adm-filters__label" id="adm-period-label">
@@ -533,6 +535,7 @@ function Dashboard({ onSignOut, signingOut }: AdminProps) {
         )}
 
         {active === 'equipe' && <Team />}
+        {active === 'cardapio' && <div id="cardapio" role="tabpanel" aria-labelledby="tab-cardapio"><h2 id="h-cardapio" className="sr-only">Cardápio</h2><MenuEditor /></div>}
 
         {/* ======================================================== sessões */}
         {active === 'sessoes' && (

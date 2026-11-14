@@ -1,5 +1,5 @@
 import menuData from '../data/menu.json'
-import type { Menu, MenuItem } from '../types'
+import type { Menu, MenuItem, TagGroup } from '../types'
 import { normalizeAnswers, reasonFrom, scoreMenu, topPicks } from '../../shared/recommend.mjs'
 
 export type Want = 'quente' | 'gelada' | 'comer' | 'tanto-faz'
@@ -38,10 +38,11 @@ const tagGroups = (menuData as unknown as Menu).tagGroups ?? []
  * Plano B, sem IA: o mesmo algoritmo por etiquetas que o servidor usa (shared/recommend.mjs).
  * Filtra o que a pessoa não pode ou não quer e pontua o resto; as 3 melhores, sem repetir a mesma bebida.
  */
-export function recommend(items: MenuItem[], a: QuizAnswers, limit = 3): Suggestion[] {
-  const scored = scoreMenu(items, tagGroups, normalizeAnswers(a))
+export function recommend(items: MenuItem[], a: QuizAnswers, limit = 3, groups: TagGroup[] = tagGroups): Suggestion[] {
+  const scored = scoreMenu(items, groups, normalizeAnswers(a))
   return topPicks(scored, limit).map((s) => ({ item: s.item, score: s.score, reasons: s.matched }))
 }
 
 /** Frase de motivo, sem IA. */
 export const reasonOf = (s: Suggestion) => reasonFrom(s.reasons, s.item)
+

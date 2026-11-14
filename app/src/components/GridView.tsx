@@ -46,9 +46,14 @@ export function GridView({ categories, items, counts, onOpen, onAdd, filter, onC
                       <span className="card__name">{item.name}</span>
                       <span className="card__price">{fromPrice(item)}</span>
                     </button>
-                    <button className="card__add" aria-label={`Adicionar ${item.name} à sacola`} onClick={() => onAdd(item)}>
+                    <button
+                      className={`card__add ${item.available === false ? 'card__add--unavailable' : ''}`}
+                      aria-label={item.available === false ? `${item.name} indisponível nesta unidade` : `Adicionar ${item.name} à sacola`}
+                      disabled={item.available === false}
+                      onClick={() => onAdd(item)}
+                    >
                       <span className="glass card__pill">
-                        <BagPlus size={15} /> Adicionar
+                        {item.available === false ? 'Indisponível' : <><BagPlus size={15} /> Adicionar</>}
                       </span>
                       {n > 0 && <span className="count" aria-label={`${n} na sacola`}>{n}</span>}
                     </button>
@@ -62,3 +67,4 @@ export function GridView({ categories, items, counts, onOpen, onAdd, filter, onC
     </div>
   )
 }
+

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { MenuItem } from '../types'
+import type { MenuItem, TagGroup } from '../types'
 import type { Avoid, Body, Caffeine, FlavorId, FoodKind, Moment, QuizAnswers, Taste, Want } from '../lib/recommend'
 import { suggest, type PickResult } from '../lib/ai'
 import { fromPrice } from '../lib/format'
@@ -11,6 +11,9 @@ interface Props {
   onPick: (item: MenuItem) => void
   counts: Map<string, number>
   onAdd: (item: MenuItem) => void
+  tagGroups?: TagGroup[]
+  /** Desliga a API, que ainda só conhece o cardápio de referência. */
+  localOnly?: boolean
 }
 
 const WANT: { v: Want; label: string; emoji: string }[] = [
@@ -82,7 +85,7 @@ const FLOWS: Record<Flow, StepId[]> = {
 const flowOf = (w: Want | null): Flow => (w === 'comer' ? 'food' : w === 'tanto-faz' ? 'any' : 'drink')
 
 /** "Ainda não sei, preciso de ajuda": de 5 a 6 perguntas rápidas (um toque cada) e três sugestões. */
-export function Quiz({ items, onPick, counts, onAdd }: Props) {
+export function Quiz({ items, onPick, counts, onAdd, tagGroups, localOnly = false }: Props) {
   const [step, setStep] = useState(0)
   const [want, setWant] = useState<Want | null>(null)
   // null = ainda não respondeu (nada aparece marcado); na hora de enviar vira a opção neutra
@@ -114,7 +117,7 @@ export function Quiz({ items, onPick, counts, onAdd }: Props) {
       ...(flow === 'any' ? { moment: moment ?? 'qualquer', taste: taste ?? 'equilibrado' } : {}),
     }
     setLoading(true)
-    const r = await suggest(items, a, text)
+    const r = await suggest(items, a, text, { localOnly, tagGroups })
     setLoading(false)
     setResult(r)
     // restrição alimentar e texto livre são dados sensíveis: não vão para o registro de interesse
@@ -152,9 +155,9 @@ export function Quiz({ items, onPick, counts, onAdd }: Props) {
       <div className="quiz">
         <h3 className="quiz__title">Achamos a sua cara</h3>
         <span className={`source source--${result.source}`}>
-          {result.source === 'ia' ? 'Sugerido pela IA' : 'Sugestão rápida (IA indisponível aqui)'}
+          {result.source === 'ia' ? 'Sugerido pela IA' : localOnly ? 'Sugestão por etiquetas' : 'Sugestão rápida (IA indisponível aqui)'}
         </span>
-        {!result.picks.length && <p className="quiz__empty">Nada bateu com tudo isso. Tenta tirar uma restrição?</p>}
+        {!result.picks.length && <p className="quiz__empty">{localOnly && (avoid.length > 0 || text.trim()) ? 'Não conseguimos confirmar restrições com segurança. Fale com a equipe da cafeteria antes de escolher.' : 'Nada bateu com tudo isso. Confira as opções com a equipe da cafeteria.'}</p>}
         <div className="sugs">
           {result.picks.map(({ item, why, matched }, i) => {
             const n = counts.get(item.id) ?? 0
@@ -185,11 +188,9 @@ export function Quiz({ items, onPick, counts, onAdd }: Props) {
             )
           })}
         </div>
-        {avoid.length > 0 && (
-          <p className="warn">
-            Filtramos pelo cardápio, mas não garantimos ausência de traços. Confirme com a equipe antes de pedir.
-          </p>
-        )}
+        <p className="warn">
+          As sugestões usam informações do cardápio, que podem estar incompletas. Elas não confirmam ausência de ingredientes ou traços. Confirme com a equipe antes de pedir.
+        </p>
         <button className="link" onClick={restart}>Refazer</button>
       </div>
     )
@@ -320,3 +321,4 @@ export function Quiz({ items, onPick, counts, onAdd }: Props) {
     </div>
   )
 }
+

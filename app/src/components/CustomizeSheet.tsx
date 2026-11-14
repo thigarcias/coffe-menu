@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import type { MenuItem, OptionGroup } from '../types'
+import type { Menu, MenuItem, OptionGroup } from '../types'
 import { groupsOf, normalize, optionSetOf, sizesOf, unitPrice, type Choices } from '../lib/cart'
 import { money } from '../lib/format'
 import { Minus, Plus } from './Icons'
 
 interface Props {
   item: MenuItem
+  menu: Menu
   initial: { choices: Choices; note: string }
   /** quantas unidades esta personalização vale (para o preço do botão) */
   qty: number
@@ -15,8 +16,8 @@ interface Props {
 const addLabel = (add: number) => (add > 0 ? `+ ${money(add)}` : '')
 
 /** Painel de personalização de uma linha da sacola: tamanho, café, leite, adicionais, sem chantilly e observação. */
-export function CustomizeSheet({ item, initial, qty, onSave }: Props) {
-  const set = optionSetOf(item)
+export function CustomizeSheet({ item, menu, initial, qty, onSave }: Props) {
+  const set = optionSetOf(item, menu)
   const groups = set ? groupsOf(item, set) : []
   const [choices, setChoices] = useState<Choices>(initial.choices)
   const [note, setNote] = useState(initial.note)
@@ -32,7 +33,7 @@ export function CustomizeSheet({ item, initial, qty, onSave }: Props) {
       return { ...c, [g.id]: { ...cur, [id]: Math.max(0, Math.min(g.max, q)) } }
     })
 
-  const total = Math.round(unitPrice(item, choices) * qty * 100) / 100
+  const total = Math.round(unitPrice(item, choices, menu) * qty * 100) / 100
 
   return (
     <div className="custom">
@@ -151,3 +152,4 @@ export function CustomizeSheet({ item, initial, qty, onSave }: Props) {
     </div>
   )
 }
+
