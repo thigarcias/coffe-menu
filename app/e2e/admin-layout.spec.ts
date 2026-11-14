@@ -302,3 +302,150 @@ test.describe('modo editar no celular', () => {
     expect(cardBox.y).toBeGreaterThanOrEqual(barBox.y + barBox.height - 1)
   })
 })
+
+test.describe('pedir à IA', () => {
+  const gelados = {
+    type: 'bars', title: 'Gelados por hora', subtitle: null, metric: 'orders', metrics: [], group_by: 'hour', period: '7d', compare: false,
+    limit: null, order: null, filter_source: null, filter_category: 'gelados', filter_product: null, filter_ai: null,
+  }
+  const proposta = { ok: true, changes: ['Adiciona o bloco “Gelados por hora” no topo', 'Esconde “Vendas no período”'], layout: [{ id: 's_ia1', kind: 'spec', span: 6, spec: gelados }, { id: 'funnel', kind: 'builtin', widget: 'funnel' }] }
+
+  async function fakeAi(page: Page, answer: unknown, status = 200) {
+    const requests: { headers: Record<string, string>; body: any }[] = []
+    await page.route('**/api/admin-personalize', async (route) => {
+      requests.push({ headers: route.request().headers(), body: route.request().postDataJSON() })
+      await route.fulfill({ status, json: answer })
+    })
+    return requests
+  }
+  const askBox = (page: Page) => page.getByRole('textbox', { name: 'Peça à IA' })
+
+  test('a proposta vira o rascunho na tela, mostra o que mudou e só grava ao Salvar (como "ia")', async ({ page }) => {
+    const { calls } = await fakeBackend(page)
+    const requests = await fakeAi(page, proposta)
+    await open(page, 'vendas')
+    await edit(page).click()
+    await askBox(page).fill('só os gelados por hora')
+    await page.getByRole('button', { name: 'Pedir', exact: true }).click()
+    await expect(page.getByText('A IA propôs')).toBeVisible()
+    await expect(page.getByText('Esconde “Vendas no período”')).toBeVisible()
+    await expect(page.locator('.adm-pin').getByRole('heading', { name: 'Gelados por hora' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Vendas no período' })).toHaveCount(0)
+    expect(calls.some((c) => c.rpc === 'save_dashboard_layout')).toBe(false) // nada gravado ainda
+    // o servidor recebe a seção, o pedido e o layout atual, com o login do dono
+    expect(requests[0].body).toMatchObject({ section: 'vendas', prompt: 'só os gelados por hora' })
+    expect(requests[0].body.current.map((i: any) => i.id)).toEqual(['sales', 'funnel'])
+    expect(requests[0].headers.authorization).toBe('Bearer access-token-de-teste')
+    await page.getByRole('button', { name: 'Salvar', exact: true }).click()
+    await expect(bar(page)).toHaveCount(0)
+    const save = calls.find((c) => c.rpc === 'save_dashboard_layout')!
+    expect(save.args).toMatchObject({ p_source: 'ia', p_section: 'vendas', p_expected_version: 0 })
+    expect(save.args.p_items.map((i: any) => i.id)).toEqual(['s_ia1', 'funnel'])
+  })
+
+  test('a proposta aparece à vista: nem sob o topo fixo, nem atrás da doca', async ({ page }) => {
+    await fakeBackend(page)
+    await fakeAi(page, proposta)
+    await open(page, 'vendas')
+    await edit(page).click()
+    await askBox(page).fill('só os gelados por hora')
+    await page.getByRole('button', { name: 'Pedir', exact: true }).click()
+    const prop = page.locator('.adm-ai__proposal')
+    await expect(prop).toBeVisible()
+    await expect
+      .poll(async () => {
+        const [p, top, dock] = await Promise.all([box(prop), box(page.locator('.adm-top')), box(page.locator('.adm-dock'))])
+        return p.y >= top.y + top.height - 1 && p.y + p.height <= dock.y + 1
+      }, { message: 'a proposta ficou escondida pelo topo ou pela doca' })
+      .toBe(true)
+  })
+
+  test('um pedido pronto (chip) funciona sem digitar', async ({ page }) => {
+    await fakeBackend(page)
+    const requests = await fakeAi(page, proposta)
+    await open(page, 'vendas')
+    await edit(page).click()
+    await page.getByRole('button', { name: 'Traz o funil para o topo' }).click()
+    await expect(page.getByText('A IA propôs')).toBeVisible()
+    expect(requests[0].body.prompt).toBe('Traz o funil para o topo')
+  })
+
+  test('Desfazer proposta devolve o rascunho de antes e Salvar volta a ficar desligado', async ({ page }) => {
+    await fakeBackend(page)
+    await fakeAi(page, proposta)
+    await open(page, 'vendas')
+    await edit(page).click()
+    await askBox(page).fill('x')
+    await page.getByRole('button', { name: 'Pedir', exact: true }).click()
+    await expect(page.getByText('A IA propôs')).toBeVisible()
+    await page.getByRole('button', { name: 'Desfazer proposta' }).click()
+    await expect(page.getByText('A IA propôs')).toHaveCount(0)
+    await expect(page.getByRole('heading', { name: 'Vendas no período' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Salvar', exact: true })).toBeDisabled()
+  })
+
+  test('Cancelar descarta a proposta sem gravar', async ({ page }) => {
+    const { calls } = await fakeBackend(page)
+    await fakeAi(page, proposta)
+    await open(page, 'vendas')
+    await edit(page).click()
+    await askBox(page).fill('x')
+    await page.getByRole('button', { name: 'Pedir', exact: true }).click()
+    await expect(page.getByText('A IA propôs')).toBeVisible()
+    await page.getByRole('button', { name: 'Cancelar' }).click()
+    await expect(page.getByRole('heading', { name: 'Vendas no período' })).toBeVisible()
+    expect(calls.some((c) => c.rpc === 'save_dashboard_layout')).toBe(false)
+  })
+
+  test('recusa da IA: mostra o aviso e não mexe no painel', async ({ page }) => {
+    await fakeBackend(page)
+    await fakeAi(page, { ok: false, kind: 'fora_do_escopo', message: 'Aqui eu só consigo ajustar o painel.' })
+    await open(page, 'vendas')
+    await edit(page).click()
+    await askBox(page).fill('me conta uma piada')
+    await page.getByRole('button', { name: 'Pedir', exact: true }).click()
+    await expect(page.getByText('Aqui eu só consigo ajustar o painel.')).toBeVisible()
+    await expect(page.getByText('A IA propôs')).toHaveCount(0)
+    await expect(page.getByRole('button', { name: 'Salvar', exact: true })).toBeDisabled()
+  })
+
+  test('rota da IA fora do ar: mensagem amigável e dá para continuar à mão', async ({ page }) => {
+    await fakeBackend(page)
+    await fakeAi(page, { error: 'quebrou por dentro' }, 500)
+    await open(page, 'vendas')
+    await edit(page).click()
+    await askBox(page).fill('traz o funil')
+    await page.getByRole('button', { name: 'Pedir', exact: true }).click()
+    await expect(page.getByText('A IA não está disponível agora')).toBeVisible()
+    await page.getByRole('button', { name: 'Esconder Do cardápio ao pedido' }).click() // o modo manual segue funcionando
+    await expect(page.getByRole('button', { name: 'Salvar', exact: true })).toBeEnabled()
+  })
+
+  test('"Pedir" só liga com texto; dois pedidos seguidos não perdem o "desfazer" do primeiro', async ({ page }) => {
+    await fakeBackend(page)
+    await fakeAi(page, proposta)
+    await open(page, 'vendas')
+    await edit(page).click()
+    await expect(page.getByRole('button', { name: 'Pedir', exact: true })).toBeDisabled()
+    await askBox(page).fill('um')
+    await page.getByRole('button', { name: 'Pedir', exact: true }).click()
+    await expect(page.getByText('A IA propôs')).toBeVisible()
+    await askBox(page).fill('dois')
+    await page.getByRole('button', { name: 'Pedir', exact: true }).click()
+    await page.getByRole('button', { name: 'Desfazer proposta' }).click()
+    await expect(page.getByRole('heading', { name: 'Vendas no período' })).toBeVisible() // voltou ao de ANTES de qualquer pedido
+  })
+
+  test('no celular: campo e pedidos prontos com 44px, sem rolar para o lado', async ({ page }) => {
+    await fakeBackend(page)
+    await open(page, 'vendas')
+    await edit(page).click()
+    expect((await box(askBox(page))).height).toBeGreaterThanOrEqual(43.5)
+    for (const chip of await page.locator('.adm-ai__chip').all()) expect((await box(chip)).height).toBeGreaterThanOrEqual(43.5)
+    const r = await page.evaluate(() => {
+      const adm = document.querySelector('.adm') as HTMLElement
+      return { overflowX: adm.scrollWidth - adm.clientWidth, wide: [...adm.querySelectorAll('.adm-editbar, .adm-ai__row, .adm-ai__chip')].filter((e) => e.getBoundingClientRect().right > adm.clientWidth + 0.5).length }
+    })
+    expect(r).toEqual({ overflowX: 0, wide: 0 })
+  })
+})

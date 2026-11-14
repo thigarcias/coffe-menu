@@ -20,6 +20,43 @@ export function clean(text, max = 700) {
   if (t.length > max) t = t.slice(0, max - 1).replace(/\s+\S*$/, '') + '…'
   return t
 }
+/** Como cada tipo de bloco funciona (lido pelos planejadores de IA do chat e da personalização). */
+export const BLOCK_TYPES_HELP = `TIPOS DE BLOCO
+- kpis: 1 a 4 indicadores. Use "metrics" (lista), "period", "compare". Deixe metric e group_by nulos.
+- line: uma métrica ao longo do tempo (por dia; por hora se period = today). Use "metric", "period", "compare". Deixe group_by nulo.
+- bars: ranking ou comparação por grupo. Use "metric", "group_by", "period", "limit" e "order". Com product, category, source e ai_usage ordena por valor; com weekday, hour e day mantém a ordem natural.
+- funnel: do cardápio ao pedido. Só "period".
+- heat: pedidos por dia da semana e hora. Só "period" (use 30d se o usuário não disser).
+- table: use "metrics" (1 a 4), "group_by", "period", "limit".
+- similar: trocas de um produto por outro na aba "Parecidos" (de → para), com os pedidos que geraram. Só "period".
+- ai_picks: o que a IA do cardápio mais sugere, quantos clicam e quantos pedem. Só "period".
+- showcase: vitrine "visto × pedido" por produto (estrelas, vitrine que não converte, escondidos, pouca atenção). Só "period".
+Campos que o bloco não usa: metric/group_by/order/limit/filtros = null e metrics = [].
+- ATENÇÃO: "line" só mostra evolução POR DIA (por hora só quando period = today). Para pedidos "por hora", "por dia da semana" ou qualquer outro agrupamento, use "bars" com group_by = hour ou weekday. Nunca ponha "por hora" no título de um bloco line com period diferente de today.`
+
+export const NN = (t, extra = {}) => ({ type: [t, 'null'], ...extra })
+/** Saída estrita de um bloco planejado (usada pelo planejador do chat e pela personalização). */
+export const BLOCK_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['type', 'title', 'subtitle', 'metric', 'metrics', 'group_by', 'period', 'compare', 'limit', 'order', 'filter_source', 'filter_category', 'filter_product', 'filter_ai'],
+  properties: {
+    type: { type: 'string', enum: BLOCK_TYPES },
+    title: { type: 'string' },
+    subtitle: NN('string'),
+    metric: { type: ['string', 'null'], enum: [...Object.keys(METRICS), null] },
+    metrics: { type: 'array', items: { type: 'string', enum: Object.keys(METRICS) } },
+    group_by: { type: ['string', 'null'], enum: [...Object.keys(DIMENSIONS), null] },
+    period: { type: 'string', enum: PERIOD_IDS },
+    compare: { type: 'boolean' },
+    limit: NN('integer'),
+    order: { type: ['string', 'null'], enum: ['desc', 'asc', null] },
+    filter_source: { type: ['string', 'null'], enum: [...FILTERS.source, null] },
+    filter_category: { type: ['string', 'null'], enum: [...FILTERS.category, null] },
+    filter_product: { type: ['string', 'null'], enum: [...FILTERS.product, null] },
+    filter_ai: { type: ['string', 'null'], enum: [...FILTERS.ai_usage, null] },
+  },
+}
 export const isEnum = (v, list) => typeof v === 'string' && list.includes(v)
 
 /** Confere o plano contra o catálogo. Devolve só blocos válidos e já normalizados. */
@@ -44,6 +81,9 @@ export function normalizePlan(plan) {
       filter_product: isEnum(b.filter_product, FILTERS.product) ? b.filter_product : null,
       filter_ai: isEnum(b.filter_ai, FILTERS.ai_usage) ? b.filter_ai : null,
     }
+    // "line" só sabe mostrar a evolução por dia (por hora só em "hoje"). Pedido de linha agrupada por
+    // hora, dia da semana, produto etc. é, na verdade, um gráfico de barras: corrige para o título não mentir.
+    if (spec.type === 'line' && spec.group_by && !['none', 'day'].includes(spec.group_by) && spec.period !== 'today') spec.type = 'bars'
     out.push(spec)
   }
   return out

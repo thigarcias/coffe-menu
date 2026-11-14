@@ -22,6 +22,13 @@ Cardápio interativo para cafeterias (demo de venda para donos), com feed estilo
 - **Testes por escopo:** mudança isolada numa tela roda só os specs dela; código compartilhado roda a suíte completa (regra no `CLAUDE.md`).
 - **Pendências desta rodada:** testar o "Preencher com IA" com o modelo de verdade (os testes simulam); o estoque não desconta com pedidos (checkout simulado); limite de uso do chat por conta.
 
+## Atualização de 14/11/2026 (tarde): personalizar o painel
+
+- **Feito:** o Dashboard virou lista de cartões e o dono personaliza cada seção (esconder, reordenar, desfazer, voltar ao padrão) à mão ou pedindo à IA. Detalhes, arquivos e testes em `docs/06-painel.md`, seção "Personalizar o painel".
+- **A migração `20261114220000_coffe_menu_dashboard_layout.sql` está no repositório e testada no PGlite, mas NÃO foi aplicada no `catalogo`.** Aplicar (conector Supabase) e **manter o arquivo igual ao que foi aplicado**. Sem ela o painel funciona no padrão e o botão Personalizar não aparece.
+- **Falta:** agrupamentos (regra viva), fixar bloco do chat e escolher cafeteria com mais de uma conta.
+- Decisões do usuário nesta rodada: padrão **editável no lugar** (com "voltar ao padrão"), painel **da cafeteria e compartilhado com a equipe**, salvo no **servidor** (Supabase `catalogo`), novas categorias como **agrupamentos para análise** (não mexem no cardápio do cliente), IA **monta com peças prontas** (nunca código).
+
 ## O que existe
 
 | Área | O que é | Onde |
@@ -60,7 +67,7 @@ Em ordem sugerida. O detalhamento da fase 1 está em `docs/04-mvp.md`, seção "
 
 **2. Chat e painel**
 - **Gráfico livre com Vega-Lite** e visualizações novas (fluxo/Sankey, quadrante interativo, pequenos múltiplos), com clique no ponto virando pergunta.
-- **Fixar** painéis gerados e uma aba "Meus painéis".
+- Agrupamentos e fixar bloco do chat (a personalização do Dashboard já existe: ver `docs/06-painel.md`).
 
 **3. Quiz**
 - **Revisar a qualidade das etiquetas**: 10 bebidas não têm etiqueta de temperatura (o filtro usa o número `iced`, então não quebra), e "quente + sem café" fica com poucos itens (cerca de 9). Etiqueta errada vira recomendação errada.

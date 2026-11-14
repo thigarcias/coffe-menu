@@ -1,4 +1,5 @@
 import { handleAdminChat } from './adminChat.mjs'
+import { handlePersonalize } from './adminPersonalize.mjs'
 
 /** Confere o login do dono do painel. Devolve o usuário, ou responde o erro e devolve null. */
 export async function requireAdmin(req, res) {
@@ -43,6 +44,11 @@ export async function requireAdmin(req, res) {
 export async function handleProtectedAdminChat(req, res) {
   if (!(await requireAdmin(req, res))) return
   return handleAdminChat(req, res)
+}
+
+export async function handleProtectedPersonalize(req, res) {
+  if (!(await requireAdmin(req, res))) return
+  return handlePersonalize(req, res)
 }
 
 function reject(res, status, error) {

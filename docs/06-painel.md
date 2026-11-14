@@ -42,6 +42,54 @@ Uma dashboard numa rota do mesmo app (`/admin`), pensada para a dona ou o dono d
 - **Disponibilidade e estoque:** só lista produtos do cardápio **publicado**. Por produto: **miniatura da foto**, quantidade (−, campo, +) e Disponível/Indisponível. **Filtros:** busca, situação (Todos, Perto de acabar, Indisponíveis, Disponíveis, Sem controle), categoria e ordem (nome, menos ou mais estoque primeiro); "Perto de acabar" usa um limite que a pessoa ajusta (padrão: até 5 unidades). Quantidade 0 = Esgotado (indisponível). Quantidade vazia = sem controle. O cardápio público só recebe `available`; a quantidade é visível só para o dono. O estoque **não é descontado por pedidos** (o checkout é simulado).
 - **Mídia:** fotos novas vão para o bucket privado. As fotos e vídeos da biblioteca de referência (`menu/*.jpg`, `video/*.mp4`, arquivos do app) também podem ser publicados.
 
+## Personalizar o painel (Dashboard)
+
+14/11/2026 · o dono ajusta cada seção do Dashboard do jeito que enxerga, à mão ou pedindo à IA, e pode voltar ao padrão. **Estado:** código e testes prontos; **a migração ainda não foi aplicada no Supabase `catalogo`**. Até lá o painel segue no padrão e o botão **Personalizar** nem aparece (o painel nunca quebra por falta do servidor).
+
+### Como funciona
+
+- **O padrão mora no código** (`DEFAULT_LAYOUT` em `app/src/admin/layout/model.ts`): cada seção é uma lista de cartões. Os 15 cartões do padrão estão em `widgets.tsx` (mesmo HTML de antes da refatoração).
+- **O que o dono muda vira uma versão por seção**, salva por cafeteria e **compartilhada com a equipe**. Só há versão nova ao tocar em Salvar. `items` nulo na versão mais alta = "voltar ao padrão". O histórico nunca é apagado.
+- **Botão Personalizar** no cabeçalho de cada seção abre o modo editar: subir/descer, esconder, **Cartões escondidos** (primeiro os da própria seção; os de outras seções ficam recolhidos em "Trazer cartões de outras seções"), largura (metade/inteira) dos blocos criados pela IA, **Desfazer a última mudança salva** e **Voltar ao padrão** (em dois toques, sem diálogo do navegador). **Salvar e Cancelar ficam numa doca fixa no rodapé**, com o aviso "Mudanças não salvas".
+- **Peça à IA** (dentro do modo editar): caixa de texto e pedidos prontos. A IA devolve **operações** (`add_block`, `replace_block`, `add_builtin`, `remove`, `move`, `set_span`), nunca texto livre nem código. O servidor valida e aplica sobre o layout atual; a **proposta vira o rascunho na tela**, com a lista de mudanças **escrita pelo servidor**, e "Desfazer proposta". Só grava ao Salvar (versão marcada como `ia`).
+- **Bloco criado pela IA guarda só a receita** (tipo, métrica, agrupamento, período, filtros), nunca números: o motor calcula a cada abertura (`SpecCard.tsx` + `shared/blocks.mjs`), então acompanha o período e nunca fica velho. Receita que o motor não entende vira o aviso "Este bloco não está disponível agora".
+- Uma `line` com agrupamento por hora, dia da semana etc. é **corrigida para `bars`** (a linha só mostra dias). Foi um erro real da IA no teste com o modelo de verdade.
+
+### Onde está
+
+| O quê | Onde |
+| --- | --- |
+| Modelo, padrão, cartões, edição | `app/src/admin/layout/` (`model.ts`, `widgets.tsx`, `edit.ts`, `SectionView.tsx`, `SpecCard.tsx`, `layout.css`) |
+| Salvar, carregar, desfazer | `layout/api.ts`, `layout/useLayouts.ts`; RPCs liberadas em `server/menuData.mjs` (`get/save/restore_dashboard_layout`) |
+| Banco | `app/supabase/migrations/20261114220000_coffe_menu_dashboard_layout.sql` (versões append-only, RLS por dono, versão esperada com conflito 40001 → 409) |
+| IA | `server/adminPersonalize.mjs`, rota `POST /api/admin-personalize` (mesmo login de admin do chat; registrada nos três lugares), cliente em `layout/personalizeApi.ts` |
+| Catálogo compartilhado | `shared/layout.mjs` (cartões, seções, larguras) e `shared/blocks.mjs` (receita → bloco, também no navegador) |
+
+**Cuidado com o CSS:** `.adm-btn*` é do chat (`chat.css`). Os botões do modo editar usam `.adm-lb*` de propósito; não reutilize o nome antigo.
+
+### Defesas da IA de personalização
+
+Pré-filtro sem modelo (tamanho, "ignore as instruções", pedir o prompt, pedido de código) que **nem chama o modelo**; o pedido vai ao modelo só como dado entre `<pedido>`; saída estrita revalidada (`sanitizeLayout` e `normalizePlan` descartam id, tipo, filtro ou largura inventados); até 6 operações, 14 cartões e 8 blocos da IA por seção; recusas com texto **fixo** do servidor; erro interno vira mensagem amigável e o texto do erro não vai à tela.
+
+### Como testar
+
+```bash
+cd app
+npx playwright test e2e/admin-layout.spec.ts      # navegador: edição, IA (simulada), celular (5 aparelhos)
+npx playwright test e2e/server/personalize.spec.ts --project=server   # servidor com modelo falso + deriva do catálogo (TS, JS e SQL)
+npm run test:menu-db                                # migração no PGlite (versões, reset, desfazer, conflito, isolamento)
+NODE_USE_ENV_PROXY=1 NODE_EXTRA_CA_CERTS=/root/.ccr/ca-bundle.crt OPENAI_API_KEY=proxy-injected \
+  node scripts/personalize-smoke.mjs vendas "Só os gelados, por hora"   # IA de verdade
+```
+
+### O que falta
+
+1. **Aplicar a migração no `catalogo`** (compartilhado com outros apps: só há tabelas novas do coffe-menu). Depois conferir com um login real.
+2. **Agrupamentos** ("novas categorias" para analisar, como regra viva: categoria + etiquetas + faixa de preço, usados como filtro e como agrupamento nos blocos). Pede tabela própria e uma extensão do `runQuery`.
+3. **Fixar no painel** um bloco que o chat gerou (hoje só dá para pedir à IA do modo editar).
+4. Escolher a cafeteria quando a conta tiver mais de uma (hoje usa a primeira, como os números do painel).
+5. A equipe ainda é demonstração: hoje todos que têm acesso editam. Quando houver papéis, decidir quem pode personalizar.
+
 ## Chat com a IA
 
 O dono conversa com a IA do painel, que **monta gráficos, tabelas e análises sob pedido** com os dados do painel. A IA é o **GPT-6 Luna** (esforço `high`), chamada só pelo servidor.
@@ -82,7 +130,7 @@ Os testes automáticos **não** chamam a OpenAI: `e2e/server/` usa um modelo fal
 ### Próximas etapas
 
 1. **Gráfico livre** com Vega-Lite e visualizações novas (fluxo/Sankey, quadrante, pequenos múltiplos), com clique no ponto virando pergunta.
-2. **Fixar** painéis gerados e uma aba "Meus painéis".
+2. ~~Fixar painéis gerados~~ (a personalização do Dashboard está em "Personalizar o painel"). Falta fixar um bloco **direto do chat** e os agrupamentos.
 3. Rodar a resposta no servidor (segundo plano de verdade), login e dados reais. Isso depende da **próxima fase** (banco no Supabase, back-end separado e painel do dono do produto), descrita em `04-mvp.md`.
 
 ## Onde está o código

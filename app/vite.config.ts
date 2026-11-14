@@ -4,7 +4,7 @@ import { defineConfig, loadEnv, type Plugin } from 'vite'
 // @ts-expect-error módulo JS do servidor, sem tipos
 import { handleRecommend } from './server/ai.mjs'
 // @ts-expect-error módulo JS do servidor, sem tipos
-import { handleProtectedAdminChat } from './server/protectedAdminChat.mjs'
+import { handleProtectedAdminChat, handleProtectedPersonalize } from './server/protectedAdminChat.mjs'
 // @ts-expect-error módulo JS do servidor, sem tipos
 import { handleAuth } from './server/auth.mjs'
 // @ts-expect-error módulo JS do servidor, sem tipos
@@ -41,12 +41,20 @@ function aiApi(): Plugin {
         if (req.method !== 'POST') return next()
         void handleProtectedAdminChat(req, res)
       })
+      server.middlewares.use('/api/admin-personalize', (req, res, next) => {
+        if (req.method !== 'POST') return next()
+        void handleProtectedPersonalize(req, res)
+      })
     },
     configureServer(server) {
       authApi(server)
       server.middlewares.use('/api/admin-chat', (req, res, next) => {
         if (req.method !== 'POST') return next()
         void handleProtectedAdminChat(req, res)
+      })
+      server.middlewares.use('/api/admin-personalize', (req, res, next) => {
+        if (req.method !== 'POST') return next()
+        void handleProtectedPersonalize(req, res)
       })
       server.middlewares.use('/api/recommend', (req, res, next) => {
         if (req.method !== 'POST') return next()

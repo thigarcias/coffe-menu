@@ -74,3 +74,17 @@
   /* no modo editar o invólucro já ocupa as colunas: o bloco dentro dele preenche o espaço */
   .adm-ed > .adm-pin.is-wrapped { grid-column: auto; }
 }
+
+/* pedido à IA dentro da barra de edição */
+.adm-ai { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; min-width: 0; }
+.adm-ai__label { font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--a-sage); }
+.adm-ai__row { display: flex; gap: 8px; min-width: 0; }
+.adm-ai__input { flex: 1; min-width: 0; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--a-line); background: #fff; font: inherit; font-size: 15px; color: var(--a-ink); }
+.adm-ai__input:focus-visible { outline: 2px solid var(--a-sage); outline-offset: 1px; }
+.adm-ai__chips { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.adm-ai__chip { min-height: 44px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--a-line); background: rgba(255, 255, 255, 0.7); font-size: 13px; font-weight: 600; color: var(--a-ink-2); text-align: left; cursor: pointer; max-width: 100%; white-space: normal; }
+.adm-ai__chip:disabled { opacity: 0.5; cursor: default; }
+.adm-ai__note { margin: 0; padding: 10px 12px; border-radius: 14px; font-size: 13px; color: var(--a-warn); background: #f8e7da; }
+.adm-ai__proposal { padding: 10px 12px; border-radius: 16px; background: var(--a-matcha); font-size: 13px; color: var(--a-ink); }
+.adm-ai__proposal ul { margin: 4px 0 2px; padding-left: 18px; }
+.adm-ai__proposal .adm-lb { margin-left: -10px; }

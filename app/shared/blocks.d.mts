@@ -8,3 +8,6 @@ export const isEnum: (v: unknown, list: readonly string[]) => boolean
 export function normalizePlan(plan: { blocks?: unknown[] } | null | undefined): BlockSpec[]
 /** Executa uma receita no motor e devolve o bloco pronto para a tela e um resumo com os números. */
 export function resolveBlock(spec: BlockSpec): { block: Block; summary: Record<string, unknown> }
+export const NN: (t: string, extra?: Record<string, unknown>) => Record<string, unknown>
+export const BLOCK_SCHEMA: Record<string, unknown>
+export const BLOCK_TYPES_HELP: string
