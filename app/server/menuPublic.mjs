@@ -13,10 +13,17 @@ export async function handlePublicMenu(req, res) {
     if (!response.ok) { res.statusCode = 502; return res.end(JSON.stringify({ error: 'Cardápio indisponível.' })) }
     const data = await response.json()
     if (!data) { res.statusCode = 404; return res.end(JSON.stringify({ error: 'Unidade não encontrada.' })) }
+    // Foto enviada pelo editor (chave privada no Storage): vira URL desta API. Arquivo do próprio app
+    // (cardápio de referência: menu/x.jpg, video/x.mp4): vai como caminho absoluto do site.
     const mediaUrl = (key) => typeof key === 'string' && /^[0-9a-f-]{36}\/[0-9a-f-]{36}\.(jpg|png|webp)$/i.test(key)
       ? `/api/menu-media?slug=${encodeURIComponent(slug)}&key=${encodeURIComponent(key)}` : null
+    const staticAsset = (path, kinds) => typeof path === 'string' && new RegExp(`^(${kinds})/[A-Za-z0-9._-]+$`).test(path) && !path.includes('..') ? `/${path}` : null
     if (data.menu && Array.isArray(data.menu.items)) {
-      for (const item of data.menu.items) item.image = mediaUrl(item.image)
+      for (const item of data.menu.items) {
+        item.image = mediaUrl(item.image) ?? staticAsset(item.image, 'menu')
+        item.video = staticAsset(item.video, 'video') ?? undefined
+        if (item.video === undefined) delete item.video
+      }
       const branding = data.menu.cafe?.branding
       if (branding) { branding.logo_url = mediaUrl(branding.logo_key); delete branding.logo_key }
     }
