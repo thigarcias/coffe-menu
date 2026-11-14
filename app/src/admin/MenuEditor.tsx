@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ComponentType, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type ComponentType, type FormEvent } from 'react'
 import QRCode from 'qrcode'
 import App from '../App'
 import menuReference from '../data/menu.json'
@@ -40,6 +40,7 @@ type Publication = {
   menu?: EditorMenu
 }
 type Availability = { product_id: string; available: boolean; quantity?: number | null; note?: string | null; updated_at?: string }
+type StockStatus = 'todos' | 'disponiveis' | 'indisponiveis' | 'baixo' | 'sem-controle'
 type StockEntry = { available: boolean; quantity: number | null; note: string | null }
 type PublishedMenu = Publication & { menu: EditorMenu }
 type EditorWorkspace = {
@@ -332,6 +333,10 @@ export function MenuEditor() {
   const [newDraftName, setNewDraftName] = useState('')
   const [search, setSearch] = useState('')
   const [stockSearch, setStockSearch] = useState('')
+  const [stockStatus, setStockStatus] = useState<StockStatus>('todos')
+  const [stockCategory, setStockCategory] = useState('')
+  const [stockSort, setStockSort] = useState<'nome' | 'menos' | 'mais'>('nome')
+  const [lowLimit, setLowLimit] = useState(5)
   const [addingCategory, setAddingCategory] = useState(false)
   const [collapsedCats, setCollapsedCats] = useState<string[]>([])
   const [productEditorOpen, setProductEditorOpen] = useState(false)
@@ -875,6 +880,27 @@ export function MenuEditor() {
 
   const availablePublishedItems = workspace?.published?.menu.items ?? []
   const stock = workspace ? stockMap(workspace.availability) : new Map<string, StockEntry>()
+  const isLow = (entry: StockEntry | undefined) => entry?.quantity != null && entry.quantity > 0 && entry.quantity <= lowLimit
+  const stockRows = useMemo(() => {
+    const query = stockSearch.trim().toLocaleLowerCase('pt-BR')
+    const entryOf = (id: string): StockEntry => stock.get(id) ?? { available: true, quantity: null, note: null }
+    const rows = availablePublishedItems.filter((item) => {
+      const entry = entryOf(item.id)
+      if (query && !item.name.toLocaleLowerCase('pt-BR').includes(query)) return false
+      if (stockCategory && item.category !== stockCategory) return false
+      if (stockStatus === 'disponiveis') return entry.available && entry.quantity !== 0
+      if (stockStatus === 'indisponiveis') return !entry.available || entry.quantity === 0
+      if (stockStatus === 'baixo') return isLow(entry)
+      if (stockStatus === 'sem-controle') return entry.quantity == null
+      return true
+    })
+    // sem controle de estoque vai para o fim quando se ordena por quantidade
+    const qty = (id: string, empty: number) => entryOf(id).quantity ?? empty
+    if (stockSort === 'menos') rows.sort((a, b) => qty(a.id, Infinity) - qty(b.id, Infinity) || a.name.localeCompare(b.name, 'pt-BR'))
+    else if (stockSort === 'mais') rows.sort((a, b) => qty(b.id, -1) - qty(a.id, -1) || a.name.localeCompare(b.name, 'pt-BR'))
+    return rows
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [availablePublishedItems, workspace?.availability, stockSearch, stockCategory, stockStatus, stockSort, lowLimit])
 
   if (loading && !workspace && !cafes.length) return <section className="adm-sec menu-editor" aria-labelledby="menu-editor-title"><div className="adm-card menu-editor__loading" role="status">Carregando suas cafeterias…</div></section>
   if (error && !workspace && !loading) return <section className="adm-sec menu-editor" aria-labelledby="menu-editor-title"><div className="adm-card"><h2 id="menu-editor-title">Editor de cardápio</h2><p className="menu-editor__error" role="alert">{error}</p></div></section>
@@ -976,12 +1002,25 @@ export function MenuEditor() {
         {workspace.published && availablePublishedItems.length > 0 && <>
           <div className="menu-editor__stock-summary">
             <span><strong>{availablePublishedItems.length}</strong> produtos</span>
-            <span><strong>{availablePublishedItems.filter((item) => stock.get(item.id)?.available === false).length}</strong> indisponíveis</span>
+            <span><strong>{availablePublishedItems.filter((item) => stock.get(item.id)?.available === false || stock.get(item.id)?.quantity === 0).length}</strong> indisponíveis</span>
+            <span><strong>{availablePublishedItems.filter((item) => isLow(stock.get(item.id))).length}</strong> perto de acabar</span>
             <span><strong>{availablePublishedItems.filter((item) => stock.get(item.id)?.quantity != null).length}</strong> com estoque controlado</span>
           </div>
-          <label className="menu-editor__search"><span className="menu-editor__sr-only">Buscar produto na disponibilidade</span><input type="search" value={stockSearch} onChange={(event) => setStockSearch(event.target.value)} placeholder="Buscar produto" aria-label="Buscar produto na disponibilidade" /></label>
-          <ul className="menu-editor__availability-list">{availablePublishedItems.filter((item) => !stockSearch.trim() || item.name.toLocaleLowerCase('pt-BR').includes(stockSearch.trim().toLocaleLowerCase('pt-BR'))).map((item) => (
-            <StockRow key={`${item.id}:${stock.get(item.id)?.quantity ?? 'x'}`} name={item.name} entry={stock.get(item.id) ?? { available: true, quantity: null, note: null }} busy={busy} onChange={(change) => void setStock(item.id, change)} />
+          <div className="menu-editor__stock-filters" role="group" aria-label="Filtros da disponibilidade">
+            <label className="menu-editor__search"><span className="menu-editor__sr-only">Buscar produto na disponibilidade</span><input type="search" value={stockSearch} onChange={(event) => setStockSearch(event.target.value)} placeholder="Buscar produto" aria-label="Buscar produto na disponibilidade" /></label>
+            <div className="menu-editor__chips" role="group" aria-label="Situação do estoque">
+              {([['todos', 'Todos'], ['baixo', 'Perto de acabar'], ['indisponiveis', 'Indisponíveis'], ['disponiveis', 'Disponíveis'], ['sem-controle', 'Sem controle']] as const).map(([id, label]) => <button key={id} type="button" className={stockStatus === id ? 'menu-editor__chip-button is-on' : 'menu-editor__chip-button'} aria-pressed={stockStatus === id} onClick={() => setStockStatus(id)}>{label}</button>)}
+            </div>
+            <div className="menu-editor__filter-row">
+              <label><span>Categoria</span><select aria-label="Filtrar por categoria" value={stockCategory} onChange={(event) => setStockCategory(event.target.value)}><option value="">Todas</option>{(workspace.published.menu.categories ?? []).map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>
+              <label><span>Ordenar por</span><select aria-label="Ordenar produtos" value={stockSort} onChange={(event) => setStockSort(event.target.value as 'nome' | 'menos' | 'mais')}><option value="nome">Nome</option><option value="menos">Menos estoque primeiro</option><option value="mais">Mais estoque primeiro</option></select></label>
+              <label><span>Perto de acabar: até</span><input inputMode="numeric" value={lowLimit} aria-label="Perto de acabar: até quantas unidades" onChange={(event) => setLowLimit(Math.min(1000, Number(event.target.value.replace(/[^0-9]/g, '')) || 0))} /></label>
+            </div>
+            <p className="menu-editor__filter-count" role="status">{stockRows.length === availablePublishedItems.length ? `Mostrando todos os ${stockRows.length} produtos` : `Mostrando ${stockRows.length} de ${availablePublishedItems.length} produtos`}{(stockStatus !== 'todos' || stockCategory || stockSearch.trim()) && <button type="button" className="menu-editor__text-button" onClick={() => { setStockStatus('todos'); setStockCategory(''); setStockSearch(''); setStockSort('nome') }}>Limpar filtros</button>}</p>
+          </div>
+          {!stockRows.length && <p className="menu-editor__empty-note">Nenhum produto com esses filtros.</p>}
+          <ul className="menu-editor__availability-list">{stockRows.map((item) => (
+            <StockRow key={`${item.id}:${stock.get(item.id)?.quantity ?? 'x'}`} name={item.name} image={item.image ?? null} cafeId={workspace.cafe.id} low={isLow(stock.get(item.id))} entry={stock.get(item.id) ?? { available: true, quantity: null, note: null }} busy={busy} onChange={(change) => void setStock(item.id, change)} />
           ))}</ul>
         </>}
       </section>}
@@ -1092,7 +1131,26 @@ export function MenuEditor() {
   </section>
 }
 
-function StockRow({ name, entry, busy, onChange }: { name: string; entry: StockEntry; busy: boolean; onChange: (change: { available: boolean; quantity: number | null }) => void }) {
+/** Miniatura do produto: só busca a foto privada quando a linha aparece na tela. */
+function Thumb({ image, cafeId }: { image: string | null; cafeId: string }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const [url, setUrl] = useState('')
+  useEffect(() => {
+    if (!image) return
+    if (!isPrivateKey(cafeId, image)) { setUrl(/^(https?:|blob:|data:)/.test(image) ? image : `${import.meta.env.BASE_URL}${image}`); return }
+    const node = ref.current
+    if (!node) return
+    let cancelled = false
+    const load = () => void resolvePrivateImage(cafeId, image).then((next) => { if (!cancelled) setUrl(next) }).catch(() => {})
+    if (typeof IntersectionObserver === 'undefined') { load(); return () => { cancelled = true } }
+    const observer = new IntersectionObserver((entries) => { if (entries.some((entry) => entry.isIntersecting)) { observer.disconnect(); load() } })
+    observer.observe(node)
+    return () => { cancelled = true; observer.disconnect() }
+  }, [image, cafeId])
+  return <span className="menu-editor__thumb" ref={ref}>{url ? <img src={url} alt="" loading="lazy" decoding="async" /> : <span className="menu-editor__thumb-empty" aria-hidden>☕</span>}</span>
+}
+
+function StockRow({ name, image, cafeId, low, entry, busy, onChange }: { name: string; image: string | null; cafeId: string; low: boolean; entry: StockEntry; busy: boolean; onChange: (change: { available: boolean; quantity: number | null }) => void }) {
   const [draft, setDraft] = useState(entry.quantity == null ? '' : String(entry.quantity))
   const commit = (value: string) => {
     const clean = value.trim()
@@ -1104,7 +1162,7 @@ function StockRow({ name, entry, busy, onChange }: { name: string; entry: StockE
   const step = (delta: number) => onChange({ available: true, quantity: Math.max(0, (entry.quantity ?? 0) + delta) })
   const label = entry.quantity === 0 ? 'Esgotado' : entry.available ? 'Disponível' : 'Indisponível'
   return <li className="menu-editor__stock-row">
-    <div className="menu-editor__stock-name"><strong>{name}</strong><small>{entry.quantity == null ? 'Sem controle de estoque' : `${entry.quantity} em estoque`}</small></div>
+    <div className="menu-editor__stock-product"><Thumb image={image} cafeId={cafeId} /><div className="menu-editor__stock-name"><strong>{name}</strong><small className={low ? 'is-low' : undefined}>{entry.quantity == null ? 'Sem controle de estoque' : low ? `Perto de acabar · ${entry.quantity} em estoque` : `${entry.quantity} em estoque`}</small></div></div>
     <div className="menu-editor__stepper" role="group" aria-label={`Quantidade de ${name}`}>
       <button type="button" className="menu-editor__secondary" aria-label={`Diminuir estoque de ${name}`} onClick={() => step(-1)} disabled={busy || entry.quantity == null || entry.quantity <= 0}>−</button>
       <input inputMode="numeric" aria-label={`Quantidade em estoque de ${name}`} placeholder="Qtd." value={draft} disabled={busy} onChange={(event) => setDraft(event.target.value.replace(/[^0-9]/g, ''))} onBlur={(event) => commit(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); commit((event.target as HTMLInputElement).value) } }} />

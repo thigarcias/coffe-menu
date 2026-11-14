@@ -159,3 +159,46 @@ test('editor, disponibilidade e diálogo cabem na largura da tela, sem rolar par
   expect(box!.x + box!.width).toBeLessThanOrEqual(page.viewportSize()!.width + 0.5)
   expect(await dialog.evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(0)
 })
+
+test('disponibilidade: miniatura do produto e filtros por situação, categoria e ordem de estoque', async ({ page }) => {
+  const [low, out, plenty] = items
+  const stock = { [low.id]: { available: true, quantity: 3, note: null }, [out.id]: { available: false, quantity: 0, note: null }, [plenty.id]: { available: true, quantity: 50, note: null } }
+  await openEditor(page, { stock })
+  await page.getByRole('tab', { name: 'Disponibilidade', exact: true }).click()
+  const list = page.locator('.menu-editor__availability-list')
+  const rows = list.getByRole('listitem')
+  await expect(rows).toHaveCount(items.length)
+  // miniatura de cada produto
+  const first = rows.first()
+  await expect(first.locator('.menu-editor__thumb img')).toBeVisible()
+  const thumb = await first.locator('.menu-editor__thumb').boundingBox()
+  expect(thumb!.width).toBeGreaterThanOrEqual(40)
+  // perto de acabar (até 5): só o de 3 unidades
+  await page.getByRole('button', { name: 'Perto de acabar', exact: true }).click()
+  await expect(rows).toHaveCount(1)
+  await expect(rows.first()).toContainText(low.name)
+  await expect(rows.first()).toContainText('Perto de acabar')
+  // mudar o limite traz o de 50
+  await page.getByLabel('Perto de acabar: até quantas unidades').fill('60')
+  await expect(rows).toHaveCount(2)
+  await page.getByLabel('Perto de acabar: até quantas unidades').fill('5')
+  // indisponíveis inclui o esgotado
+  await page.getByRole('button', { name: 'Indisponíveis', exact: true }).click()
+  await expect(rows).toHaveCount(1)
+  await expect(rows.first()).toContainText(out.name)
+  // sem controle: os que não têm quantidade
+  await page.getByRole('button', { name: 'Sem controle', exact: true }).click()
+  await expect(rows).toHaveCount(items.length - 3)
+  // categoria
+  await page.getByRole('button', { name: 'Todos', exact: true }).click()
+  await page.getByLabel('Filtrar por categoria').selectOption(categories[1].id)
+  await expect(rows).toHaveCount(items.filter((item: any) => item.category === categories[1].id).length)
+  await expect(page.getByRole('status').filter({ hasText: /Mostrando/ })).toContainText('de')
+  await page.getByRole('button', { name: 'Limpar filtros' }).click()
+  await expect(rows).toHaveCount(items.length)
+  // ordenar: menos estoque primeiro (esgotado), mais estoque primeiro (50)
+  await page.getByLabel('Ordenar produtos').selectOption('menos')
+  await expect(rows.first()).toContainText(out.name)
+  await page.getByLabel('Ordenar produtos').selectOption('mais')
+  await expect(rows.first()).toContainText(plenty.name)
+})

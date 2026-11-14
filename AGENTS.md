@@ -12,7 +12,7 @@ Instruções para agentes de código (Codex e outros). O projeto é um cardápio
 
 - **Português do Brasil** em tudo: conversa, textos do app, commits e documentação.
 - **Commits vão direto na `main`**. Ignore a branch `claude/…` (era da sessão do Claude).
-- **Rode `cd app && npm run test:e2e` e só commite se todos os testes passarem.** Eles não chamam a OpenAI.
+- **Testes:** mudança isolada numa tela = `tsc` + só os specs dela; mudança em código compartilhado (CSS/layout do painel, tipos, `shared/`, servidor, migrações) = `cd app && npm run test:e2e` completo. Só commite com o que foi rodado passando. Eles não chamam a OpenAI. Detalhes no `CLAUDE.md`.
 - Mobile first (320px a 430px), alvos de toque de 44px, botão de ícone com texto de apoio.
 - Toda IA usa `gpt-6-luna` com `reasoning.effort: "high"` (fixos em `app/server/openai.mjs`). A chave `OPENAI_API_KEY` **nunca** vai ao navegador.
 - **Não afrouxe o guardrail do chat** (`app/server/adminChat.mjs`) sem rodar `e2e/server/guardrail.spec.ts`.
