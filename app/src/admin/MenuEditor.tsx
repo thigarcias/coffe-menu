@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type ComponentType, type FormEvent } from
 import QRCode from 'qrcode'
 import App from '../App'
 import menuReference from '../data/menu.json'
-import type { Category, Choice, Menu, MenuItem, OptionGroup, OptionSet, Price } from '../types'
+import type { Category, Choice, Menu, MenuItem, OptionGroup, OptionSet, Price, TagGroup } from '../types'
 import { supabase } from '../lib/adminAuth'
 import './menu-editor.css'
 
@@ -39,14 +39,15 @@ type Publication = {
   published_by?: string | null
   menu?: EditorMenu
 }
-type Availability = { product_id: string; available: boolean; note?: string | null; updated_at?: string }
+type Availability = { product_id: string; available: boolean; quantity?: number | null; note?: string | null; updated_at?: string }
+type StockEntry = { available: boolean; quantity: number | null; note: string | null }
 type PublishedMenu = Publication & { menu: EditorMenu }
 type EditorWorkspace = {
   cafe: CafeSummary
   published: PublishedMenu | null
   drafts: MenuDraftRecord[]
   publications: Publication[]
-  availability: Availability[] | Record<string, boolean | { available: boolean; note?: string | null }>
+  availability: Availability[] | Record<string, boolean | { available: boolean; quantity?: number | null; note?: string | null }>
 }
 
 type ProductForm = {
@@ -65,9 +66,14 @@ type ProductForm = {
   prices: { size: string; ml: string; price: string }[]
   tags: { sweet: string; bitter: string; milk: string; iced: string; caffeine: string; hunger: string }
   labels: string[]
+  customLabels: string[]
 }
 
-type AiSuggestions = { labels: string[]; allergens: string[]; allergensVerified: false }
+type AiFill = {
+  name: string; description: string; lookalike: string; ingredients: string[]; allergens: string[]
+  labels: string[]; newLabels: string[]
+  tags: { sweet: string; bitter: string; hunger: string; milk: string; iced: string; caffeine: string }
+}
 
 const PreviewApp = App as ComponentType<{ menu: Menu }>
 const dateTime = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'medium', timeStyle: 'short' })
@@ -168,17 +174,39 @@ async function resolvePrivateImage(cafeId: string, key: string) {
   return result.url
 }
 
-async function requestSuggestions(cafeId: string, product: Pick<ProductForm, 'name' | 'description' | 'ingredients'>): Promise<AiSuggestions> {
+async function requestFill(cafeId: string, form: ProductForm, brief: string, tagGroups: TagGroupLite[]): Promise<AiFill> {
   const token = await getAccessToken()
   const response = await fetch('/api/menu-suggest', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ cafeId, product: { name: product.name, description: product.description, ingredients: product.ingredients.split(',').map((part) => part.trim()).filter(Boolean) } }),
+    body: JSON.stringify({ cafeId, mode: 'fill', tagGroups, product: { brief, name: form.name, description: form.description, ingredients: csv(form.ingredients) } }),
   })
-  const result = await response.json().catch(() => null) as AiSuggestions & { message?: string } | null
-  if (!response.ok || !result) throw new Error(result?.message || 'Não foi possível gerar sugestões agora.')
-  return { labels: result.labels ?? [], allergens: result.allergens ?? [], allergensVerified: false }
+  const result = await response.json().catch(() => null) as (AiFill & { message?: string }) | null
+  if (!response.ok || !result) throw new Error(result?.message || 'Não foi possível preencher com a IA agora.')
+  return { ...result, allergens: result.allergens ?? [], labels: result.labels ?? [], newLabels: result.newLabels ?? [], ingredients: result.ingredients ?? [] }
 }
+
+/** Aplica a proposta da IA só nos campos vazios: o que a pessoa já escreveu nunca é sobrescrito. */
+function applyFill(form: ProductForm, fill: AiFill) {
+  const changed: string[] = []
+  const next: ProductForm = { ...form, tags: { ...form.tags }, labels: [...form.labels], customLabels: [...form.customLabels] }
+  if (!next.name.trim() && fill.name) { next.name = fill.name; changed.push('nome') }
+  if (!next.description.trim() && fill.description) { next.description = fill.description; changed.push('descrição') }
+  if (!next.lookalike.trim() && fill.lookalike) { next.lookalike = fill.lookalike; changed.push('“com o que se parece”') }
+  if (!next.ingredients.trim() && fill.ingredients.length) { next.ingredients = fill.ingredients.join(', '); changed.push('ingredientes') }
+  const tagNames = { sweet: 'doçura', bitter: 'amargor', hunger: 'fome', milk: 'leite', iced: 'gelado', caffeine: 'cafeína' } as const
+  const filled: string[] = []
+  for (const key of Object.keys(tagNames) as (keyof typeof tagNames)[]) if (next.tags[key] === '' && fill.tags[key] !== '') { next.tags[key] = fill.tags[key]; filled.push(tagNames[key]) }
+  if (filled.length) changed.push('características')
+  const addedLabels = fill.labels.filter((id) => !next.labels.includes(id))
+  const addedCustom = fill.newLabels.filter((label) => !next.customLabels.some((item) => item.toLocaleLowerCase('pt-BR') === label.toLocaleLowerCase('pt-BR')))
+  next.labels.push(...addedLabels)
+  next.customLabels.push(...addedCustom)
+  if (addedLabels.length + addedCustom.length) changed.push(`${addedLabels.length + addedCustom.length} ${addedLabels.length + addedCustom.length === 1 ? 'etiqueta' : 'etiquetas'}`)
+  return { next, changed }
+}
+
+type TagGroupLite = { id: string; tags: { id: string; label: string }[] }
 
 function editorFriendlyError(error: unknown, fallback: string) {
   if (error instanceof Error && (error.message.includes('sessão expirou') || error.message.includes('mudou em outra tela') || error.message.includes('Use uma imagem') || error.message.includes('3 MB'))) return error.message
@@ -195,9 +223,14 @@ function isPrivateKey(cafeId: string, value: string | null | undefined) {
   return Boolean(value && value.startsWith(`${cafeId}/`))
 }
 
+function stockMap(value: EditorWorkspace['availability']) {
+  const entry = (available: boolean, quantity?: number | null, note?: string | null): StockEntry => ({ available, quantity: quantity ?? null, note: note ?? null })
+  if (Array.isArray(value)) return new Map(value.map((row) => [row.product_id, entry(row.available, row.quantity, row.note)]))
+  return new Map(Object.entries(value ?? {}).map(([id, item]) => [id, typeof item === 'boolean' ? entry(item) : entry(item.available, item.quantity, item.note)]))
+}
+
 function availabilityMap(value: EditorWorkspace['availability']) {
-  if (Array.isArray(value)) return new Map(value.map((row) => [row.product_id, row.available]))
-  return new Map(Object.entries(value ?? {}).map(([id, entry]) => [id, typeof entry === 'boolean' ? entry : entry.available]))
+  return new Map([...stockMap(value)].map(([id, entry]) => [id, entry.available]))
 }
 
 function makeProductForm(item?: MenuItem): ProductForm {
@@ -224,6 +257,7 @@ function makeProductForm(item?: MenuItem): ProductForm {
       hunger: item ? String(item.tags.hunger) : '',
     },
     labels: [...(item?.labels ?? [])],
+    customLabels: [],
   }
 }
 
@@ -263,6 +297,11 @@ function itemFromForm(form: ProductForm): MenuItem & { allergensVerified: boolea
   }
 }
 
+function detailsSummary(form: ProductForm) {
+  const filled = [form.lookalike.trim() && 'parecido com', form.ingredients.trim() && 'ingredientes', form.badges.trim() && 'rótulos', form.options && 'personalização'].filter(Boolean)
+  return filled.length ? `preenchido: ${filled.join(', ')}` : 'opcional'
+}
+
 function isValidProductForm(form: ProductForm) {
   return Boolean(form.name.trim())
 }
@@ -292,19 +331,25 @@ export function MenuEditor() {
   const [notice, setNotice] = useState('')
   const [newDraftName, setNewDraftName] = useState('')
   const [search, setSearch] = useState('')
+  const [stockSearch, setStockSearch] = useState('')
   const [addingCategory, setAddingCategory] = useState(false)
+  const [collapsedCats, setCollapsedCats] = useState<string[]>([])
   const [productEditorOpen, setProductEditorOpen] = useState(false)
   const [productForm, setProductForm] = useState<ProductForm | null>(null)
   const [productIsNew, setProductIsNew] = useState(false)
   const [productError, setProductError] = useState('')
   const [imageBusy, setImageBusy] = useState(false)
   const [localImageUrl, setLocalImageUrl] = useState('')
-  const [aiSuggestions, setAiSuggestions] = useState<AiSuggestions | null>(null)
-  const [selectedAiLabels, setSelectedAiLabels] = useState<string[]>([])
+  const [fillBrief, setFillBrief] = useState('')
+  const [fillBusy, setFillBusy] = useState(false)
+  const [fillError, setFillError] = useState('')
+  const [fillNote, setFillNote] = useState('')
+  const [fillUndo, setFillUndo] = useState<ProductForm | null>(null)
+  const [aiAllergens, setAiAllergens] = useState<string[]>([])
   const [selectedAiAllergens, setSelectedAiAllergens] = useState<string[]>([])
   const [confirmedAiAllergens, setConfirmedAiAllergens] = useState(false)
-  const [suggestionBusy, setSuggestionBusy] = useState(false)
-  const [suggestionError, setSuggestionError] = useState('')
+  const [newLabelText, setNewLabelText] = useState('')
+  const [heroUrl, setHeroUrl] = useState('')
   const [categoryName, setCategoryName] = useState('')
   const [selectedOptionSetId, setSelectedOptionSetId] = useState('')
   const [newOptionSetName, setNewOptionSetName] = useState('')
@@ -368,6 +413,16 @@ export function MenuEditor() {
     if (!localImageUrl) return
     return () => URL.revokeObjectURL(localImageUrl)
   }, [localImageUrl])
+
+  // foto do produto no começo do diálogo: arquivo escolhido agora, foto privada já salva ou foto do cardápio de referência
+  useEffect(() => {
+    const image = productForm?.image ?? ''
+    if (!productEditorOpen || !image || localImageUrl || !workspace) { setHeroUrl(''); return }
+    if (!isPrivateKey(workspace.cafe.id, image)) { setHeroUrl(/^(https?:|blob:|data:)/.test(image) ? image : `${import.meta.env.BASE_URL}${image}`); return }
+    let cancelled = false
+    void resolvePrivateImage(workspace.cafe.id, image).then((url) => { if (!cancelled) setHeroUrl(url) }).catch(() => { if (!cancelled) setHeroUrl('') })
+    return () => { cancelled = true }
+  }, [productEditorOpen, productForm?.image, localImageUrl, workspace?.cafe.id])
 
   const labels = useMemo(() => {
     const result = new Map<string, string>()
@@ -539,15 +594,15 @@ export function MenuEditor() {
     setError('')
   }
 
-  async function setAvailability(productId: string, available: boolean) {
+  async function setStock(productId: string, change: { available: boolean; quantity: number | null }) {
     if (!workspace) return
     setBusy(true)
     setError('')
     try {
-      await callRpc('set_product_availability', { p_cafe_id: workspace.cafe.id, p_product_id: productId, p_available: available })
+      await callRpc('set_product_stock', { p_cafe_id: workspace.cafe.id, p_product_id: productId, p_available: change.available, p_quantity: change.quantity })
       await reloadWorkspace(selectedDraftId)
       if (dirty && workingMenu) setWorkingMenu(workingMenu)
-      setNotice(available ? 'Produto marcado como disponível.' : 'Produto marcado como indisponível.')
+      setNotice(change.quantity === 0 ? 'Estoque zerado: produto marcado como indisponível.' : change.available ? 'Produto disponível.' : 'Produto marcado como indisponível.')
     } catch (reason) {
       setError(editorFriendlyError(reason, 'Não foi possível atualizar a disponibilidade.'))
     } finally {
@@ -587,11 +642,15 @@ export function MenuEditor() {
     setProductForm(makeProductForm(item))
     setProductIsNew(!item)
     setProductError('')
-    setAiSuggestions(null)
-    setSelectedAiLabels([])
+    setFillBrief('')
+    setFillError('')
+    setFillNote('')
+    setFillUndo(null)
+    setAiAllergens([])
     setSelectedAiAllergens([])
     setConfirmedAiAllergens(false)
-    setSuggestionError('')
+    setNewLabelText('')
+    setHeroUrl('')
     setLocalImageUrl('')
     setProductEditorOpen(true)
   }
@@ -608,8 +667,22 @@ export function MenuEditor() {
       setProductError('Já existe um produto com este identificador. Edite o nome para criar outro.')
       return
     }
-    const product = itemFromForm({ ...productForm, id })
-    updateMenu((menu) => ({ ...menu, items: productIsNew ? [...menu.items, product] : menu.items.map((item) => item.id === product.id ? product : item) }))
+    // etiquetas novas viram parte do catálogo do cardápio (família "Minhas etiquetas")
+    const groups: TagGroup[] = clone(workingMenu.tagGroups ?? [])
+    const allTags = () => groups.flatMap((group) => group.tags)
+    const labelIds = [...productForm.labels]
+    for (const label of productForm.customLabels) {
+      const found = allTags().find((tag) => tag.label.toLocaleLowerCase('pt-BR') === label.toLocaleLowerCase('pt-BR'))
+      if (found) { labelIds.push(found.id); continue }
+      let tagId = idFromName(label, 'etiqueta')
+      while (allTags().some((tag) => tag.id === tagId)) tagId = `${tagId}-2`
+      let own = groups.find((group) => group.id === 'minhas-etiquetas')
+      if (!own) { own = { id: 'minhas-etiquetas', name: 'Minhas etiquetas', weight: 2, tags: [] }; groups.push(own) }
+      own.tags.push({ id: tagId, label })
+      labelIds.push(tagId)
+    }
+    const product = itemFromForm({ ...productForm, id, labels: labelIds })
+    updateMenu((menu) => ({ ...menu, tagGroups: groups, items: productIsNew ? [...menu.items, product] : menu.items.map((item) => item.id === product.id ? product : item) }))
     setProductEditorOpen(false)
     setProductForm(null)
   }
@@ -634,41 +707,65 @@ export function MenuEditor() {
     }
   }
 
-  async function getAiSuggestions() {
+  async function fillWithAi() {
     if (!workspace || !productForm) return
-    if (!productForm.name.trim()) {
-      setSuggestionError('Informe o nome do produto antes de pedir sugestões.')
+    if (!fillBrief.trim() && !productForm.name.trim()) {
+      setFillError('Escreva uma frase sobre o produto ou digite o nome antes de pedir à IA.')
       return
     }
-    setSuggestionBusy(true)
-    setSuggestionError('')
+    setFillBusy(true)
+    setFillError('')
+    setFillNote('')
     try {
-      const result = await requestSuggestions(workspace.cafe.id, productForm)
-      setAiSuggestions(result)
-      setSelectedAiLabels(result.labels.filter((id) => labels.has(id)))
+      const groups = (workingMenu?.tagGroups ?? []).map((group) => ({ id: group.id, tags: group.tags }))
+      const result = await requestFill(workspace.cafe.id, productForm, fillBrief, groups)
+      const { next, changed } = applyFill(productForm, result)
+      setFillUndo(productForm)
+      setProductForm(next)
+      setAiAllergens(result.allergens)
       setSelectedAiAllergens([])
       setConfirmedAiAllergens(false)
+      setFillNote(changed.length ? `A IA preencheu: ${changed.join(', ')}. Revise antes de salvar; o que você já tinha escrito não foi alterado.` : 'A IA não encontrou nada novo para preencher: os campos já estavam completos.')
     } catch (reason) {
-      setSuggestionError(editorFriendlyError(reason, 'Não foi possível gerar sugestões agora.'))
+      setFillError(editorFriendlyError(reason, 'Não foi possível preencher com a IA agora.'))
     } finally {
-      setSuggestionBusy(false)
+      setFillBusy(false)
     }
   }
 
-  function applyAiSuggestions() {
-    if (!productForm || !aiSuggestions) return
+  function undoFill() {
+    if (!fillUndo) return
+    setProductForm(fillUndo)
+    setFillUndo(null)
+    setFillNote('Preenchimento da IA desfeito.')
+    setAiAllergens([])
+  }
+
+  function applyAiAllergens() {
+    if (!productForm) return
     if (selectedAiAllergens.length && !confirmedAiAllergens) {
-      setSuggestionError('Confirme cada alerta de alérgeno em uma fonte da cafeteria antes de aplicar.')
+      setFillError('Confirme cada alerta de alérgeno em uma fonte da cafeteria antes de aplicar.')
       return
     }
     setProductForm({
       ...productForm,
-      labels: [...new Set([...productForm.labels, ...selectedAiLabels])],
       allergens: [...new Set([...csv(productForm.allergens), ...selectedAiAllergens])].join(', '),
       allergensVerified: selectedAiAllergens.length ? true : productForm.allergensVerified,
     })
-    setAiSuggestions(null)
-    setSuggestionError('')
+    setAiAllergens([])
+    setFillError('')
+  }
+
+  function addCustomLabel() {
+    const label = newLabelText.trim()
+    if (!productForm || !label) return
+    const exists = [...labels.values(), ...productForm.customLabels].some((item) => item.toLocaleLowerCase('pt-BR') === label.toLocaleLowerCase('pt-BR'))
+    if (!exists) setProductForm({ ...productForm, customLabels: [...productForm.customLabels, label.slice(0, 40)] })
+    else {
+      const id = [...labels].find(([, text]) => text.toLocaleLowerCase('pt-BR') === label.toLocaleLowerCase('pt-BR'))?.[0]
+      if (id && !productForm.labels.includes(id)) setProductForm({ ...productForm, labels: [...productForm.labels, id] })
+    }
+    setNewLabelText('')
   }
 
   async function uploadLogo(file?: File) {
@@ -777,7 +874,7 @@ export function MenuEditor() {
   }
 
   const availablePublishedItems = workspace?.published?.menu.items ?? []
-  const availability = workspace ? availabilityMap(workspace.availability) : new Map<string, boolean>()
+  const stock = workspace ? stockMap(workspace.availability) : new Map<string, StockEntry>()
 
   if (loading && !workspace && !cafes.length) return <section className="adm-sec menu-editor" aria-labelledby="menu-editor-title"><div className="adm-card menu-editor__loading" role="status">Carregando suas cafeterias…</div></section>
   if (error && !workspace && !loading) return <section className="adm-sec menu-editor" aria-labelledby="menu-editor-title"><div className="adm-card"><h2 id="menu-editor-title">Editor de cardápio</h2><p className="menu-editor__error" role="alert">{error}</p></div></section>
@@ -820,6 +917,7 @@ export function MenuEditor() {
       {activeTab === 'conteudo' && <section className="adm-card menu-editor__products" aria-label="Produtos do cardápio">
         <div className="menu-editor__toolbar">
           <label className="menu-editor__search"><span className="menu-editor__sr-only">Buscar produto</span><input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar produto" aria-label="Buscar produto" /></label>
+          {(workingMenu?.categories.length ?? 0) > 1 && <button type="button" className="menu-editor__secondary" onClick={() => setCollapsedCats(collapsedCats.length ? [] : (workingMenu?.categories ?? []).map((category) => category.id))}>{collapsedCats.length ? 'Expandir todas' : 'Recolher todas'}</button>}
           <button type="button" className="menu-editor__secondary" onClick={() => setAddingCategory((open) => !open)} disabled={!workingMenu} aria-expanded={addingCategory || !workingMenu?.categories.length}>Nova categoria</button>
           <button type="button" className="menu-editor__primary" onClick={() => openProduct()} disabled={!selectedDraft || !workingMenu?.categories.length}>Adicionar produto</button>
         </div>
@@ -829,10 +927,15 @@ export function MenuEditor() {
           const count = workingMenu?.items.filter((item) => item.category === category.id).length ?? 0
           const rows = shownItems.filter((item) => item.category === category.id)
           if (search.trim() && !rows.length) return null
-          return <section key={category.id} className="menu-editor__group" aria-label={`Categoria ${category.name}`}>
+          const collapsed = collapsedCats.includes(category.id) && !search.trim()
+          return <section key={category.id} className={collapsed ? 'menu-editor__group is-collapsed' : 'menu-editor__group'} aria-label={`Categoria ${category.name}`}>
             <header className="menu-editor__group-head">
-              <h3>{category.name}</h3>
-              <span className="menu-editor__count">{count}</span>
+              <h3><button type="button" className="menu-editor__group-toggle" aria-expanded={!collapsed} onClick={() => setCollapsedCats(collapsed ? collapsedCats.filter((id) => id !== category.id) : [...collapsedCats, category.id])}>
+                <svg className="menu-editor__chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="m6 9 6 6 6-6" /></svg>
+                <span>{category.name}</span>
+                <span className="menu-editor__count">{count}</span>
+                <span className="menu-editor__toggle-hint">{collapsed ? 'Expandir' : 'Recolher'}</span>
+              </button></h3>
               <details className="menu-editor__cat-menu">
                 <summary>Editar categoria</summary>
                 <div className="menu-editor__cat-body">
@@ -845,8 +948,8 @@ export function MenuEditor() {
                 </div>
               </details>
             </header>
-            {!rows.length && <p className="menu-editor__empty-note">Nenhum produto aqui ainda.</p>}
-            <ul className="menu-editor__product-list">{rows.map((item) => <li key={item.id}><div className="menu-editor__product-copy"><strong>{item.name}</strong><small>{item.prices?.[0]?.price == null ? 'Preço não definido' : brl.format(item.prices[0].price)}</small></div><button type="button" className="menu-editor__secondary" onClick={() => openProduct(item)} disabled={!selectedDraft}>Editar</button><button type="button" className="menu-editor__text-button" onClick={() => deleteProduct(item)} disabled={!selectedDraft}>Remover</button></li>)}</ul>
+            {!collapsed && !rows.length && <p className="menu-editor__empty-note">Nenhum produto aqui ainda.</p>}
+            {!collapsed && <ul className="menu-editor__product-list">{rows.map((item) => <li key={item.id}><div className="menu-editor__product-copy"><strong>{item.name}</strong><small>{item.prices?.[0]?.price == null ? 'Preço não definido' : brl.format(item.prices[0].price)}</small></div><button type="button" className="menu-editor__secondary" onClick={() => openProduct(item)} disabled={!selectedDraft}>Editar</button><button type="button" className="menu-editor__text-button" onClick={() => deleteProduct(item)} disabled={!selectedDraft}>Remover</button></li>)}</ul>}
           </section>
         })}
         {workingMenu?.items.length ? !shownItems.length && <p className="menu-editor__empty-note">Nenhum produto corresponde à busca.</p> : null}
@@ -867,13 +970,20 @@ export function MenuEditor() {
       </section>}
 
       {activeTab === 'disponibilidade' && <section className="adm-card menu-editor__availability">
-        <header className="menu-editor__section-head"><div><h3>Disponibilidade</h3><p>Esses ajustes valem para os produtos já publicados e entram no cardápio imediatamente.</p></div></header>
-        {!workspace.published && <p className="menu-editor__empty-note">Publique o primeiro cardápio para controlar a disponibilidade dos produtos.</p>}
+        <header className="menu-editor__section-head"><div><h3>Disponibilidade e estoque</h3><p>Valem para o cardápio já publicado e entram no ar na hora. Com a quantidade em 0, o produto fica indisponível sozinho.</p></div></header>
+        {!workspace.published && <div className="menu-editor__empty-note"><p>Publique o primeiro cardápio para controlar a disponibilidade e o estoque dos produtos.</p>{selectedDraft && <button type="button" className="menu-editor__primary" onClick={() => void publishDraft()} disabled={busy || !workingMenu}>Publicar cardápio agora</button>}</div>}
         {workspace.published && !availablePublishedItems.length && <p className="menu-editor__empty-note">O cardápio publicado não tem produtos.</p>}
-        <ul className="menu-editor__availability-list">{availablePublishedItems.map((item) => {
-          const isAvailable = availability.get(item.id) !== false
-          return <li key={item.id}><div><strong>{item.name}</strong><small>{workspace.published?.draft_name} · versão {workspace.published?.version}</small></div><button type="button" className={isAvailable ? 'menu-editor__availability-button is-available' : 'menu-editor__availability-button is-unavailable'} aria-pressed={isAvailable} onClick={() => void setAvailability(item.id, !isAvailable)} disabled={busy}>{isAvailable ? 'Disponível' : 'Indisponível'}</button></li>
-        })}</ul>
+        {workspace.published && availablePublishedItems.length > 0 && <>
+          <div className="menu-editor__stock-summary">
+            <span><strong>{availablePublishedItems.length}</strong> produtos</span>
+            <span><strong>{availablePublishedItems.filter((item) => stock.get(item.id)?.available === false).length}</strong> indisponíveis</span>
+            <span><strong>{availablePublishedItems.filter((item) => stock.get(item.id)?.quantity != null).length}</strong> com estoque controlado</span>
+          </div>
+          <label className="menu-editor__search"><span className="menu-editor__sr-only">Buscar produto na disponibilidade</span><input type="search" value={stockSearch} onChange={(event) => setStockSearch(event.target.value)} placeholder="Buscar produto" aria-label="Buscar produto na disponibilidade" /></label>
+          <ul className="menu-editor__availability-list">{availablePublishedItems.filter((item) => !stockSearch.trim() || item.name.toLocaleLowerCase('pt-BR').includes(stockSearch.trim().toLocaleLowerCase('pt-BR'))).map((item) => (
+            <StockRow key={`${item.id}:${stock.get(item.id)?.quantity ?? 'x'}`} name={item.name} entry={stock.get(item.id) ?? { available: true, quantity: null, note: null }} busy={busy} onChange={(change) => void setStock(item.id, change)} />
+          ))}</ul>
+        </>}
       </section>}
 
       {activeTab === 'avancado' && <div className="menu-editor__advanced">
@@ -907,39 +1017,101 @@ export function MenuEditor() {
 
     {productEditorOpen && productForm && <div className="menu-editor__overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) setProductEditorOpen(false) }}><form className="menu-editor__dialog" role="dialog" aria-modal="true" aria-labelledby="menu-product-title" onSubmit={saveProduct}>
       <header className="menu-editor__dialog-head"><div><p className="menu-editor__eyebrow">PRODUTO DO RASCUNHO</p><h2 id="menu-product-title">{productIsNew ? 'Adicionar produto' : 'Editar produto'}</h2><p>Confira os dados antes de salvar no rascunho.</p></div><button type="button" className="menu-editor__close" aria-label="Fechar" onClick={() => setProductEditorOpen(false)}>×</button></header>
-      <div className="menu-editor__product-form-grid">
+      <section className="menu-editor__hero" aria-label="Foto e identificação do produto">
+        <div className="menu-editor__photo">
+          <div className="menu-editor__photo-frame">{localImageUrl || heroUrl ? <img src={localImageUrl || heroUrl} alt={productForm.name ? `Foto de ${productForm.name}` : 'Foto do produto'} /> : <div className="menu-editor__photo-empty"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M4 8h3l1.5-2h7L17 8h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg><span>Sem foto ainda</span></div>}</div>
+          <div className="menu-editor__photo-actions">
+            <label className="menu-editor__secondary menu-editor__file-button">{imageBusy ? 'Enviando…' : productForm.image ? 'Trocar foto' : 'Enviar foto'}<input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Escolher foto do produto" onChange={(event) => void uploadProductImage(event.target.files?.[0])} disabled={imageBusy} /></label>
+            {productForm.image && <button type="button" className="menu-editor__text-button" onClick={() => { setProductForm({ ...productForm, image: '' }); setLocalImageUrl('') }}>Remover foto</button>}
+          </div>
+          <small>JPG, PNG ou WebP · até 3 MB</small>
+        </div>
+        <div className="menu-editor__hero-fields">
         <label><span>Nome do produto</span><input required maxLength={100} value={productForm.name} onChange={(event) => setProductForm({ ...productForm, name: event.target.value })} /></label>
         <label><span>Categoria · pode definir depois</span><select value={productForm.category} onChange={(event) => setProductForm({ ...productForm, category: event.target.value })}><option value="">Sem categoria</option>{(workingMenu?.categories ?? []).map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>
-        <label><span>Subcategoria (opcional)</span><input maxLength={60} value={productForm.subcategory} onChange={(event) => setProductForm({ ...productForm, subcategory: event.target.value })} /></label>
+        </div>
+      </section>
+
+      <section className="menu-editor__ai-fill" aria-label="Preencher com IA">
+        <div className="menu-editor__ai-head"><span className="menu-editor__ai-badge" aria-hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z" /></svg></span><div><strong>Preencher com IA</strong><small>Conte em uma frase o que é o produto. A IA escreve a descrição e sugere ingredientes, etiquetas e características. Você só revisa.</small></div></div>
+        <label><span className="menu-editor__sr-only">Descreva o produto para a IA</span><textarea rows={2} maxLength={1500} value={fillBrief} placeholder="Ex.: Latte de pistache com leite de aveia, cremoso e adocicado, servido gelado" onChange={(event) => setFillBrief(event.target.value)} /></label>
+        <div className="menu-editor__ai-actions"><button type="button" className="menu-editor__primary" onClick={() => void fillWithAi()} disabled={fillBusy}>{fillBusy ? 'Preenchendo…' : 'Preencher com IA'}</button>{fillUndo && <button type="button" className="menu-editor__secondary" onClick={undoFill}>Desfazer</button>}</div>
+        <small>Só preenche o que está vazio. Preço e foto ficam com você; alérgenos a IA apenas sugere.</small>
+        {fillError && <p className="menu-editor__error" role="alert">{fillError}</p>}
+        {fillNote && <p className="menu-editor__notice" role="status">{fillNote}</p>}
+        {aiAllergens.length > 0 && <div className="menu-editor__ai-results"><div><strong>Possíveis alérgenos · a IA não confirma, você confere</strong>{aiAllergens.map((allergen) => <label key={allergen}><input type="checkbox" checked={selectedAiAllergens.includes(allergen)} onChange={(event) => setSelectedAiAllergens(event.target.checked ? [...selectedAiAllergens, allergen] : selectedAiAllergens.filter((value) => value !== allergen))} />{allergen}</label>)}<label className="menu-editor__ai-confirm"><input type="checkbox" checked={confirmedAiAllergens} onChange={(event) => setConfirmedAiAllergens(event.target.checked)} />Conferi os alérgenos selecionados com uma fonte da cafeteria.</label></div><button type="button" className="menu-editor__secondary" onClick={applyAiAllergens} disabled={!selectedAiAllergens.length}>Usar alérgenos selecionados</button></div>}
+      </section>
+
+      <div className="menu-editor__product-form-grid">
         <label className="menu-editor__wide"><span>Descrição (opcional)</span><textarea maxLength={600} rows={3} value={productForm.description} onChange={(event) => setProductForm({ ...productForm, description: event.target.value })} /></label>
-        <label className="menu-editor__wide"><span>Com o que se parece</span><textarea maxLength={300} rows={2} value={productForm.lookalike} onChange={(event) => setProductForm({ ...productForm, lookalike: event.target.value })} /></label>
-        <label><span>Ingredientes (separados por vírgula)</span><textarea rows={2} value={productForm.ingredients} onChange={(event) => setProductForm({ ...productForm, ingredients: event.target.value })} /></label>
-          <label><span>Alérgenos informados pela cafeteria</span><input value={productForm.allergens} placeholder="Separados por vírgula" onChange={(event) => setProductForm({ ...productForm, allergens: event.target.value, allergensVerified: false })} /><small>As sugestões da IA não confirmam alérgenos.</small></label>
-          <label className="menu-editor__verified"><input type="checkbox" checked={productForm.allergensVerified} onChange={(event) => setProductForm({ ...productForm, allergensVerified: event.target.checked })} />Conferi a lista de alérgenos com uma fonte confiável da cafeteria.</label>
-        <label><span>Rótulos (separados por vírgula)</span><input value={productForm.badges} placeholder="Ex.: Novo, Vegano" onChange={(event) => setProductForm({ ...productForm, badges: event.target.value })} /></label>
-        <label><span>Conjunto de opções</span><select value={productForm.options} onChange={(event) => setProductForm({ ...productForm, options: event.target.value })}><option value="">Sem personalização</option>{Object.entries(optionSets).map(([id, set]) => <option key={id} value={id}>{set.name}</option>)}</select></label>
         <div className="menu-editor__wide menu-editor__prices"><div className="menu-editor__field-head"><div><strong>Tamanhos e preços</strong><small>Deixe o preço vazio se ainda não foi definido.</small></div><button type="button" className="menu-editor__secondary" onClick={() => setProductForm({ ...productForm, prices: [...productForm.prices, { size: '', ml: '', price: '' }] })}>Adicionar tamanho</button></div>
           {productForm.prices.map((price, index) => <div className="menu-editor__price-row" key={index}><label><span>Tamanho</span><input value={price.size} maxLength={40} onChange={(event) => setProductForm({ ...productForm, prices: productForm.prices.map((item, i) => i === index ? { ...item, size: event.target.value } : item) })} /></label><label><span>Volume (ml)</span><input type="number" min="0" value={price.ml} onChange={(event) => setProductForm({ ...productForm, prices: productForm.prices.map((item, i) => i === index ? { ...item, ml: event.target.value } : item) })} /></label><label><span>Preço (R$)</span><input type="number" min="0" step="0.01" value={price.price} onChange={(event) => setProductForm({ ...productForm, prices: productForm.prices.map((item, i) => i === index ? { ...item, price: event.target.value } : item) })} /></label><button type="button" className="menu-editor__text-button" onClick={() => setProductForm({ ...productForm, prices: productForm.prices.filter((_, i) => i !== index) })} disabled={productForm.prices.length === 1}>Remover</button></div>)}
         </div>
-        <div className="menu-editor__wide menu-editor__image-field"><div><strong>Foto do produto</strong><small>JPG, PNG ou WebP · até 3 MB · guardada em armazenamento privado</small>{productForm.image && <small>Arquivo atual: {productForm.image.split('/').at(-1)}</small>}</div>{localImageUrl && <img src={localImageUrl} alt="Prévia da imagem escolhida" />}{!localImageUrl && productForm.image && !isPrivateKey(workspace?.cafe.id ?? '', productForm.image) && <img src={`${import.meta.env.BASE_URL}${productForm.image}`} alt="Foto atual do produto" />}{!localImageUrl && productForm.image && isPrivateKey(workspace?.cafe.id ?? '', productForm.image) && <span className="menu-editor__image-placeholder">Imagem privada salva</span>}<label className="menu-editor__secondary menu-editor__file-button">{imageBusy ? 'Enviando…' : productForm.image ? 'Trocar foto' : 'Enviar foto'}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void uploadProductImage(event.target.files?.[0])} disabled={imageBusy} /></label>{productForm.image && <button type="button" className="menu-editor__text-button" onClick={() => { setProductForm({ ...productForm, image: '' }); setLocalImageUrl('') }}>Remover foto</button>}</div>
+      </div>
 
+      <details className="menu-editor__more menu-editor__section">
+        <summary>Detalhes para o cliente<small>{detailsSummary(productForm)}</small></summary>
+        <div className="menu-editor__product-form-grid">
+        <label className="menu-editor__wide"><span>Com o que se parece</span><textarea maxLength={300} rows={2} value={productForm.lookalike} onChange={(event) => setProductForm({ ...productForm, lookalike: event.target.value })} /></label>
+        <label><span>Ingredientes (separados por vírgula)</span><textarea rows={2} value={productForm.ingredients} onChange={(event) => setProductForm({ ...productForm, ingredients: event.target.value })} /></label>
+        <label><span>Subcategoria (opcional)</span><input maxLength={60} value={productForm.subcategory} onChange={(event) => setProductForm({ ...productForm, subcategory: event.target.value })} /></label>
+        <label><span>Rótulos (separados por vírgula)</span><input value={productForm.badges} placeholder="Ex.: Novo, Vegano" onChange={(event) => setProductForm({ ...productForm, badges: event.target.value })} /></label>
+        <label><span>Conjunto de opções</span><select value={productForm.options} onChange={(event) => setProductForm({ ...productForm, options: event.target.value })}><option value="">Sem personalização</option>{Object.entries(optionSets).map(([id, set]) => <option key={id} value={id}>{set.name}</option>)}</select></label>
+        </div>
+      </details>
+
+      <details className="menu-editor__more menu-editor__section">
+        <summary>Alérgenos<small>{productForm.allergens.trim() ? (productForm.allergensVerified ? 'informados e conferidos' : 'informados, falta conferir') : 'opcional'}</small></summary>
+        <div className="menu-editor__product-form-grid">
+          <label><span>Alérgenos informados pela cafeteria</span><input value={productForm.allergens} placeholder="Separados por vírgula" onChange={(event) => setProductForm({ ...productForm, allergens: event.target.value, allergensVerified: false })} /><small>As sugestões da IA não confirmam alérgenos.</small></label>
+          <label className="menu-editor__verified"><input type="checkbox" checked={productForm.allergensVerified} onChange={(event) => setProductForm({ ...productForm, allergensVerified: event.target.checked })} />Conferi a lista de alérgenos com uma fonte confiável da cafeteria.</label>
+        </div>
+      </details>
+
+      <details className="menu-editor__more menu-editor__section">
+        <summary>Etiquetas e características<small>{productForm.labels.length + productForm.customLabels.length ? `${productForm.labels.length + productForm.customLabels.length} ${productForm.labels.length + productForm.customLabels.length === 1 ? 'etiqueta' : 'etiquetas'}` : 'opcional · ajudam nas sugestões'}</small></summary>
+        <div className="menu-editor__product-form-grid">
+          <fieldset className="menu-editor__wide menu-editor__labels"><legend>Etiquetas de sabor, perfil e ocasião</legend><p>Marque as que descrevem o produto. Faltou alguma? Crie a sua logo abaixo.</p>{workingMenu?.tagGroups?.length ? workingMenu.tagGroups.map((group) => <div className="menu-editor__label-group" key={group.id}><strong>{group.name}</strong><div>{group.tags.map((tag) => <label key={tag.id}><input type="checkbox" checked={productForm.labels.includes(tag.id)} onChange={(event) => setProductForm({ ...productForm, labels: event.target.checked ? [...productForm.labels, tag.id] : productForm.labels.filter((id) => id !== tag.id) })} />{tag.label}</label>)}</div></div>) : <p className="menu-editor__empty-note">Este rascunho ainda não tem etiquetas. Crie as suas abaixo.</p>}
+            <div className="menu-editor__label-group"><strong>Novas etiquetas deste produto</strong><div>{productForm.customLabels.map((label) => <label key={label}><input type="checkbox" checked onChange={() => setProductForm({ ...productForm, customLabels: productForm.customLabels.filter((item) => item !== label) })} />{label}</label>)}</div>
+              <div className="menu-editor__new-label"><label><span>Nova etiqueta</span><input value={newLabelText} maxLength={40} placeholder="Ex.: Sem açúcar, Pistache, Para dividir" onChange={(event) => setNewLabelText(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); addCustomLabel() } }} /></label><button type="button" className="menu-editor__secondary" onClick={addCustomLabel} disabled={!newLabelText.trim()}>Criar etiqueta</button></div>
+              <small>Etiquetas novas entram na família “Minhas etiquetas” e ficam disponíveis para todos os produtos.</small></div>
+          </fieldset>
         <fieldset className="menu-editor__wide menu-editor__tags"><legend>Características para as sugestões</legend><p>Esses campos influenciam recomendações. Se não preencher, escalas ficam em 0 e as opções sim/não ficam em “não”; revise com a ficha real do produto.</p><div className="menu-editor__tag-grid">
           <label><span>Doçura (0 a 3)</span><select value={productForm.tags.sweet} onChange={(event) => setProductForm({ ...productForm, tags: { ...productForm.tags, sweet: event.target.value } })}><option value="">Sem avaliação</option>{[0, 1, 2, 3].map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
           <label><span>Amargor (0 a 3)</span><select value={productForm.tags.bitter} onChange={(event) => setProductForm({ ...productForm, tags: { ...productForm.tags, bitter: event.target.value } })}><option value="">Sem avaliação</option>{[0, 1, 2, 3].map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
           <label><span>Fome (0 a 3)</span><select value={productForm.tags.hunger} onChange={(event) => setProductForm({ ...productForm, tags: { ...productForm.tags, hunger: event.target.value } })}><option value="">Sem avaliação</option>{[0, 1, 2, 3].map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
           {([['milk', 'Contém leite?'], ['iced', 'É gelado?'], ['caffeine', 'Tem cafeína?']] as const).map(([key, label]) => <label key={key}><span>{label}</span><select value={productForm.tags[key]} onChange={(event) => setProductForm({ ...productForm, tags: { ...productForm.tags, [key]: event.target.value } })}><option value="">Sem avaliação</option><option value="true">Sim</option><option value="false">Não</option></select></label>)}
         </div></fieldset>
-
-        <fieldset className="menu-editor__wide menu-editor__labels"><legend>Etiquetas de sabor e ocasião</legend><p>Escolha apenas as etiquetas que descrevem este produto.</p>{workingMenu?.tagGroups?.length ? workingMenu.tagGroups.map((group) => <div className="menu-editor__label-group" key={group.id}><strong>{group.name}</strong><div>{group.tags.map((tag) => <label key={tag.id}><input type="checkbox" checked={productForm.labels.includes(tag.id)} onChange={(event) => setProductForm({ ...productForm, labels: event.target.checked ? [...productForm.labels, tag.id] : productForm.labels.filter((id) => id !== tag.id) })} />{tag.label}</label>)}</div></div>) : <p className="menu-editor__empty-note">Este rascunho não tem um catálogo de etiquetas configurado.</p>}</fieldset>
-
-        <section className="menu-editor__wide menu-editor__suggestions"><div className="menu-editor__field-head"><div><strong>Sugestões assistidas</strong><small>As etiquetas e os alertas precisam ser revisados pela cafeteria.</small></div><button type="button" className="menu-editor__secondary" onClick={() => void getAiSuggestions()} disabled={suggestionBusy}>{suggestionBusy ? 'Gerando…' : 'Sugerir etiquetas'}</button></div>{suggestionError && <p className="menu-editor__error" role="alert">{suggestionError}</p>}{aiSuggestions && <div className="menu-editor__ai-results"><p>As etiquetas são sugestões; os alérgenos são <strong>não verificados</strong>.</p>{aiSuggestions.labels.length > 0 && <div><strong>Etiquetas</strong>{aiSuggestions.labels.map((id) => <label key={id}><input type="checkbox" checked={selectedAiLabels.includes(id)} disabled={!labels.has(id)} onChange={(event) => setSelectedAiLabels(event.target.checked ? [...selectedAiLabels, id] : selectedAiLabels.filter((value) => value !== id))} />{labels.get(id) ?? id}{!labels.has(id) && <small> (fora do catálogo deste rascunho)</small>}</label>)}</div>}{aiSuggestions.allergens.length > 0 && <div><strong>Alertas de alérgeno · requer confirmação</strong>{aiSuggestions.allergens.map((allergen) => <label key={allergen}><input type="checkbox" checked={selectedAiAllergens.includes(allergen)} onChange={(event) => setSelectedAiAllergens(event.target.checked ? [...selectedAiAllergens, allergen] : selectedAiAllergens.filter((value) => value !== allergen))} />{allergen}</label>)}<label className="menu-editor__ai-confirm"><input type="checkbox" checked={confirmedAiAllergens} onChange={(event) => setConfirmedAiAllergens(event.target.checked)} />Conferi os alérgenos selecionados com uma fonte da cafeteria.</label></div>}<button type="button" className="menu-editor__secondary" onClick={applyAiSuggestions} disabled={!selectedAiLabels.length && !selectedAiAllergens.length}>Aplicar sugestões selecionadas</button></div>}</section>
-      </div>
+        </div>
+      </details>
       {productError && <p className="menu-editor__error" role="alert">{productError}</p>}
       <div className="menu-editor__dialog-actions"><button type="button" className="menu-editor__secondary" onClick={() => setProductEditorOpen(false)}>Cancelar</button><button type="submit" className="menu-editor__primary" disabled={imageBusy}>{productIsNew ? 'Adicionar ao rascunho' : 'Salvar produto no rascunho'}</button></div>
     </form></div>}
 
     {previewOpen && <div className="menu-editor__preview-overlay"><header className="menu-editor__preview-bar"><div><strong>Prévia do cardápio</strong><small>Itens indisponíveis aparecem identificados.</small></div><button type="button" className="menu-editor__secondary" onClick={() => { setPreviewOpen(false); setPreviewMenu(null); setPreviewError('') }}>Fechar prévia</button></header>{previewBusy && <p className="menu-editor__preview-status" role="status">Preparando fotos privadas…</p>}{previewError && <p className="menu-editor__error menu-editor__preview-status" role="alert">{previewError}</p>}{previewMenu && !previewBusy && (previewMenu.items.length ? <PreviewApp menu={previewMenu} /> : <p className="menu-editor__preview-status" role="status">Adicione produtos ao rascunho para visualizá-los.</p>)}</div>}
   </section>
+}
+
+function StockRow({ name, entry, busy, onChange }: { name: string; entry: StockEntry; busy: boolean; onChange: (change: { available: boolean; quantity: number | null }) => void }) {
+  const [draft, setDraft] = useState(entry.quantity == null ? '' : String(entry.quantity))
+  const commit = (value: string) => {
+    const clean = value.trim()
+    const quantity = clean === '' ? null : Math.min(100000, Math.max(0, Math.floor(Number(clean))))
+    if (clean !== '' && !Number.isFinite(quantity)) { setDraft(entry.quantity == null ? '' : String(entry.quantity)); return }
+    if (quantity === entry.quantity) return
+    onChange({ available: entry.available || quantity === null ? true : entry.available, quantity })
+  }
+  const step = (delta: number) => onChange({ available: true, quantity: Math.max(0, (entry.quantity ?? 0) + delta) })
+  const label = entry.quantity === 0 ? 'Esgotado' : entry.available ? 'Disponível' : 'Indisponível'
+  return <li className="menu-editor__stock-row">
+    <div className="menu-editor__stock-name"><strong>{name}</strong><small>{entry.quantity == null ? 'Sem controle de estoque' : `${entry.quantity} em estoque`}</small></div>
+    <div className="menu-editor__stepper" role="group" aria-label={`Quantidade de ${name}`}>
+      <button type="button" className="menu-editor__secondary" aria-label={`Diminuir estoque de ${name}`} onClick={() => step(-1)} disabled={busy || entry.quantity == null || entry.quantity <= 0}>−</button>
+      <input inputMode="numeric" aria-label={`Quantidade em estoque de ${name}`} placeholder="Qtd." value={draft} disabled={busy} onChange={(event) => setDraft(event.target.value.replace(/[^0-9]/g, ''))} onBlur={(event) => commit(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); commit((event.target as HTMLInputElement).value) } }} />
+      <button type="button" className="menu-editor__secondary" aria-label={`Aumentar estoque de ${name}`} onClick={() => step(1)} disabled={busy}>+</button>
+    </div>
+    <button type="button" className={entry.available && entry.quantity !== 0 ? 'menu-editor__availability-button is-available' : 'menu-editor__availability-button is-unavailable'} aria-pressed={entry.available && entry.quantity !== 0} onClick={() => onChange({ available: !(entry.available && entry.quantity !== 0), quantity: entry.quantity === 0 ? null : entry.quantity })} disabled={busy}>{label}</button>
+  </li>
 }
 
 function OptionGroupEditor({ group, groupIndex, onChange, onRemove }: { group: OptionGroup; groupIndex: number; onChange: (change: (group: OptionGroup) => OptionGroup) => void; onRemove: () => void }) {

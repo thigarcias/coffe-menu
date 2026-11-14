@@ -1,7 +1,14 @@
 import { readFile } from 'node:fs/promises'
 import { readJson } from './menuData.mjs'
-import { suggestMenuDetails } from './menuSuggestions.mjs'
+import { fillProductDetails, suggestMenuDetails } from './menuSuggestions.mjs'
 const { tagGroups } = JSON.parse(await readFile(new URL('../src/data/menu.json', import.meta.url), 'utf8'))
+// as famílias de etiquetas do rascunho (a cafeteria pode ter criado as suas): só texto curto, em quantidade limitada
+function cleanGroups(value) {
+  if (!Array.isArray(value) || !value.length || value.length > 20) return null
+  const short = (x, n) => typeof x === 'string' && x.length >= 1 && x.length <= n
+  const groups = value.filter((g) => g && short(g.id, 80) && Array.isArray(g.tags) && g.tags.length <= 80).map((g) => ({ id: g.id, tags: g.tags.filter((t) => t && short(t.id, 80) && short(t.label, 60)).map((t) => ({ id: t.id, label: t.label })) }))
+  return groups.length ? groups : null
+}
 export async function handleMenuSuggest(req, res) {
   res.setHeader('Cache-Control', 'no-store'); res.setHeader('Content-Type', 'application/json; charset=utf-8')
   const fail = (status, message) => { res.statusCode = status; return res.end(JSON.stringify({ message })) }
@@ -18,7 +25,8 @@ export async function handleMenuSuggest(req, res) {
     if (!check.ok) return fail(503, 'Sugestões indisponíveis no momento.')
     const cafes = await check.json()
     if (!Array.isArray(cafes) || !cafes.some((c) => c.id === body.cafeId)) return fail(403, 'Você não tem acesso a esta unidade.')
-    const result = await suggestMenuDetails(body.product, tagGroups)
+    const groups = cleanGroups(body.tagGroups) ?? tagGroups
+    const result = body.mode === 'fill' ? await fillProductDetails(body.product, groups) : await suggestMenuDetails(body.product, groups)
     return res.end(JSON.stringify(result))
   } catch (error) { return fail(error?.status === 400 ? 400 : 503, error?.status === 400 ? error.message : 'Sugestões indisponíveis no momento.') }
 }
