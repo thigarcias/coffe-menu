@@ -1,8 +1,8 @@
 # MVP: cardápio interativo
 
-13/11/2026 · estado do que está construído, do que falta e das decisões tomadas.
+14/11/2026 · estado do que está construído, do que falta e das decisões tomadas.
 
-O MVP é uma **demo de venda para donos de cafeteria**: um cardápio que o cliente abre pelo QR, entende e escolhe com ajuda de IA, e que registra o que despertou interesse. O lado do cliente está pronto e no ar na Vercel. O painel do lojista já existe em `/admin` (ver `06-painel.md`), com um chat de IA que monta gráficos sob pedido, mas **tudo com dados fictícios**. Hoje nada fica guardado num banco: o cardápio vive num arquivo, os eventos e as sessões do chat ficam no navegador de cada pessoa. A próxima fase é o banco de dados (**Supabase**), a separação entre front-end e back-end e um painel para o **dono do produto** (veja "Próxima fase").
+O MVP é uma **demo de venda para donos de cafeteria**: um cardápio que o cliente abre pelo QR, entende e escolhe com ajuda de IA, e que registra o que despertou interesse. O lado do cliente está pronto e no ar na Vercel. O painel do lojista já existe em `/admin` (ver `06-painel.md`), agora com **login (Supabase Auth)**, **menu lateral**, um chat de IA que monta gráficos sob pedido e o **editor de cardápio por cafeteria** (rascunhos, publicação, disponibilidade e estoque, marca, QR e IA para preencher produtos). **Os números do painel e do chat ainda são fictícios**; o que já está no banco (Supabase, projeto `catalogo`) é o **cardápio da cafeteria**: rascunhos, versões, publicações, disponibilidade/estoque e fotos privadas. Eventos, pedidos e sessões do chat ainda ficam no navegador. A próxima fase é completar o banco (estatística real), separar front-end e back-end e criar um painel para o **dono do produto** (veja "Próxima fase").
 
 ## Para quem e para quê
 
@@ -16,7 +16,7 @@ O MVP é uma **demo de venda para donos de cafeteria**: um cardápio que o clien
 | IA | `gpt-6-luna` com esforço `high`, para tudo que for IA. | Pedido do usuário |
 | Visual | Soft de cafeteria gourmet (pastéis) com Liquid Glass claro por cima. Mobile first. | Pedido do usuário |
 | Stack | React (+ Vite e TypeScript), na Vercel. | Pedido do usuário |
-| Banco de dados | **Supabase** (Postgres). Ainda não integrado. | Pedido do usuário, 13/11/2026 |
+| Banco de dados | **Supabase** (Postgres). Integrado para login e cardápio da cafeteria; falta estatística, pedidos e chat. | Pedido do usuário, 13/11/2026 |
 
 ## O que está pronto
 
@@ -30,7 +30,8 @@ O MVP é uma **demo de venda para donos de cafeteria**: um cardápio que o clien
 | Me ajuda a escolher | De 5 a 6 perguntas rápidas que **mudam com o caminho** (bebida, comida ou tanto faz): temperatura, com ou sem café (ou doce e salgado), sabores (até 2), paladar, textura, momento, o que evitar e texto livre opcional. A recomendação é **por etiquetas**: o algoritmo filtra e pontua os 162 produtos e o GPT-6 Luna escolhe os 3 finais entre os 12 melhores, com o motivo e as etiquetas que casaram. Se a IA falhar, valem as 3 melhores notas do algoritmo. |
 | Quero provar | O coração guarda o item numa lista para mostrar no balcão. |
 | Coleta de interesse | Tempo em cada produto, detalhes abertos, favoritos, categorias e resultado do quiz, salvos no `localStorage` (`cm.events`). |
-| Testes | 802 testes: 5 tamanhos de celular (320px a 430px) para layout, fluxos e capturas de referência, e testes de servidor (motor de consulta, guardrail da IA e recomendação do quiz) que rodam só no Node. |
+| Editor de cardápio (`/admin`, "Personalizar cardápio") | Por cafeteria: rascunhos com versões, publicação, **disponibilidade e estoque** (quantidade por produto; 0 = esgotado), foto no topo do produto, **Preencher com IA** (GPT-6 Luna), etiquetas próprias, marca (cores e logo), QR e prévia. O cardápio publicado abre em `/?unidade=<slug>`. Migrações em `app/supabase/migrations/`. |
+| Testes | 886 testes: 5 tamanhos de celular (320px a 430px) para layout, fluxos e capturas de referência, e testes de servidor (motor de consulta, guardrail da IA e recomendação do quiz) que rodam só no Node. |
 
 ## Dados do cardápio
 
@@ -79,7 +80,7 @@ Ficam **fora do MVP** (doc core): pagamento, PDV e NFC. **Atenção:** a doc cor
 
 ## Próxima fase: banco de dados, back-end separado e painel do dono do produto
 
-Registrado em 13/11/2026, **ainda não começou**. Os itens abaixo são o que precisa ser feito e as decisões em aberto, nada disso está construído.
+Registrado em 13/11/2026. **Já feito (14/11):** Auth (login do lojista), tabelas do cardápio com RLS, rascunhos/publicação, disponibilidade e estoque, bucket privado de fotos e o editor. **Ainda não feito:** estatística, pedidos, sessões do chat, `ai_calls`, painel do dono do produto e a separação back-end/front-end. Os itens abaixo seguem como plano.
 
 ### A. Banco de dados: o que precisa ser guardado
 
@@ -125,8 +126,8 @@ Hoje `app/` mistura tudo: `src/` (React), `server/` e `api/` (servidor) e `share
 
 ### C. Integração com o Supabase
 
-- Criar o projeto e guardar as chaves: a **chave pública (anon)** pode ir ao navegador; a **service role** só no servidor, como `OPENAI_API_KEY`. Novas variáveis: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
-- **Migrações versionadas** no repositório (`supabase/migrations`) e um *seed* a partir do `menu.json` e das fotos.
+- **Projeto:** o Supabase `catalogo` (compartilhado com outros apps do usuário; as tabelas do cardápio são `cafes`, `menu_drafts`, `menu_draft_versions`, `menu_publications`, `product_availability`, mais o bucket privado `coffe-menu-media`). Variáveis de ambiente, **só no servidor**: `SUPABASE_URL` (ou `VITE_SUPABASE_URL`) e `SUPABASE_PUBLISHABLE_KEY`. O navegador **não** recebe chave: ele fala com `/auth/v1/*` e `/api/menu-*` no próprio domínio, e o servidor repassa para o Supabase. Chave de serviço (*service role*) não é usada.
+- **Migrações versionadas** em `app/supabase/migrations/` (hoje: personalização, estoque e mídia de referência), testadas com `npm run test:menu-db` (PGlite). Quando uma migração for aplicada no Supabase (por exemplo pelo conector do Claude), o arquivo **tem que estar no repositório** também. O *seed* do cardápio de referência já está no banco (rascunho "Cardápio de referência", 162 produtos, publicado em `cafeteria-mock`, estoque 20 cada, para teste).
 - **Auth** do Supabase para o login do lojista e do dono do produto; **regras de acesso por linha** (RLS) para cada cafeteria só ver os próprios dados.
 - **Storage** para fotos e vídeos (hoje em `app/public/`).
 - **Sessões do chat no banco** resolvem o limite atual ("plano A"): a resposta pode rodar **no servidor, em segundo plano**, e continuar mesmo com a guia fechada, e a mesma conversa aparece em outro aparelho. A Vercel limita o tempo de uma função, então é preciso escolher como rodar em segundo plano (função com `waitUntil`, Edge Function do Supabase ou uma fila). **A decidir.**
@@ -157,7 +158,7 @@ Decisões em aberto: o endereço (`/plataforma`?), se é o mesmo app ou outro, e
 5. Login (Supabase Auth) e proteção do `/admin` e do chat.
 6. Painel do dono do produto (D).
 
-**Antes de ir ao ar com dados reais:** hoje `/admin` e o chat da IA **não têm senha nem limite de uso** (pedido do usuário, por ser demo). O item 5 acima precisa vir antes de a demo ser mostrada fora do círculo próximo, porque qualquer pessoa com o endereço gasta crédito da OpenAI.
+**Antes de ir ao ar com dados reais:** o `/admin` e o chat da IA já exigem login (Supabase Auth, conta com `app_metadata.coffe_admin`), e o login por senha tem limite de tentativas. O chat ainda não tem **limite de uso por conta**, então quem tem uma conta pode gastar crédito da OpenAI; vale limitar antes de abrir para mais gente.
 
 ## Critérios de pronto
 

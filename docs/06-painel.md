@@ -1,6 +1,6 @@
 # Painel do dono (`/admin`)
 
-13/11/2026 · **versão de design com dados de exemplo.** Serve para aprovar a cara e a estrutura; ainda não lê dado nenhum de verdade.
+14/11/2026 · **números com dados de exemplo; cardápio, login e equipe são de verdade (equipe ainda é demonstração).** O painel de dados serve para aprovar a cara e a estrutura; o editor de cardápio já grava no Supabase.
 
 ## O que é
 
@@ -8,9 +8,10 @@ Uma dashboard numa rota do mesmo app (`/admin`), pensada para a dona ou o dono d
 
 ## Como está organizado
 
-- **Topo fixo (vidro):** a marca e as **abas** das seções. Cada aba mostra **só a sua seção** (a página não é uma rolagem única): clicou, mudou. A aba fica no endereço (`/admin#vendas`), então recarregar ou mandar o link abre na mesma aba; setas, Home e End do teclado trocam de aba. No celular as abas rolam de lado e mantêm a ativa à vista. O filtro de tempo **não fica no topo**.
+- **Topo fixo (vidro):** a marca, o botão **Perguntar à IA** e, no celular, o botão **Menu**. O filtro de tempo **não fica no topo**.
+- **Menu lateral:** fixo à esquerda no desktop (a partir de 1024px) e **gaveta** no celular (abre pelo botão Menu; fecha ao escolher, com Esc ou tocando fora). Grupo **Dashboard** (clica e abre: Visão geral, Vendas, Produtos, IA e Parecidos, Tráfego) e, soltos, **Personalizar cardápio**, **Equipe** e **Sessões**. "Ver cardápio" e "Sair" ficam no rodapé do menu. Cada item mostra **só a sua seção** (a página não é uma rolagem única). A seção fica no endereço (`/admin#vendas`), então recarregar ou mandar o link abre no mesmo lugar.
 - **Filtros:** uma linha no começo da página, igual em todas as abas, com o **Período** (Hoje, 7 dias, 30 dias) e a data de referência. O que se escolhe vale para todas as abas. É onde entram novos filtros.
-- **Cinco abas**, cada uma com título e cabendo em pouco mais de uma tela no desktop: Visão geral, Vendas, Produtos, IA e Parecidos, Tráfego.
+- **Cinco seções de dados** no grupo Dashboard, cada uma com título e cabendo em pouco mais de uma tela no desktop: Visão geral, Vendas, Produtos, IA e Parecidos, Tráfego.
 
 ## O que mostra
 
@@ -28,6 +29,19 @@ Uma dashboard numa rota do mesmo app (`/admin`), pensada para a dona ou o dono d
 | Tráfego | Como chegaram | De onde vêm as visitas (QR da mesa, balcão, Instagram, link) e quais convertem |
 | Produtos | Vitrine: visto × pedido | O que reorganizar: estrelas, vitrine que não converte, escondidos, pouca atenção |
 
+## Personalizar cardápio (editor da cafeteria)
+
+`app/src/admin/MenuEditor.tsx` (estilos em `menu-editor.css`). Só vale para a cafeteria vinculada à conta; os dados ficam no Supabase (ver `04-mvp.md`, seção C).
+
+- **Barra única** no topo: nome do rascunho, "No ar · vN" ou "Ainda não publicado", Abrir prévia, Salvar rascunho e Publicar cardápio. Trocar de cafeteria ou de rascunho, criar, renomear e excluir rascunho ficam recolhidos em "Cafeteria e rascunhos".
+- **Abas internas:** Produtos, Marca, Disponibilidade, Avançado (opções de personalização e histórico de versões).
+- **Produtos:** agrupados por categoria, que **recolhem e expandem** (uma ou todas); busca; "Nova categoria"; "Editar categoria" (renomear, subir, descer, remover).
+- **Diálogo do produto:** começa pela **foto** (tamanho médio, com Trocar/Remover), depois nome e categoria, o cartão **Preencher com IA**, descrição e preços. "Detalhes para o cliente", "Alérgenos" e "Etiquetas e características" ficam recolhidos, cada um com um resumo do que já está preenchido.
+- **Preencher com IA:** a pessoa escreve uma frase; `POST /api/menu-suggest` com `mode: "fill"` (`fillProductDetails` em `server/menuSuggestions.mjs`, GPT-6 Luna). Só preenche campos **vazios**, tem **Desfazer**, e **alérgenos nunca são aplicados sozinhos** (a pessoa marca e confirma que conferiu). Preço e foto nunca são inventados.
+- **Etiquetas flexíveis:** além do catálogo, a cafeteria cria etiquetas novas (a IA também sugere). Elas entram na família "Minhas etiquetas" ao salvar o produto.
+- **Disponibilidade e estoque:** só lista produtos do cardápio **publicado**. Por produto: quantidade (−, campo, +) e Disponível/Indisponível. Quantidade 0 = Esgotado (indisponível). Quantidade vazia = sem controle. O cardápio público só recebe `available`; a quantidade é visível só para o dono. O estoque **não é descontado por pedidos** (o checkout é simulado).
+- **Mídia:** fotos novas vão para o bucket privado. As fotos e vídeos da biblioteca de referência (`menu/*.jpg`, `video/*.mp4`, arquivos do app) também podem ser publicados.
+
 ## Chat com a IA
 
 O dono conversa com a IA do painel, que **monta gráficos, tabelas e análises sob pedido** com os dados do painel. A IA é o **GPT-6 Luna** (esforço `high`), chamada só pelo servidor.
@@ -35,7 +49,7 @@ O dono conversa com a IA do painel, que **monta gráficos, tabelas e análises s
 ### Interface e sessões
 
 - **Painel lateral** por cima da dashboard (botão **Perguntar à IA**, no topo). Dele dá para ir para a **tela cheia** ou para uma **guia só com o chat** (`/admin?chat=ID`).
-- **Sessões com ID e histórico**, guardadas no navegador. Todas as formas de ver a mesma conversa (lateral, tela cheia, outra guia) mostram **a mesma sessão em tempo real**. A aba **Sessões** lista todas, com o estado (Rodando, Concluída, Interrompida, Erro) e abre qualquer uma.
+- **Sessões com ID e histórico**, guardadas no navegador. Todas as formas de ver a mesma conversa (lateral, tela cheia, outra guia) mostram **a mesma sessão em tempo real**. O item **Sessões** do menu lista todas, com o estado (Rodando, Concluída, Interrompida, Erro) e abre qualquer uma.
 - **Fechar o chat não para a resposta.** O executor (`chat/runner.ts`) mora no módulo, não num componente. Limite do "plano A": a resposta roda **na guia do navegador** que a começou; se ela for fechada no meio, a sessão fica **Interrompida** e há um botão **Retomar**. Rodar de verdade em segundo plano pede um servidor com banco (não foi feito).
 - Respostas em **blocos** (`chat/types.ts`): texto, indicadores, linha, barras, funil, mapa de calor, tabela e perguntas sugeridas (tocar numa envia a pergunta). Quem desenha é o nosso código, com os componentes do painel.
 
@@ -92,5 +106,5 @@ Os testes automáticos **não** chamam a OpenAI: `e2e/server/` usa um modelo fal
 
 1. **Eventos num servidor** (`/api/events` e um banco): hoje o app guarda só no `localStorage` de cada cliente.
 2. **Registrar o que o painel pede e o app ainda não registra**: origem da visita (QR da mesa × balcão × link), cliques em "Parecidos" com o destino, o que a IA sugeriu e o que foi pedido depois, e o pedido em si (valor e itens).
-3. **Login** (hoje `/admin` é aberta; com dados reais precisa de senha) e escolha da cafeteria.
+3. ~~Login~~ (feito: Supabase Auth). Falta escolher a cafeteria quando a conta tiver mais de uma nos números do painel.
 4. Trocar `mock.ts` por uma leitura desses dados.

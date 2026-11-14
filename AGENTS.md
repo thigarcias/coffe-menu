@@ -17,4 +17,6 @@ Instruções para agentes de código (Codex e outros). O projeto é um cardápio
 - Toda IA usa `gpt-6-luna` com `reasoning.effort: "high"` (fixos em `app/server/openai.mjs`). A chave `OPENAI_API_KEY` **nunca** vai ao navegador.
 - **Não afrouxe o guardrail do chat** (`app/server/adminChat.mjs`) sem rodar `e2e/server/guardrail.spec.ts`.
 - Depois de uma mudança visual, apague as capturas afetadas em `app/e2e/__screenshots__/`, gere de novo e **olhe as imagens**. Não aprove o próprio visual sem olhar.
+- **Supabase:** migrações em `app/supabase/migrations/` (teste com `npm run test:menu-db`). Se aplicar uma migração no banco de verdade, o arquivo do repositório precisa ser igual ao aplicado. O projeto `catalogo` é compartilhado com outros apps: só mexa nas tabelas do cardápio. Chaves só no servidor (`SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`).
+- Testes visuais só comparam no Linux; fim de linha é LF (`.gitattributes`).
 - Depois de publicar, avise que a Vercel precisa terminar o deploy: o usuário valida pelo celular.

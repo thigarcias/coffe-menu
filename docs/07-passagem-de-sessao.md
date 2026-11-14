@@ -1,14 +1,24 @@
 # Passagem de sessão
 
-13/11/2026 · para quem continuar o trabalho (outro agente ou outra sessão). Leia o `CLAUDE.md` primeiro: ele tem as regras do projeto. Este arquivo conta **onde estamos, o que já foi decidido e o que fazer a seguir**.
+14/11/2026 · para quem continuar o trabalho (outro agente ou outra sessão). Leia o `CLAUDE.md` primeiro: ele tem as regras do projeto. Este arquivo conta **onde estamos, o que já foi decidido e o que fazer a seguir**.
 
 ## Em uma frase
 
-Cardápio interativo para cafeterias (demo de venda para donos), com feed estilo Reels, quiz de recomendação por etiquetas com IA, sacola e pedido simulados, e um painel do lojista (`/admin`) com um chat de IA que monta gráficos sob pedido. **Nada é gravado num banco ainda**: o cardápio é um arquivo, o painel lê uma tabela fictícia e as sessões do chat ficam no navegador.
+Cardápio interativo para cafeterias (demo de venda para donos), com feed estilo Reels, quiz de recomendação por etiquetas com IA, sacola e pedido simulados, e um painel do lojista (`/admin`) com um chat de IA que monta gráficos sob pedido. **O cardápio da cafeteria já está no Supabase** (rascunhos, publicação, disponibilidade e estoque, fotos privadas) e o `/admin` exige login. **Os números do painel ainda vêm de uma tabela fictícia** e as sessões do chat e os eventos ficam no navegador.
 
 - Produção para validar: `coffe-menu-app.vercel.app` (o usuário valida **pelo celular**; depois de subir, avise que a Vercel precisa terminar o deploy).
 - Repositório: `thigarcias/coffe-menu`, código em `app/` (React + Vite + TypeScript). Commits vão **direto na `main`**.
-- Estado dos testes: **802 passando** (`cd app && npm run test:e2e`). A última coisa publicada foi o commit `d4f05c3` (quiz por etiquetas).
+- Estado dos testes: **886 passando** (`cd app && npm run test:e2e`) e `npm run test:menu-db` (migrações no PGlite). A última coisa publicada foi o editor de cardápio com estoque e Preencher com IA (14/11/2026).
+
+## Atualização de 14/11/2026 (o que mudou desde a primeira passagem)
+
+- **Login do `/admin`** (Supabase Auth via proxy do servidor; o navegador não recebe chave) e área **Equipe** (demonstração, nada persiste). Login por senha com limite de 10 tentativas / 5 min por IP.
+- **Menu lateral** no painel (gaveta no celular, fixo no desktop): Dashboard (5 seções de dados) + Personalizar cardápio, Equipe e Sessões. Substituiu as abas do topo.
+- **Editor de cardápio** simplificado (barra única, produtos por categoria recolhíveis, resto recolhido), **foto no topo do produto**, **Preencher com IA** (GPT-6 Luna, `mode: "fill"` em `/api/menu-suggest`), **etiquetas próprias** (família "Minhas etiquetas") e **estoque** por produto (`product_availability.quantity`, RPC `set_product_stock`; 0 = esgotado; o público não vê a quantidade).
+- **Supabase de produção:** projeto `catalogo`, compartilhado com outros apps do usuário (não mexer nas tabelas que não são do cardápio). Migrações em `app/supabase/migrations/` (personalização, estoque, mídia de referência). Algumas foram aplicadas pelo conector Supabase do Claude: **mantenha o arquivo do repositório igual ao que foi aplicado**.
+- **Cardápio de referência publicado** em `cafeteria-mock` (162 produtos da Starbucks, estoque 20 cada, só para teste): abre em `/?unidade=cafeteria-mock`. É uma referência interna, não é para mostrar a terceiros como produto da Starbucks. Para publicá-lo foi preciso liberar as fotos e vídeos da biblioteca de referência (`menu/*`, `video/*`) na validação de publicação.
+- **Quebra de linha:** `.gitattributes` com `eol=lf`. **Capturas visuais** só comparam no Linux (`quiz.png` foi regerado lá).
+- **Pendências desta rodada:** testar o "Preencher com IA" com o modelo de verdade (os testes simulam); o estoque não desconta com pedidos (checkout simulado); limite de uso do chat por conta.
 
 ## O que existe
 
@@ -17,7 +27,7 @@ Cardápio interativo para cafeterias (demo de venda para donos), com feed estilo
 | Cardápio do cliente | Feed em tela cheia, categorias, grade "Ver tudo", detalhe, "Parecidos", sacola, personalização e pedido simulado | `app/src/` (`docs/04-mvp.md`, `docs/05-checkout.md`) |
 | Vídeo no feed (mockup) | Os itens 2 a 6 do feed tocam um clipe vertical em tela cheia (clipes genéricos da Pexels, **não** são o produto). Foto e vídeo usam o mesmo estilo: texto menor, colado no dock, faixa branca curta | `video` em `menu.json`, `app/public/video/`, `ProductImage.tsx`, `scripts/fetch-videos.mjs` |
 | Quiz "Me ajuda a escolher" | 5 a 6 perguntas que mudam com o caminho (bebida, comida, tanto faz). Algoritmo por etiquetas + GPT-6 Luna escolhendo os 3 finais entre os 12 melhores | `app/shared/recommend.mjs`, `app/server/quiz.mjs`, `app/src/components/Quiz.tsx` |
-| Painel do lojista | `/admin`, em abas (Visão geral, Vendas, Produtos, IA e Parecidos, Tráfego, Sessões), Liquid Glass sobre branco, mobile first e desktop | `app/src/admin/`, `docs/06-painel.md` |
+| Painel do lojista | `/admin`, com menu lateral (Dashboard: Visão geral, Vendas, Produtos, IA e Parecidos, Tráfego; e Personalizar cardápio, Equipe, Sessões), Liquid Glass sobre branco, mobile first e desktop | `app/src/admin/`, `docs/06-painel.md` |
 | Chat com a IA no painel | Painel lateral, tela cheia e guia só do chat (`/admin?chat=ID`), com sessões e histórico. IA em 3 etapas com **guardrail** (só responde sobre os dados do painel) | `app/src/admin/chat/`, `app/server/adminChat.mjs` |
 | Dados do painel e do chat | **Uma única tabela fictícia** (61 dias) e um motor de consulta. O painel e a IA leem dela, então nunca se contradizem | `app/shared/analytics.mjs` |
 
@@ -26,12 +36,12 @@ Rotas de servidor, cada uma em **três** lugares (plugin do Vite, `server/index.
 ## Decisões já tomadas (não reabrir sem o usuário)
 
 - **Toda IA usa `gpt-6-luna` com `reasoning.effort: "high"`**, fixos em `app/server/openai.mjs`. A única variável de ambiente é `OPENAI_API_KEY`, e a chave **nunca vai ao navegador**.
-- **Banco de dados: Supabase.** Ainda não integrado (ver "O que fazer a seguir").
+- **Banco de dados: Supabase.** Integrado para login e cardápio da cafeteria; falta a estatística, os pedidos e as sessões do chat (ver "O que fazer a seguir").
 - **Chat, "plano A":** a resposta roda na guia do navegador que a começou; se ela fechar no meio, a sessão fica "Interrompida" e dá para retomar. Segundo plano de verdade só depois do banco.
 - **Gráfico livre no chat: Vega-Lite**, aprovado pelo usuário, **ainda não feito** (instalar só quando chegar nele; carrega só no chat).
-- **Sem senha** no `/admin` e no chat por enquanto (é demo). Isso precisa mudar antes de mostrar fora do círculo próximo, porque qualquer pessoa gasta crédito da OpenAI.
+- **Login** no `/admin` e no chat (feito em 14/11, antes era sem senha). Falta limite de uso do chat por conta.
 - **Dados do painel são fictícios e locais**, por pedido do usuário. Custo e latência da IA não são prioridade agora.
-- **Visual:** foto de produto inteira, sem corte; **vídeo** em tela cheia; fundo pastel da própria foto; Liquid Glass só na camada de controles. Painel `/admin` em abas (nada de rolagem única), com o filtro de período numa linha de filtros no começo da página (não no topo fixo).
+- **Visual:** foto de produto inteira, sem corte; **vídeo** em tela cheia; fundo pastel da própria foto; Liquid Glass só na camada de controles. Painel `/admin` com menu lateral (nada de rolagem única), com o filtro de período numa linha de filtros no começo da página (não no topo fixo).
 - **Guardrail do chat:** a recusa é um texto **fixo escrito no servidor**; o modelo nunca a escreve. Não afrouxar sem rodar `e2e/server/guardrail.spec.ts` e `scripts/chat-smoke.mjs`.
 - **Quiz:** restrição alimentar e texto livre **não** vão para o registro de interesse (`cm.events`). Alergia é dado sensível e a tela sempre manda confirmar com a equipe.
 
@@ -65,14 +75,15 @@ cd app
 npm ci
 npm run dev -- --host        # app + rotas da IA (precisa de OPENAI_API_KEY no .env)
 npm run build                # typecheck + build
-npm run test:e2e             # 802 testes; só commite se TODOS passarem
+npm run test:e2e             # 886 testes; só commite se TODOS passarem
+npm run test:menu-db         # migrações do Supabase no PGlite
 node scripts/chat-smoke.mjs "pergunta"   # chama o GPT-6 Luna de verdade (pipeline do chat)
 node scripts/quiz-eval.mjs               # 14 perfis no quiz com a IA real
 ```
 
 - Os testes **nunca** chamam a OpenAI: o navegador usa `page.route(...)`, e os testes de `e2e/server/` (rodam só no Node, projeto `server`) usam um modelo falso. Para validar a IA de verdade, use os dois scripts acima.
 - `cm.admin.mock = 1` no `localStorage` faz o chat usar respostas de exemplo do código (é o que `e2e/admin-chat.spec.ts` usa); `cm.admin.fast = 1` encolhe as pausas dessas respostas.
-- **Capturas de tela (`e2e/__screenshots__`)**: o `--update-snapshots` não regrava diferença pequena (tolerância de 2%). Depois de mudar o visual, **apague** as PNGs afetadas e gere de novo, e **olhe as imagens** antes de commitar.
+- **Capturas de tela (`e2e/__screenshots__`)** (só no Linux; em Windows/macOS os testes visuais pulam): o `--update-snapshots` não regrava diferença pequena (tolerância de 2%). Depois de mudar o visual, **apague** as PNGs afetadas e gere de novo, e **olhe as imagens** antes de commitar.
 - Não encadeie `git commit` depois de `| tail`: o pipe engole o erro dos testes.
 
 ## Armadilhas que já custaram tempo

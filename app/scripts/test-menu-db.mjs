@@ -8,6 +8,8 @@ const sql=await readFile(new URL('../supabase/migrations/20261114015222_coffe_me
 await db.exec(sql)
 const stockSql=await readFile(new URL('../supabase/migrations/20261114200000_coffe_menu_estoque.sql', import.meta.url),'utf8')
 await db.exec(stockSql)
+const refSql=await readFile(new URL('../supabase/migrations/20261114210000_coffe_menu_midia_de_referencia.sql', import.meta.url),'utf8')
+await db.exec(refSql)
 const owner='11111111-1111-4111-8111-111111111111', other='22222222-2222-4222-8222-222222222222', cafe='33333333-3333-4333-8333-333333333333'
 await db.query('insert into auth.users(id) values ($1),($2)', [owner,other])
 await db.query('insert into public.cafes(id,owner_id,slug,name) values ($1,$2,$3,$4)',[cafe,owner,'cafe-teste','Café'])
@@ -69,7 +71,18 @@ await db.exec('reset role; set role anon')
 const stockPublic=await db.query('select public.get_published_menu($1) as data',['cafe-teste'])
 assert.equal(stockPublic.rows[0].data.availability.item,true)
 await assert.rejects(() => db.query('select quantity from public.product_availability'))
-console.log('Migração, isolamento, rascunho, publicação, restauração, disponibilidade e estoque passaram.')
+
+// mídia de referência do app (menu/ e video/) é aceita; caminho solto, externo ou com ".." não
+await db.exec('reset role; set role authenticated')
+await db.query("select set_config('request.jwt.claim.sub',$1,false)",[owner])
+const refMenu={cafe:{name:'Referência'},categories:[{id:'cafes',name:'Cafés'}],items:[{id:'ref',name:'Café',category:'cafes',image:'menu/cafe-latte.jpg',video:'video/cafe-latte.mp4',prices:[{size:'Único',price:5}]}]}
+const refDraft=await db.query('select public.create_menu_draft($1,$2,$3::jsonb) as data',[cafe,'Referência',JSON.stringify(refMenu)])
+await db.query('select public.publish_menu_draft($1,$2,$3)',[cafe,refDraft.rows[0].data.draft_id,1])
+for (const bad of ['menu/../segredo.jpg','/menu/a.jpg','https://exemplo.com/a.jpg','outra/a.jpg','menu/sub/a.jpg']) {
+  const ruim=await db.query('select public.create_menu_draft($1,$2,$3::jsonb) as data',[cafe,'Ruim '+bad,JSON.stringify({...refMenu,items:[{...refMenu.items[0],image:bad,video:null}]})])
+  await assert.rejects(() => db.query('select public.publish_menu_draft($1,$2,$3)',[cafe,ruim.rows[0].data.draft_id,1]),`deveria recusar ${bad}`)
+}
+console.log('Migração, isolamento, rascunho, publicação, restauração, disponibilidade, estoque e mídia de referência passaram.')
 await db.close()
 
 
