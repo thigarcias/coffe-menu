@@ -25,8 +25,9 @@ Cardápio interativo para cafeterias (demo de venda para donos), com feed estilo
 ## Atualização de 14/11/2026 (tarde): personalizar o painel
 
 - **Feito:** o Dashboard virou lista de cartões e o dono personaliza cada seção (esconder, reordenar, desfazer, voltar ao padrão) à mão ou pedindo à IA. Detalhes, arquivos e testes em `docs/06-painel.md`, seção "Personalizar o painel".
-- **A migração `20261114220000_coffe_menu_dashboard_layout.sql` está no repositório e testada no PGlite, mas NÃO foi aplicada no `catalogo`.** Aplicar (conector Supabase) e **manter o arquivo igual ao que foi aplicado**. Sem ela o painel funciona no padrão e o botão Personalizar não aparece.
-- **Falta:** agrupamentos (regra viva), fixar bloco do chat e escolher cafeteria com mais de uma conta.
+- **A migração `20261114220000_coffe_menu_dashboard_layout.sql` foi aplicada no `catalogo`** (a pedido do usuário, versão `20261114172211`; RLS e permissões conferidos). **Mantenha o arquivo do repositório igual ao que foi aplicado.**
+- **Agrupamentos feitos:** regra viva dentro do bloco (`spec.groups`), sem tabela nova. Detalhes e o limite conhecido em `docs/06-painel.md`.
+- **Falta:** conferir com um login real, fixar bloco direto do chat, lista "Meus agrupamentos" e escolher cafeteria com mais de uma conta.
 - Decisões do usuário nesta rodada: padrão **editável no lugar** (com "voltar ao padrão"), painel **da cafeteria e compartilhado com a equipe**, salvo no **servidor** (Supabase `catalogo`), novas categorias como **agrupamentos para análise** (não mexem no cardápio do cliente), IA **monta com peças prontas** (nunca código).
 
 ## O que existe

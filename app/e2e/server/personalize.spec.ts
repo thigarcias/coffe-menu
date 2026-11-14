@@ -5,7 +5,8 @@ import { MAX_PROMPT } from '../../server/adminChat.mjs'
 import { readFileSync } from 'node:fs'
 import { BUILTIN_IDS, DASH_SECTIONS, SPANS } from '../../shared/layout.mjs'
 import { BUILTIN_IDS as TS_BUILTIN_IDS, DASH_SECTIONS as TS_SECTIONS } from '../../src/admin/layout/model'
-import { BLOCK_TYPES } from '../../shared/blocks.mjs'
+import { BLOCK_TYPES, describeGroups, describeRule, normalizeGroup, normalizePlan, resolveBlock } from '../../shared/blocks.mjs'
+import { groupMembers, PRODUCT_IDS, runQuery } from '../../shared/analytics.mjs'
 
 // IA que personaliza o painel, com um MODELO FALSO. Nada aqui chama a OpenAI: provamos que o
 // servidor só aplica o que é válido, mesmo quando o modelo erra, é enganado ou devolve lixo.
@@ -274,5 +275,146 @@ test.describe('o catálogo de cartões é o mesmo no navegador, no servidor da I
   test('tipos de bloco e larguras aceitos pelo banco = os do servidor', () => {
     expect(list(/\(v_item -> 'spec' ->> 'type'\) not in \(([^)]*)\)/)).toEqual(BLOCK_TYPES)
     expect(list(/\(v_item ->> 'span'\) not in \(([^)]*)\)/)).toEqual(SPANS.map(String))
+  })
+})
+
+/* ------------------------------------------------------------------ agrupamentos (regra viva) */
+const grp = (over: Record<string, unknown> = {}) => ({ name: 'Frios', categories: [], labels: ['gelado'], price_min: null, price_max: null, ...over })
+
+test.describe('agrupamentos: a regra', () => {
+  test('categoria vale se for QUALQUER uma; etiquetas precisam estar TODAS; preço é faixa', () => {
+    const gelados = groupMembers({ categories: ['gelados'] })
+    const doces = groupMembers({ categories: ['doces'] })
+    const ambos = groupMembers({ categories: ['gelados', 'doces'] })
+    expect(ambos.length).toBe(new Set([...gelados, ...doces]).size)
+    const frios = groupMembers({ labels: ['gelado'] })
+    const friosCafe = groupMembers({ labels: ['gelado', 'cafe'] })
+    expect(friosCafe.length).toBeLessThan(frios.length)
+    expect(friosCafe.every((id: string) => frios.includes(id))).toBe(true)
+    const baratos = groupMembers({ labels: ['gelado'], price_max: 20 })
+    expect(baratos.length).toBeLessThanOrEqual(frios.length)
+    expect(groupMembers({ price_min: 9999 })).toEqual([])
+  })
+  test('só entram produtos que vendem no painel', () => {
+    for (const id of groupMembers({ labels: ['quente'] })) expect(PRODUCT_IDS).toContain(id)
+  })
+  test('normalizeGroup: descarta o que não existe, troca preço invertido e exige algum critério', () => {
+    expect(normalizeGroup(grp({ labels: ['gelado', 'nao-existe'], categories: ['pizza', 'gelados'] }))).toMatchObject({ labels: ['gelado'], categories: ['gelados'] })
+    expect(normalizeGroup(grp({ labels: ['nao-existe'] }))).toBeNull() // sem nenhum critério válido
+    expect(normalizeGroup(grp({ name: '   ' }))).toBeNull()
+    expect(normalizeGroup(grp({ labels: [], price_min: 30, price_max: 10 }))).toMatchObject({ price_min: 10, price_max: 30 })
+    expect(normalizeGroup(grp({ name: '<b>x</b> https://a.com ' + 'y'.repeat(80) }))!.name.length).toBeLessThanOrEqual(40)
+    expect(normalizeGroup(grp({ labels: [], price_max: 99999 }))!.price_max).toBe(500)
+    expect(normalizeGroup(null)).toBeNull()
+  })
+  test('normalizePlan: no máximo 4 grupos e 2 ou mais viram barras comparando', () => {
+    const [a] = normalizePlan({ blocks: [spec({ type: 'line', group_by: null, metric: 'revenue', groups: Array.from({ length: 6 }, (_, i) => grp({ name: 'G' + i })) })] })
+    expect(a.groups).toHaveLength(4)
+    expect(a).toMatchObject({ type: 'bars', group_by: null, metrics: [], metric: 'revenue' })
+    const [b2] = normalizePlan({ blocks: [spec({ type: 'kpis', metric: null, metrics: ['orders', 'units'], groups: [grp(), grp({ name: 'Quentes', labels: ['quente'] })] })] })
+    expect(b2).toMatchObject({ type: 'bars', metric: 'orders' })
+    const [c] = normalizePlan({ blocks: [spec({ groups: [grp()] })] })
+    expect(c.type).toBe('bars') // um grupo só: o tipo do bloco continua
+    expect(c.group_by).toBe('hour')
+  })
+  test('blocos antigos, sem "groups", continuam válidos', () => {
+    const [a] = normalizePlan({ blocks: [spec()] })
+    expect(a.groups).toEqual([])
+  })
+})
+
+test.describe('agrupamentos: os números vêm do motor', () => {
+  test('um grupo filtra o bloco: barras por hora só dos produtos da regra', () => {
+    const g = grp({ name: 'Frios', labels: ['gelado'] })
+    const [s] = normalizePlan({ blocks: [spec({ title: 'Frios por hora', filter_category: null, groups: [g] })] })
+    const { block } = resolveBlock(s) as any
+    const q = runQuery({ metric: 'orders', groupBy: 'hour', period: '7d', filter: { products: groupMembers(g), group: 'Frios' } })
+    expect(block.rows.map((r: any) => r.value)).toEqual(q.rows.map((r: any) => r.value))
+    expect(block.subtitle).toContain('grupo: Frios')
+  })
+  test('o total de um grupo é a soma dos seus produtos (unidades e vendas)', () => {
+    const g = grp({ labels: ['gelado'] })
+    const ids = groupMembers(g)
+    for (const metric of ['units', 'revenue']) {
+      const total = runQuery({ metric, period: '30d', filter: { products: ids, group: 'x' } }).total
+      const soma = ids.map((id: string) => runQuery({ metric, period: '30d', filter: { product: id } }).total).reduce((a: number, b: number) => a + b, 0)
+      expect(total, metric).toBeCloseTo(soma, 1)
+    }
+  })
+  test('dois grupos: uma barra por grupo, ordenadas, iguais à consulta de cada um', () => {
+    const [s] = normalizePlan({ blocks: [spec({ type: 'bars', title: 'Frios × Quentes', metric: 'revenue', group_by: null, filter_category: null, groups: [grp({ name: 'Frios', labels: ['gelado'] }), grp({ name: 'Quentes', labels: ['quente'] })] })] })
+    const { block } = resolveBlock(s) as any
+    expect(block.type).toBe('bars')
+    expect(block.rows.map((r: any) => r.label).sort()).toEqual(['Frios', 'Quentes'])
+    expect(block.rows[0].value).toBeGreaterThanOrEqual(block.rows[1].value)
+    for (const r of block.rows) {
+      const ids = groupMembers(r.label === 'Frios' ? { labels: ['gelado'] } : { labels: ['quente'] })
+      expect(r.value).toBe(runQuery({ metric: 'revenue', period: '7d', filter: { products: ids, group: r.label } }).total)
+    }
+  })
+  test('comparando com o período anterior, cada barra traz a variação', () => {
+    const [s] = normalizePlan({ blocks: [spec({ metric: 'orders', compare: true, group_by: null, filter_category: null, groups: [grp(), grp({ name: 'Quentes', labels: ['quente'] })] })] })
+    expect((resolveBlock(s) as any).block.rows[0].note).toMatch(/vs antes/)
+  })
+  test('não resolve: métrica que não é de itens, tipo sem produto ou grupo sem nenhum produto', () => {
+    for (const over of [{ metric: 'avg_ticket', group_by: 'hour' }, { type: 'heat', metric: null, group_by: null }, { groups: [grp({ labels: [], price_min: 9999 })] }]) {
+      const [s] = normalizePlan({ blocks: [spec({ groups: [grp()], ...over })] })
+      expect(() => resolveBlock(s), JSON.stringify(over)).toThrow()
+    }
+  })
+  test('describeGroups mostra quantos e quais produtos a regra pegou', () => {
+    const [s] = normalizePlan({ blocks: [spec({ groups: [grp({ name: 'Frios' })] })] })
+    const txt = describeGroups(s)
+    const ids = groupMembers(s.groups[0])
+    expect(txt).toContain(`Frios: ${ids.length} produtos`)
+    if (ids.length > 4) expect(txt).toContain(`e mais ${ids.length - 4}`)
+  })
+})
+
+test.describe('agrupamentos: o cartão explica a regra', () => {
+  test('a regra em português de balcão', () => {
+    expect(describeRule(grp())).toBe('etiqueta Gelado')
+    expect(describeRule(grp({ labels: ['gelado', 'cafe'] }))).toBe('etiquetas Gelado e Café')
+    expect(describeRule(grp({ categories: ['doces', 'salgados'], labels: [], price_max: 20 }))).toBe('categorias Doces ou Salgados, até R$ 20')
+    expect(describeRule(grp({ categories: ['gelados'], labels: [], price_min: 10, price_max: 25 }))).toBe('categoria Gelados, de R$ 10 a R$ 25')
+    expect(describeRule(grp({ categories: [], labels: [], price_min: 30 }))).toBe('a partir de R$ 30')
+  })
+  test('todo bloco com grupo leva a nota; bloco sem grupo não', () => {
+    const [um] = normalizePlan({ blocks: [spec({ groups: [grp({ name: 'Frios' })] })] })
+    expect((resolveBlock(um) as any).block.footnote).toBe('Frios = etiqueta Gelado')
+    const [dois] = normalizePlan({ blocks: [spec({ group_by: null, groups: [grp({ name: 'Frios' }), grp({ name: 'Quentes', labels: ['quente'] })] })] })
+    expect((resolveBlock(dois) as any).block.footnote).toBe('Frios = etiqueta Gelado · Quentes = etiqueta Quente')
+    const [sem] = normalizePlan({ blocks: [spec()] })
+    expect((resolveBlock(sem) as any).block.footnote).toBeUndefined()
+  })
+})
+
+test.describe('agrupamentos na proposta da IA', () => {
+  test('a conferência diz o que a regra pegou, antes de salvar', async () => {
+    const { r } = await run('frios da tarde por hora', ok([op({ op: 'add_block', position: 'end', block: spec({ title: 'Frios por hora', filter_category: null, groups: [grp({ name: 'Frios', labels: ['gelado'] })] }) })]))
+    expect(r.ok).toBe(true)
+    expect(r.changes[0]).toMatch(/^Adiciona o bloco “Frios por hora” no fim · grupo Frios: \d+ produtos \(/)
+    expect(r.layout[2].spec.groups[0]).toMatchObject({ name: 'Frios', labels: ['gelado'] })
+  })
+  test('proposta com grupo que não pega nenhum produto é descartada e diz o motivo (nunca salva um cartão quebrado)', async () => {
+    const { r } = await run('x', ok([op({ op: 'add_block', position: 'end', block: spec({ groups: [grp({ name: 'Caros', labels: [], price_min: 9999 })] }) })]))
+    expect(r).toEqual({ ok: false, kind: 'sem_mudanca', message: 'Nenhum produto se encaixa na regra do grupo “Caros”. Tente uma regra mais aberta.' })
+  })
+  test('proposta com métrica incompatível com grupo também é descartada', async () => {
+    const { r } = await run('x', ok([op({ op: 'add_block', position: 'end', block: spec({ metric: 'conversion', group_by: 'hour', groups: [grp()] }) })]))
+    expect(r.ok).toBe(false)
+  })
+  test('as instruções ensinam os grupos e listam as etiquetas válidas', async () => {
+    const { calls } = await run('x', ok([op({ op: 'remove', target: 'sales' })]))
+    expect(calls[0].instructions).toContain('AGRUPAMENTOS')
+    expect(calls[0].instructions).toContain('gelado = Gelado')
+    expect(calls[0].instructions).toContain('REGRA, não uma lista')
+  })
+  test('o esquema estrito aceita "groups" no bloco', async () => {
+    let schema: any
+    await runPersonalize({ section: 'vendas', prompt: 'x', current: DEFAULT_VENDAS, log: () => {}, model: async (o: any) => { schema = o.schema; return ok([]) } } as any)
+    const block = schema.properties.operations.items.properties.block.anyOf[0]
+    expect(block.required).toContain('groups')
+    expect(block.properties.groups.items.required).toEqual(['name', 'categories', 'labels', 'price_min', 'price_max'])
   })
 })

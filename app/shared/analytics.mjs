@@ -32,6 +32,10 @@ const unitPrice = (id) => byId.get(id)?.prices.find((p) => p.price != null)?.pri
 
 export const CATEGORY_LABEL = { cafes: 'Cafés', gelados: 'Gelados', bebidas: 'Bebidas', salgados: 'Salgados', doces: 'Doces', novidades: 'Novidades' }
 
+/** Etiquetas do cardápio (ids usados em `labels` dos itens), com o nome e a família de cada uma. */
+export const LABEL_CATALOG = menu.tagGroups.flatMap((g) => g.tags.map((t) => ({ id: t.id, label: t.label, group: g.name })))
+export const LABEL_IDS = LABEL_CATALOG.map((l) => l.id)
+
 /** [id, peso de venda, peso de visualização, multiplicador de conversão de quem vê] */
 const PRODUCTS = [
   ['cafe-latte-gelado', 10.5, 10.5, 1],
@@ -65,6 +69,31 @@ const PRODUCTS = [
 export const PRODUCT_IDS = PRODUCTS.map((p) => p[0])
 const IDX = new Map(PRODUCT_IDS.map((id, i) => [id, i]))
 const itemOf = (i) => byId.get(PRODUCT_IDS[i])
+
+/**
+ * Agrupamento por REGRA VIVA: os produtos que vendem no painel e se encaixam na regra, hoje.
+ * Categoria: qualquer uma da lista. Etiquetas: TODAS. Preço: do primeiro tamanho com preço.
+ * Produto novo que se encaixa entra sozinho; a regra nunca vira uma lista fixa.
+ * @param {{categories?: string[], labels?: string[], price_min?: number|null, price_max?: number|null}} rule
+ * @returns {string[]} ids de produto
+ */
+export function groupMembers(rule) {
+  const cats = rule?.categories ?? []
+  const labels = rule?.labels ?? []
+  const min = rule?.price_min ?? null
+  const max = rule?.price_max ?? null
+  return PRODUCT_IDS.filter((id) => {
+    const it = byId.get(id)
+    if (!it) return false
+    if (cats.length && !cats.includes(it.category)) return false
+    if (labels.length && !labels.every((l) => it.labels?.includes(l))) return false
+    const price = unitPrice(id)
+    if (min != null && price < min) return false
+    if (max != null && price > max) return false
+    return true
+  })
+}
+export const productName = (id) => byId.get(id)?.name ?? id
 
 /** Origem das visitas: [nome, participação, multiplicador de compra] */
 export const SOURCES = [
@@ -286,6 +315,10 @@ function parseFilter(f) {
     if (!(f.category in CATEGORY_LABEL)) throw new Error(`categoria desconhecida: ${f.category}`)
     out.category = f.category
   }
+  if (f.products != null) {
+    // lista de produtos (agrupamento): ids desconhecidos são ignorados
+    out.products = new Set(f.products.map((id) => IDX.get(id)).filter((i) => i !== undefined))
+  }
   if (f.product != null) {
     const i = IDX.get(f.product)
     if (i === undefined) throw new Error(`produto desconhecido: ${f.product}`)
@@ -302,6 +335,7 @@ function describeFilter(f) {
   if (f.source != null) parts.push(`origem: ${f.source}`)
   if (f.category != null) parts.push(`categoria: ${CATEGORY_LABEL[f.category]}`)
   if (f.product != null) parts.push(`produto: ${byId.get(f.product)?.name ?? f.product}`)
+  if (f.products != null) parts.push(`grupo: ${f.group ?? `${f.products.length} produtos`}`)
   if (f.ai_usage != null) parts.push(f.ai_usage === 'com_ia' ? 'só quem usou a IA' : 'só quem não usou a IA')
   return parts.join(' · ')
 }
@@ -377,6 +411,7 @@ const passes = (row, f) => {
   if (f.ai !== undefined && row.ai !== f.ai) return false
   if (row.p !== undefined) {
     if (f.product !== undefined && row.p !== f.product) return false
+    if (f.products !== undefined && !f.products.has(row.p)) return false
     if (f.category !== undefined && itemOf(row.p)?.category !== f.category) return false
   }
   return true
@@ -396,7 +431,7 @@ function tally(rows, dim, rg, pick, filter) {
 function computeValues(metric, dim, rg, filter) {
   const f = getFacts()
   // com produto/categoria (agrupando ou filtrando) a conta é feita pelos itens dos pedidos
-  const byProduct = dim === 'product' || dim === 'category' || filter?.product !== undefined || filter?.category !== undefined
+  const byProduct = dim === 'product' || dim === 'category' || filter?.product !== undefined || filter?.products !== undefined || filter?.category !== undefined
   switch (metric) {
     case 'revenue':
       return byProduct ? tally(f.items, dim, rg, (i) => i.rev, filter) : tally(f.orders, dim, rg, (o) => o.total, filter)
@@ -455,8 +490,8 @@ export function runQuery(q) {
   if (!ALLOWED[metric].includes(groupBy)) throw new Error(`a métrica ${metric} não pode ser agrupada por ${groupBy}`)
   if (!PERIOD_IDS.includes(period)) throw new Error(`período desconhecido: ${period}`)
   const filter = parseFilter(q.filter)
-  if ((filter?.product !== undefined || filter?.category !== undefined) && !ITEM_DIMS_METRICS.includes(metric)) {
-    throw new Error(`a métrica ${metric} não aceita filtro por produto ou categoria`)
+  if ((filter?.product !== undefined || filter?.products !== undefined || filter?.category !== undefined) && !ITEM_DIMS_METRICS.includes(metric)) {
+    throw new Error(`a métrica ${metric} não aceita filtro por produto, grupo ou categoria`)
   }
 
   const rg = rangeOf(period)

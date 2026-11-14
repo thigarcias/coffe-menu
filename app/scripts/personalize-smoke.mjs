@@ -31,6 +31,7 @@ for (const { prompt, ms, r, logs } of results) {
   console.log(`\n=== ${prompt}  (${(ms / 1000).toFixed(1)} s)`)
   if (r.ok) {
     console.log('  [mudanças]', r.changes.join(' | '))
+    for (const i of r.layout) if (i.kind === 'spec' && i.spec.groups?.length) for (const g of i.spec.groups) console.log(`  [grupo] ${g.name}: categorias=${g.categories.join(',') || '-'} etiquetas=${g.labels.join(',') || '-'} preço=${g.price_min ?? '-'}..${g.price_max ?? '-'}`)
     console.log('  [layout]', r.layout.map((i) => (i.kind === 'builtin' ? i.widget : `${i.spec.type}(${i.spec.metric ?? i.spec.metrics.join('+')}/${i.spec.group_by ?? '-'}/${i.spec.period}${i.spec.compare ? '/comparando' : ''}${['filter_source', 'filter_category', 'filter_product', 'filter_ai'].map((k) => (i.spec[k] ? '/' + i.spec[k] : '')).join('')})`)).join(', '))
   } else console.log(`  [${r.kind}]`, r.message)
   for (const l of logs) console.log('  [log]', l)

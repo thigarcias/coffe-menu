@@ -83,3 +83,14 @@ export function similarOf(period?: string): {
 }
 export function radarOf(period?: string): Record<'star' | 'window' | 'hidden' | 'weak', { item: MenuItem; views: number; conv: number }[]>
 export function describeCatalog(): string
+
+export const LABEL_CATALOG: { id: string; label: string; group: string }[]
+export const LABEL_IDS: string[]
+export interface GroupRule {
+  categories: string[]
+  labels: string[]
+  price_min: number | null
+  price_max: number | null
+}
+export function groupMembers(rule: Partial<GroupRule>): string[]
+export function productName(id: string): string

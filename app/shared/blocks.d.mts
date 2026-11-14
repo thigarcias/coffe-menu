@@ -11,3 +11,8 @@ export function resolveBlock(spec: BlockSpec): { block: Block; summary: Record<s
 export const NN: (t: string, extra?: Record<string, unknown>) => Record<string, unknown>
 export const BLOCK_SCHEMA: Record<string, unknown>
 export const BLOCK_TYPES_HELP: string
+export const MAX_GROUPS: number
+export const GROUP_SCHEMA: Record<string, unknown>
+export function normalizeGroup(g: unknown): import('./analytics.mjs').GroupRule & { name: string } | null
+export function describeGroups(spec: { groups?: unknown[] }): string
+export function describeRule(g: Partial<import('./analytics.mjs').GroupRule>): string

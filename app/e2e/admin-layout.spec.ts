@@ -1,7 +1,7 @@
 import { test } from './adminSession'
 import { expect, type Locator, type Page } from '@playwright/test'
 import { goSection } from './adminNav'
-import { runQuery } from '../shared/analytics.mjs'
+import { groupMembers, runQuery } from '../shared/analytics.mjs'
 
 const CAFE = '11111111-1111-4111-8111-111111111111'
 
@@ -447,5 +447,63 @@ test.describe('pedir à IA', () => {
       return { overflowX: adm.scrollWidth - adm.clientWidth, wide: [...adm.querySelectorAll('.adm-editbar, .adm-ai__row, .adm-ai__chip')].filter((e) => e.getBoundingClientRect().right > adm.clientWidth + 0.5).length }
     })
     expect(r).toEqual({ overflowX: 0, wide: 0 })
+  })
+})
+
+test.describe('agrupamentos (novas categorias para analisar)', () => {
+  const frios = { name: 'Frios', categories: [], labels: ['gelado'], price_min: null, price_max: null }
+  const quentes = { name: 'Quentes', categories: [], labels: ['quente'], price_min: null, price_max: null }
+  const base = {
+    type: 'bars', title: 'Frios × Quentes', subtitle: null, metric: 'revenue', metrics: [], group_by: null, period: '7d', compare: false,
+    limit: null, order: null, filter_source: null, filter_category: null, filter_product: null, filter_ai: null, groups: [frios, quentes],
+  }
+
+  test('dois grupos: uma barra por grupo, com os números do motor', async ({ page }) => {
+    await fakeBackend(page, { seed: { produtos: [{ id: 's_1', kind: 'spec', span: 12, spec: base }] } })
+    await open(page, 'produtos')
+    const card = page.locator('.adm-pin')
+    await expect(card.getByRole('heading', { name: 'Frios × Quentes' })).toBeVisible()
+    for (const [nome, regra] of [['Frios', frios], ['Quentes', quentes]] as const) {
+      const total = runQuery({ metric: 'revenue', period: '7d', filter: { products: groupMembers(regra), group: nome } }).total
+      const linha = card.getByRole('listitem').filter({ hasText: nome })
+      const esperado = total >= 1000 ? `R$ ${new Intl.NumberFormat('pt-BR').format(Math.round(total))}` : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(total)
+      await expect(linha).toContainText(esperado.replace(/\s/g, ' '))
+    }
+    await expect(card.getByRole('listitem')).toHaveCount(2)
+    await expect(card).toContainText('Frios = etiqueta Gelado · Quentes = etiqueta Quente') // o cartão diz o que cada grupo significa
+  })
+
+  test('um grupo só filtra o bloco e o subtítulo diz qual é o grupo', async ({ page }) => {
+    const um = { ...base, title: 'Frios por hora', type: 'bars', metric: 'orders', group_by: 'hour', groups: [frios] }
+    await fakeBackend(page, { seed: { vendas: [{ id: 's_1', kind: 'spec', span: 12, spec: um }] } })
+    await open(page, 'vendas')
+    await expect(page.locator('.adm-pin')).toContainText('grupo: Frios')
+    const q = runQuery({ metric: 'orders', groupBy: 'hour', period: '7d', filter: { products: groupMembers(frios), group: 'Frios' } })
+    const top = q.rows.reduce((a: any, b: any) => (b.value > a.value ? b : a))
+    await expect(page.locator('.adm-pin')).toContainText(`${top.value} pedidos`)
+  })
+
+  test('grupo que hoje não pega nenhum produto vira aviso, sem derrubar a página', async ({ page }) => {
+    const vazio = { ...base, groups: [{ ...frios, labels: [], price_min: 9999 }, quentes] }
+    await fakeBackend(page, { seed: { produtos: [{ id: 's_1', kind: 'spec', span: 6, spec: vazio }, { id: 'top', kind: 'builtin', widget: 'top' }] } })
+    await open(page, 'produtos')
+    await expect(page.getByText('Este bloco não está disponível agora')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Mais vendidos' })).toBeVisible()
+  })
+
+  test('a proposta da IA mostra quantos e quais produtos o grupo pegou, antes de salvar', async ({ page }) => {
+    const { calls } = await fakeBackend(page)
+    const ids = groupMembers(frios)
+    const linha = `Adiciona o bloco “Frios × Quentes” no fim · grupo Frios: ${ids.length} produtos (Café Latte Gelado, Cold Brew Tradicional e mais ${ids.length - 2})`
+    await page.route('**/api/admin-personalize', (r) => r.fulfill({ json: { ok: true, changes: [linha], layout: [{ id: 'sales', kind: 'builtin', widget: 'sales' }, { id: 's_ia', kind: 'spec', span: 12, spec: base }] } }))
+    await open(page, 'vendas')
+    await edit(page).click()
+    await page.getByRole('textbox', { name: 'Peça à IA' }).fill('compara frios e quentes')
+    await page.getByRole('button', { name: 'Pedir', exact: true }).click()
+    await expect(page.locator('.adm-ai__proposal')).toContainText(`grupo Frios: ${ids.length} produtos`)
+    expect(calls.some((c) => c.rpc === 'save_dashboard_layout')).toBe(false)
+    await page.getByRole('button', { name: 'Salvar', exact: true }).click()
+    const save = calls.find((c) => c.rpc === 'save_dashboard_layout')!
+    expect(save.args.p_items[1].spec.groups.map((g: any) => g.name)).toEqual(['Frios', 'Quentes']) // a regra viaja dentro do bloco
   })
 })

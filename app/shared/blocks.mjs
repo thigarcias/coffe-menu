@@ -3,7 +3,7 @@
  * personalização com IA) e o navegador (que desenha os blocos salvos na hora, com o motor).
  * Nada aqui fala com a OpenAI nem usa API do Node.
  */
-import { aiStatsOf, COMPARE_WITH, DIMENSIONS, FILTERS, funnelOf, heatOf, METRICS, PERIOD_IDS, PERIOD_LABEL, radarOf, runQuery, similarOf } from './analytics.mjs'
+import { aiStatsOf, CATEGORY_LABEL, COMPARE_WITH, DIMENSIONS, FILTERS, funnelOf, groupMembers, heatOf, LABEL_CATALOG, LABEL_IDS, METRICS, PERIOD_IDS, PERIOD_LABEL, productName, radarOf, runQuery, similarOf } from './analytics.mjs'
 
 export const BLOCK_TYPES = ['kpis', 'line', 'bars', 'funnel', 'heat', 'table', 'similar', 'ai_picks', 'showcase']
 
@@ -35,11 +35,29 @@ Campos que o bloco não usa: metric/group_by/order/limit/filtros = null e metric
 - ATENÇÃO: "line" só mostra evolução POR DIA (por hora só quando period = today). Para pedidos "por hora", "por dia da semana" ou qualquer outro agrupamento, use "bars" com group_by = hour ou weekday. Nunca ponha "por hora" no título de um bloco line com period diferente de today.`
 
 export const NN = (t, extra = {}) => ({ type: [t, 'null'], ...extra })
+/** Máximo de grupos por bloco, de etiquetas por regra e de nomes mostrados na conferência. */
+export const MAX_GROUPS = 4
+const MAX_RULE_LABELS = 6
+
+/** Agrupamento: nome + regra viva (categorias, TODAS as etiquetas, faixa de preço). */
+export const GROUP_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['name', 'categories', 'labels', 'price_min', 'price_max'],
+  properties: {
+    name: { type: 'string' },
+    categories: { type: 'array', maxItems: 6, items: { type: 'string', enum: Object.keys(CATEGORY_LABEL) } },
+    labels: { type: 'array', maxItems: MAX_RULE_LABELS, items: { type: 'string', enum: LABEL_IDS } },
+    price_min: { type: ['number', 'null'] },
+    price_max: { type: ['number', 'null'] },
+  },
+}
+
 /** Saída estrita de um bloco planejado (usada pelo planejador do chat e pela personalização). */
 export const BLOCK_SCHEMA = {
   type: 'object',
   additionalProperties: false,
-  required: ['type', 'title', 'subtitle', 'metric', 'metrics', 'group_by', 'period', 'compare', 'limit', 'order', 'filter_source', 'filter_category', 'filter_product', 'filter_ai'],
+  required: ['type', 'title', 'subtitle', 'metric', 'metrics', 'group_by', 'period', 'compare', 'limit', 'order', 'filter_source', 'filter_category', 'filter_product', 'filter_ai', 'groups'],
   properties: {
     type: { type: 'string', enum: BLOCK_TYPES },
     title: { type: 'string' },
@@ -55,11 +73,48 @@ export const BLOCK_SCHEMA = {
     filter_category: { type: ['string', 'null'], enum: [...FILTERS.category, null] },
     filter_product: { type: ['string', 'null'], enum: [...FILTERS.product, null] },
     filter_ai: { type: ['string', 'null'], enum: [...FILTERS.ai_usage, null] },
+    groups: { type: 'array', maxItems: MAX_GROUPS, items: GROUP_SCHEMA },
   },
 }
 export const isEnum = (v, list) => typeof v === 'string' && list.includes(v)
 
 /** Confere o plano contra o catálogo. Devolve só blocos válidos e já normalizados. */
+const num = (v, lo, hi) => (typeof v === 'number' && Number.isFinite(v) ? Math.max(lo, Math.min(hi, Math.round(v * 100) / 100)) : null)
+
+/** Grupo vindo de fora (IA ou banco): só categorias e etiquetas que existem; sem critério nenhum, descarta. */
+export function normalizeGroup(g) {
+  const name = clean(g?.name, 40)
+  const categories = [...new Set((Array.isArray(g?.categories) ? g.categories : []).filter((c) => isEnum(c, Object.keys(CATEGORY_LABEL))))].slice(0, 6)
+  const labels = [...new Set((Array.isArray(g?.labels) ? g.labels : []).filter((l) => isEnum(l, LABEL_IDS)))].slice(0, MAX_RULE_LABELS)
+  const price_min = num(g?.price_min, 0, 500)
+  const price_max = num(g?.price_max, 0, 500)
+  if (!name || (!categories.length && !labels.length && price_min == null && price_max == null)) return null
+  if (price_min != null && price_max != null && price_min > price_max) return { name, categories, labels, price_min: price_max, price_max: price_min }
+  return { name, categories, labels, price_min, price_max }
+}
+
+const money = (v) => `R$ ${new Intl.NumberFormat('pt-BR').format(v)}`
+const listOr = (xs, w) => (xs.length > 1 ? `${xs.slice(0, -1).join(', ')} ${w} ${xs[xs.length - 1]}` : (xs[0] ?? ''))
+
+/** A regra de um grupo em português de balcão: "etiqueta Gelado, até R$ 20". */
+export function describeRule(g) {
+  const cats = (g.categories ?? []).map((c) => CATEGORY_LABEL[c] ?? c)
+  const labs = (g.labels ?? []).map((id) => LABEL_CATALOG.find((l) => l.id === id)?.label ?? id)
+  const price = g.price_min != null && g.price_max != null ? `de ${money(g.price_min)} a ${money(g.price_max)}` : g.price_min != null ? `a partir de ${money(g.price_min)}` : g.price_max != null ? `até ${money(g.price_max)}` : ''
+  return [cats.length ? `${cats.length > 1 ? 'categorias' : 'categoria'} ${listOr(cats, 'ou')}` : '', labs.length ? `${labs.length > 1 ? 'etiquetas' : 'etiqueta'} ${listOr(labs, 'e')}` : '', price].filter(Boolean).join(', ')
+}
+
+/** "Frios (9 produtos: Café Latte Gelado, Cold Brew… e mais 4)", para o dono conferir a regra antes de salvar. */
+export function describeGroups(spec) {
+  return (spec.groups ?? [])
+    .map((g) => {
+      const ids = groupMembers(g)
+      const names = ids.slice(0, 4).map(productName)
+      return `${g.name}: ${ids.length} ${ids.length === 1 ? 'produto' : 'produtos'}${names.length ? ` (${names.join(', ')}${ids.length > 4 ? ` e mais ${ids.length - 4}` : ''})` : ''}`
+    })
+    .join('; ')
+}
+
 export function normalizePlan(plan) {
   const out = []
   for (const b of Array.isArray(plan?.blocks) ? plan.blocks.slice(0, 4) : []) {
@@ -80,18 +135,55 @@ export function normalizePlan(plan) {
       filter_category: isEnum(b.filter_category, FILTERS.category) ? b.filter_category : null,
       filter_product: isEnum(b.filter_product, FILTERS.product) ? b.filter_product : null,
       filter_ai: isEnum(b.filter_ai, FILTERS.ai_usage) ? b.filter_ai : null,
+      groups: (Array.isArray(b.groups) ? b.groups : []).map(normalizeGroup).filter(Boolean).slice(0, MAX_GROUPS),
     }
     // "line" só sabe mostrar a evolução por dia (por hora só em "hoje"). Pedido de linha agrupada por
     // hora, dia da semana, produto etc. é, na verdade, um gráfico de barras: corrige para o título não mentir.
     if (spec.type === 'line' && spec.group_by && !['none', 'day'].includes(spec.group_by) && spec.period !== 'today') spec.type = 'bars'
+    // comparar dois ou mais grupos é um gráfico de barras (um valor por grupo); o resto do bloco não se aplica
+    if (spec.groups.length > 1) {
+      spec.metric = spec.metric ?? spec.metrics[0] ?? null
+      Object.assign(spec, { type: 'bars', metrics: [], group_by: null })
+    }
     out.push(spec)
   }
   return out
 }
 
-const filterOf = (s) => {
+const filterOf = (s, group = s.groups?.length === 1 ? s.groups[0] : null) => {
   const f = { source: s.filter_source, category: s.filter_category, product: s.filter_product, ai_usage: s.filter_ai }
+  if (group) Object.assign(f, { products: groupMembers(group), group: group.name })
   return Object.values(f).some((v) => v != null) ? f : null
+}
+
+const GROUP_METRICS = ['revenue', 'orders', 'units']
+/** Grupo só vale em métrica de itens vendidos, e uma regra que não pega nenhum produto não vira bloco. */
+function assertGroups(s) {
+  if (!s.groups?.length) return
+  const metric = s.metric ?? s.metrics?.[0]
+  const metrics = s.metrics?.length ? s.metrics : metric ? [metric] : []
+  if (['funnel', 'heat', 'similar', 'ai_picks', 'showcase'].includes(s.type) || metrics.some((m) => !GROUP_METRICS.includes(m))) {
+    throw new Error('agrupamento só vale para vendas, pedidos e unidades')
+  }
+  for (const g of s.groups) if (!groupMembers(g).length) throw new Error(`o grupo "${g.name}" não tem nenhum produto`)
+}
+
+/** Dois ou mais grupos: uma barra por grupo, com o mesmo período, filtros e comparação. */
+function resolveGroupsCompare(s) {
+  const metric = s.metric
+  const filter = filterOf(s, null)
+  const rs = s.groups.map((g) => ({ g, q: runQuery({ metric, period: s.period, compare: s.compare, filter: { ...filter, products: groupMembers(g), group: g.name } }) }))
+  const sorted = [...rs].sort((a, b) => (s.order === 'asc' ? a.q.total - b.q.total : b.q.total - a.q.total))
+  const rows = sorted.map(({ g, q }) => ({
+    label: g.name,
+    value: q.total,
+    figure: figureOf(metric, q.total),
+    ...(q.prevTotal != null ? { note: `${fmtDelta(delta(q.total, q.prevTotal)) || 'novo'} vs antes` } : { note: `${groupMembers(g).length} produtos` }),
+  }))
+  return {
+    block: { type: 'bars', title: s.title, subtitle: s.subtitle ?? [PERIOD_LABEL[s.period][0].toUpperCase() + PERIOD_LABEL[s.period].slice(1), METRICS[metric].label].join(' · '), ranked: true, rows },
+    summary: { bloco: s.title, tipo: 'comparação de grupos de produtos', metrica: METRICS[metric].label, periodo: PERIOD_LABEL[s.period], grupos: sorted.map(({ g, q }) => ({ grupo: g.name, produtos: groupMembers(g).length, valor: fmtValue(metric, q.total), ...(q.prevTotal != null ? { antes: fmtValue(metric, q.prevTotal), variacao: fmtDelta(delta(q.total, q.prevTotal)) } : {}) })) },
+  }
 }
 
 /* ------------------------------------------------------------------ formatação */
@@ -118,6 +210,15 @@ const subtitleOf = (s, q) => s.subtitle ?? [PERIOD_LABEL[s.period][0].toUpperCas
  * compacto (para o redator) com os números que ele pode citar.
  */
 export function resolveBlock(s) {
+  const r = resolveCore(s)
+  // o cartão salvo precisa dizer o que cada grupo significa (semanas depois ninguém lembra da regra)
+  if (s.groups?.length && r.block.type !== 'text') r.block.footnote = s.groups.map((g) => `${g.name} = ${describeRule(g)}`).join(' · ')
+  return r
+}
+
+function resolveCore(s) {
+  assertGroups(s)
+  if (s.groups?.length > 1) return resolveGroupsCompare(s)
   const filter = filterOf(s)
   if (s.type === 'funnel') {
     const steps = funnelOf(s.period)

@@ -44,7 +44,7 @@ Uma dashboard numa rota do mesmo app (`/admin`), pensada para a dona ou o dono d
 
 ## Personalizar o painel (Dashboard)
 
-14/11/2026 · o dono ajusta cada seção do Dashboard do jeito que enxerga, à mão ou pedindo à IA, e pode voltar ao padrão. **Estado:** código e testes prontos; **a migração ainda não foi aplicada no Supabase `catalogo`**. Até lá o painel segue no padrão e o botão **Personalizar** nem aparece (o painel nunca quebra por falta do servidor).
+14/11/2026 · o dono ajusta cada seção do Dashboard do jeito que enxerga, à mão ou pedindo à IA, e pode voltar ao padrão. **Estado:** pronto e no ar. A migração foi **aplicada no Supabase `catalogo`** em 14/11/2026 (versão `20261114172211`, nome `coffe_menu_dashboard_layout`; conferido: RLS ligado, `anon` sem acesso, `authenticated` só pelas RPCs). Se o servidor ou a conta não responderem, o painel segue no padrão e o botão **Personalizar** não aparece (nunca quebra).
 
 ### Como funciona
 
@@ -67,6 +67,18 @@ Uma dashboard numa rota do mesmo app (`/admin`), pensada para a dona ou o dono d
 
 **Cuidado com o CSS:** `.adm-btn*` é do chat (`chat.css`). Os botões do modo editar usam `.adm-lb*` de propósito; não reutilize o nome antigo.
 
+### Agrupamentos ("novas categorias" para analisar)
+
+O dono pede um conjunto de produtos ("frios da tarde", "doces até R$ 20", "tudo com chocolate") e a IA cria um **agrupamento por regra viva**, guardado **dentro do bloco** (`spec.groups`, até 4 por bloco). Não mexe no cardápio do cliente.
+
+- **A regra** (`GroupRule`): `categories` (o produto precisa estar em QUALQUER uma), `labels` (precisa ter TODAS; ids de `tagGroups` do `menu.json`) e `price_min`/`price_max` (preço do primeiro tamanho com preço). É uma regra, não uma lista: produto novo que se encaixa entra sozinho (`groupMembers` em `shared/analytics.mjs`, avaliada a cada abertura).
+- **Um grupo** filtra o bloco inteiro (ex.: barras por hora só dos "Frios"). **Dois ou mais** viram barras comparando um contra o outro ("Frios × Quentes"); `normalizePlan` converte o tipo do bloco para `bars` sozinho.
+- **Só vale com vendas, pedidos e unidades** (métricas de itens). Em funil, mapa de calor, Parecidos, sugestões da IA e vitrine, ou com grupo que não pega nenhum produto, o motor recusa: a proposta da IA **descarta o bloco e diz o motivo** (nunca se salva um cartão quebrado). Um bloco antigo cuja regra ficou vazia mostra "Este bloco não está disponível agora".
+- **Conferência antes de salvar:** a lista de mudanças da proposta diz quantos e quais produtos cada regra pegou. **Depois de salvo,** o cartão traz uma nota no rodapé com a regra em português ("Frios = etiqueta Gelado · Quentes = etiqueta Quente").
+- **O total de um grupo é a soma dos seus produtos** (unidades e vendas): há teste para isso. O filtro por lista é `filter.products` no `runQuery`.
+- **Limite conhecido:** como o grupo mora no bloco, não há uma lista "Meus agrupamentos" para reusar a mesma regra em vários blocos (a IA copia a regra). Se isso incomodar, o próximo passo é uma tabela de grupos por cafeteria e `filter_group` por id.
+- O chat do painel usa o mesmo `BLOCK_SCHEMA` e o mesmo motor, então ele também *pode* receber grupos, mas as instruções dele ainda não os ensinam.
+
 ### Defesas da IA de personalização
 
 Pré-filtro sem modelo (tamanho, "ignore as instruções", pedir o prompt, pedido de código) que **nem chama o modelo**; o pedido vai ao modelo só como dado entre `<pedido>`; saída estrita revalidada (`sanitizeLayout` e `normalizePlan` descartam id, tipo, filtro ou largura inventados); até 6 operações, 14 cartões e 8 blocos da IA por seção; recusas com texto **fixo** do servidor; erro interno vira mensagem amigável e o texto do erro não vai à tela.
@@ -84,9 +96,9 @@ NODE_USE_ENV_PROXY=1 NODE_EXTRA_CA_CERTS=/root/.ccr/ca-bundle.crt OPENAI_API_KEY
 
 ### O que falta
 
-1. **Aplicar a migração no `catalogo`** (compartilhado com outros apps: só há tabelas novas do coffe-menu). Depois conferir com um login real.
-2. **Agrupamentos** ("novas categorias" para analisar, como regra viva: categoria + etiquetas + faixa de preço, usados como filtro e como agrupamento nos blocos). Pede tabela própria e uma extensão do `runQuery`.
-3. **Fixar no painel** um bloco que o chat gerou (hoje só dá para pedir à IA do modo editar).
+1. **Conferir com um login real** (a migração está aplicada e testada no PGlite e no banco, mas ninguém salvou um layout pelo celular ainda).
+2. **Fixar no painel** um bloco que o chat gerou (hoje só dá para pedir pela caixa do modo editar).
+3. **Lista "Meus agrupamentos"** para reusar uma regra em vários blocos (ver "Limite conhecido" acima).
 4. Escolher a cafeteria quando a conta tiver mais de uma (hoje usa a primeira, como os números do painel).
 5. A equipe ainda é demonstração: hoje todos que têm acesso editam. Quando houver papéis, decidir quem pode personalizar.
 
@@ -130,7 +142,7 @@ Os testes automáticos **não** chamam a OpenAI: `e2e/server/` usa um modelo fal
 ### Próximas etapas
 
 1. **Gráfico livre** com Vega-Lite e visualizações novas (fluxo/Sankey, quadrante, pequenos múltiplos), com clique no ponto virando pergunta.
-2. ~~Fixar painéis gerados~~ (a personalização do Dashboard está em "Personalizar o painel"). Falta fixar um bloco **direto do chat** e os agrupamentos.
+2. ~~Fixar painéis gerados~~ (a personalização e os agrupamentos estão em "Personalizar o painel"). Falta fixar um bloco **direto do chat**.
 3. Rodar a resposta no servidor (segundo plano de verdade), login e dados reais. Isso depende da **próxima fase** (banco no Supabase, back-end separado e painel do dono do produto), descrita em `04-mvp.md`.
 
 ## Onde está o código

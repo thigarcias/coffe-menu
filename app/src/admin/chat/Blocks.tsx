@@ -18,7 +18,7 @@ export function RichText({ text }: { text: string }) {
   )
 }
 
-function Card({ title, subtitle, children }: { title?: string; subtitle?: string; children: ReactNode }) {
+function Card({ title, subtitle, footnote, children }: { title?: string; subtitle?: string; footnote?: string; children: ReactNode }) {
   return (
     <section className="adm-bk">
       {title && (
@@ -28,6 +28,7 @@ function Card({ title, subtitle, children }: { title?: string; subtitle?: string
         </header>
       )}
       {children}
+      {footnote && <p className="adm-bk__foot">{footnote}</p>}
     </section>
   )
 }
@@ -49,7 +50,7 @@ export function BlockView({ block, onAsk }: { block: Block; onAsk?: (q: string) 
       )
     case 'kpis':
       return (
-        <Card title={block.title}>
+        <Card title={block.title} footnote={block.footnote}>
           <dl className="adm-stats">
             {block.items.map((k) => (
               <div key={k.label}>
@@ -63,7 +64,7 @@ export function BlockView({ block, onAsk }: { block: Block; onAsk?: (q: string) 
       )
     case 'line':
       return (
-        <Card title={block.title} subtitle={block.subtitle}>
+        <Card title={block.title} subtitle={block.subtitle} footnote={block.footnote}>
           {block.previous.length > 0 && (
             <Legend
               items={[
@@ -88,7 +89,7 @@ export function BlockView({ block, onAsk }: { block: Block; onAsk?: (q: string) 
       )
     case 'bars':
       return (
-        <Card title={block.title} subtitle={block.subtitle}>
+        <Card title={block.title} subtitle={block.subtitle} footnote={block.footnote}>
           <RankedBars ranked={block.ranked !== false} rows={block.rows.map((r) => ({ key: r.label, label: r.label, value: r.value, figure: r.figure, figureSub: r.note }))} />
         </Card>
       )
@@ -106,7 +107,7 @@ export function BlockView({ block, onAsk }: { block: Block; onAsk?: (q: string) 
       )
     case 'table':
       return (
-        <Card title={block.title}>
+        <Card title={block.title} footnote={block.footnote}>
           <div className="adm-tablewrap">
             <table className="adm-table">
               <thead>

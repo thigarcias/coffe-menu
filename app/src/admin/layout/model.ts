@@ -46,6 +46,17 @@ export interface BlockSpec {
   filter_category: string | null
   filter_product: string | null
   filter_ai: string | null
+  /** agrupamentos (regra viva) do bloco; ausente em blocos salvos antes de existirem */
+  groups?: SpecGroup[]
+}
+
+/** "Nova categoria" para analisar: nome e regra (categoria, TODAS as etiquetas, faixa de preço). */
+export interface SpecGroup {
+  name: string
+  categories: string[]
+  labels: string[]
+  price_min: number | null
+  price_max: number | null
 }
 
 /** Largura do cartão na grade de 12 colunas (no celular tudo vira uma coluna). */

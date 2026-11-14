@@ -10,11 +10,13 @@ export type Block =
   | { type: 'text'; text: string }
   /** perguntas sugeridas: tocar numa delas envia a pergunta */
   | { type: 'suggest'; items: string[] }
-  | { type: 'kpis'; title?: string; items: { label: string; value: string; note?: string }[] }
+  | { type: 'kpis'; title?: string; footnote?: string; items: { label: string; value: string; note?: string }[] }
   | {
       type: 'line'
       title: string
       subtitle?: string
+      /** o que cada agrupamento do bloco significa (regra em português) */
+      footnote?: string
       labels: string[]
       tips: string[]
       current: number[]
@@ -24,10 +26,10 @@ export type Block =
       /** vazio quando não há comparação */
       format: 'money' | 'number' | 'percent'
     }
-  | { type: 'bars'; title: string; subtitle?: string; /** mostra a posição (1, 2, 3…): só para rankings */ ranked?: boolean; rows: { label: string; value: number; figure: string; note?: string }[] }
+  | { type: 'bars'; title: string; subtitle?: string; footnote?: string; /** mostra a posição (1, 2, 3…): só para rankings */ ranked?: boolean; rows: { label: string; value: number; figure: string; note?: string }[] }
   | { type: 'funnel'; title: string; steps: { label: string; hint: string; value: number }[] }
   | { type: 'heat'; title: string; subtitle?: string; hours: number[]; rows: { label: string; cells: number[] }[] }
-  | { type: 'table'; title: string; columns: string[]; rows: string[][] }
+  | { type: 'table'; title: string; footnote?: string; columns: string[]; rows: string[][] }
 
 export type MessageState = 'streaming' | 'done' | 'interrupted' | 'stopped' | 'error'
 
