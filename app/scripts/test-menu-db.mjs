@@ -10,6 +10,8 @@ const stockSql=await readFile(new URL('../supabase/migrations/20261114200000_cof
 await db.exec(stockSql)
 const refSql=await readFile(new URL('../supabase/migrations/20261114210000_coffe_menu_midia_de_referencia.sql', import.meta.url),'utf8')
 await db.exec(refSql)
+const layoutSql=await readFile(new URL('../supabase/migrations/20261114220000_coffe_menu_dashboard_layout.sql', import.meta.url),'utf8')
+await db.exec(layoutSql)
 const owner='11111111-1111-4111-8111-111111111111', other='22222222-2222-4222-8222-222222222222', cafe='33333333-3333-4333-8333-333333333333'
 await db.query('insert into auth.users(id) values ($1),($2)', [owner,other])
 await db.query('insert into public.cafes(id,owner_id,slug,name) values ($1,$2,$3,$4)',[cafe,owner,'cafe-teste','Café'])
@@ -82,7 +84,54 @@ for (const bad of ['menu/../segredo.jpg','/menu/a.jpg','https://exemplo.com/a.jp
   const ruim=await db.query('select public.create_menu_draft($1,$2,$3::jsonb) as data',[cafe,'Ruim '+bad,JSON.stringify({...refMenu,items:[{...refMenu.items[0],image:bad,video:null}]})])
   await assert.rejects(() => db.query('select public.publish_menu_draft($1,$2,$3)',[cafe,ruim.rows[0].data.draft_id,1]),`deveria recusar ${bad}`)
 }
-console.log('Migração, isolamento, rascunho, publicação, restauração, disponibilidade, estoque e mídia de referência passaram.')
+
+// personalização do painel: versões por seção, voltar ao padrão, desfazer, conflito e isolamento
+await db.exec('reset role; set role authenticated')
+await db.query("select set_config('request.jwt.claim.sub',$1,false)",[owner])
+const builtin=(w)=>({id:w,kind:'builtin',widget:w})
+const specItem={id:'s_1',kind:'spec',span:6,spec:{type:'bars',title:'Gelados por hora',subtitle:null,metric:'orders',metrics:[],group_by:'hour',period:'7d',compare:false,limit:null,order:null,filter_source:null,filter_category:'gelados',filter_product:null,filter_ai:null}}
+let lay=await db.query('select public.get_dashboard_layouts($1) as data',[cafe])
+assert.deepEqual(lay.rows[0].data.sections,{},'sem personalização: tudo no padrão')
+let l1=await db.query('select public.save_dashboard_layout($1,$2,$3,$4::jsonb,$5) as data',[cafe,'vendas',0,JSON.stringify([builtin('funnel'),specItem]),'manual'])
+assert.equal(l1.rows[0].data.version,1)
+await assert.rejects(() => db.query('select public.save_dashboard_layout($1,$2,$3,$4::jsonb,$5)',[cafe,'vendas',0,JSON.stringify([builtin('sales')]),'manual']),/mudou/,'versão esperada velha deve dar conflito')
+let l2=await db.query('select public.save_dashboard_layout($1,$2,$3,$4::jsonb,$5) as data',[cafe,'vendas',1,JSON.stringify([specItem]),'ia'])
+assert.equal(l2.rows[0].data.version,2)
+lay=await db.query('select public.get_dashboard_layouts($1) as data',[cafe])
+assert.equal(lay.rows[0].data.sections.vendas.version,2); assert.equal(lay.rows[0].data.sections.vendas.items.length,1)
+assert.equal(lay.rows[0].data.history.vendas.length,2)
+const l3=await db.query('select public.save_dashboard_layout($1,$2,$3,$4::jsonb,$5) as data',[cafe,'vendas',2,null,'reset'])
+assert.equal(l3.rows[0].data.version,3)
+lay=await db.query('select public.get_dashboard_layouts($1) as data',[cafe])
+assert.equal(lay.rows[0].data.sections.vendas.items,null,'reset = voltar ao padrão')
+const l4=await db.query('select public.restore_dashboard_layout($1,$2,$3,$4) as data',[cafe,'vendas',3,2])
+assert.equal(l4.rows[0].data.version,4,'desfazer cria uma versão nova, o histórico fica')
+lay=await db.query('select public.get_dashboard_layouts($1) as data',[cafe])
+assert.equal(lay.rows[0].data.sections.vendas.items[0].id,'s_1')
+assert.equal(lay.rows[0].data.history.vendas.length,4)
+// seções são independentes
+lay=await db.query('select public.get_dashboard_layouts($1) as data',[cafe]); assert.equal(lay.rows[0].data.sections.visao,undefined)
+// dado inválido nunca entra
+for (const [why,items,section,source] of [
+  ['cartão desconhecido',[{id:'x',kind:'builtin',widget:'nao-existe'}],'vendas','manual'],
+  ['id repetido',[builtin('funnel'),builtin('funnel')],'vendas','manual'],
+  ['bloco com tipo inventado',[{...specItem,spec:{...specItem.spec,type:'html'}}],'vendas','manual'],
+  ['largura inválida',[{...specItem,span:3}],'vendas','manual'],
+  ['mais de 30 cartões',Array.from({length:31},(_,i)=>({...specItem,id:'s_'+i})),'vendas','manual'],
+  ['seção inventada',[builtin('funnel')],'admin','manual'],
+  ['reset com cartões',[builtin('funnel')],'vendas','reset'],
+  ['origem inventada',[builtin('funnel')],'vendas','hack'],
+]) await assert.rejects(() => db.query('select public.save_dashboard_layout($1,$2,$3,$4::jsonb,$5)',[cafe,section,4,JSON.stringify(items),source]),`deveria recusar: ${why}`)
+// outro dono não vê nem escreve; anônimo (sem login) não faz nada
+await db.query("select set_config('request.jwt.claim.sub',$1,false)",[other])
+lay=await db.query('select public.get_dashboard_layouts($1) as data',[cafe]); assert.deepEqual(lay.rows[0].data.sections,{},'outro dono não enxerga o painel alheio')
+await assert.rejects(() => db.query('select public.save_dashboard_layout($1,$2,$3,$4::jsonb,$5)',[cafe,'vendas',4,JSON.stringify([builtin('sales')]),'manual']))
+await assert.rejects(() => db.query('select public.restore_dashboard_layout($1,$2,$3,$4)',[cafe,'vendas',4,1]))
+const peek=await db.query('select id from public.dashboard_layout_versions'); assert.equal(peek.rows.length,0,'outro dono não lê linhas de versões alheias')
+await db.exec('reset role; set role anon')
+await assert.rejects(() => db.query('select public.get_dashboard_layouts($1)',[cafe]))
+await assert.rejects(() => db.query('select public.save_dashboard_layout($1,$2,$3,$4::jsonb,$5)',[cafe,'vendas',4,JSON.stringify([builtin('sales')]),'manual']))
+console.log('Migração, isolamento, rascunho, publicação, restauração, disponibilidade, estoque, mídia de referência e personalização do painel passaram.')
 await db.close()
 
 

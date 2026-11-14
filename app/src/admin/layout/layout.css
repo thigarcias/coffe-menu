@@ -1,0 +1,76 @@
+/* Personalização do painel: cabeçalho da seção, barra de edição e invólucros dos cartões. */
+.adm-sec__head--row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.adm-sec__head--row > div { min-width: 0; }
+.adm-sec__head--row h2 { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.adm-pill.adm-pill--sage { color: var(--a-sage); background: var(--a-matcha); font-family: system-ui, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0; }
+
+.adm-lb { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 16px; border-radius: 999px; font-size: 14px; font-weight: 700; color: var(--a-ink); background: rgba(46, 36, 32, 0.07); border: 0; cursor: pointer; }
+.adm-lb:disabled { opacity: 0.45; cursor: default; }
+.adm-lb--solid { color: #fff; background: var(--a-sage); }
+.adm-lb--ghost { background: transparent; color: var(--a-sage); padding: 0 10px; }
+.adm-lb--danger { color: #fff; background: var(--a-warn); }
+.adm-edit-open { flex: none; }
+
+.adm-editbar {
+  scroll-margin-top: 96px; display: grid; gap: 10px; margin: 0 0 14px; padding: 14px; border-radius: 22px;
+  background: var(--a-glass); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid rgba(79, 127, 100, 0.35); box-shadow: var(--a-shadow);
+}
+.adm-editbar__hint { font-size: 13px; color: var(--a-ink-2); }
+.adm-editbar__row { display: flex; flex-wrap: wrap; gap: 8px; }
+.adm-editbar__row--sub { gap: 0 6px; margin: -6px 0; }
+/* doca no pé da seção: Salvar e Cancelar sempre à mão enquanto se rola pelos cartões */
+.adm-dock {
+  position: sticky; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 15; margin-top: 16px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; padding: 10px 12px; border-radius: 24px;
+  background: rgba(255, 255, 255, 0.86); -webkit-backdrop-filter: blur(22px) saturate(1.5); backdrop-filter: blur(22px) saturate(1.5);
+  border: 1px solid rgba(79, 127, 100, 0.35); box-shadow: var(--a-shadow);
+}
+.adm-dock__state { flex: 1 1 100%; margin: 0 4px; font-size: 12px; font-weight: 700; color: var(--a-ink-3); }
+@media (min-width: 380px) { .adm-dock__state { flex: 1 1 0; min-width: 0; } }
+.adm-editerr { margin: 0 0 12px; padding: 10px 12px; border-radius: 14px; font-size: 13px; color: var(--a-warn); background: #f8e7da; }
+.adm-empty { grid-column: 1 / -1; padding: 24px 8px; text-align: center; font-size: 13px; color: var(--a-ink-3); }
+
+/* invólucro de cada cartão no modo editar: barra de controles em cima, cartão embaixo */
+.adm-ed { scroll-margin-top: 96px; grid-column: 1 / -1; min-width: 0; display: flex; flex-direction: column; gap: 6px; padding: 6px; border-radius: 28px; border: 1.5px dashed rgba(79, 127, 100, 0.5); }
+.adm-ed > :not(.adm-ed__bar) { flex: 1; min-width: 0; }
+.adm-ed > .adm-card, .adm-ed > .adm-pin { grid-column: auto; }
+.adm-ed--kpi, .adm-ed--hero { grid-column: 1 / -1; } /* no celular, 1 por linha: a barra de controles precisa de ~250px */
+.adm-ed__bar { display: flex; align-items: center; gap: 4px; padding: 0 4px 0 10px; }
+.adm-ed__name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 700; color: var(--a-ink-2); }
+.adm-ed__btn { flex: none; min-width: 44px; min-height: 44px; padding: 0 8px; border-radius: 12px; font-size: 17px; font-weight: 700; color: var(--a-sage); background: transparent; border: 0; cursor: pointer; }
+.adm-ed__btn:disabled { opacity: 0.3; cursor: default; }
+.adm-ed__btn--text { font-size: 12.5px; }
+
+/* bloco da IA fixado no painel: o próprio bloco vira o cartão */
+.adm-pin { grid-column: 1 / -1; min-width: 0; }
+.adm-pin > .adm-bk { height: 100%; padding: 16px; border-radius: 24px; background: var(--a-glass); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); border: 1px solid rgba(46, 36, 32, 0.07); box-shadow: var(--a-shadow); }
+.adm-pin .adm-bk__head h3 { font-size: 17px; letter-spacing: -0.1px; }
+.adm-pin .adm-bk__head p { font-size: 12.5px; }
+.adm-pin .adm-bk .adm-stats { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+.adm-pin__gone { font-size: 13px; color: var(--a-ink-3); }
+
+.adm-hidden { margin-top: 18px; padding: 4px 14px 10px; border-radius: 22px; background: rgba(46, 36, 32, 0.035); }
+.adm-hidden ul { list-style: none; margin: 0; padding: 0; display: grid; }
+.adm-hidden li { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 52px; border-top: 1px solid var(--a-line); font-size: 14px; }
+.adm-hidden li:first-child { border-top: 0; }
+.adm-hidden__more { margin-top: 6px; }
+.adm-hidden__more summary { display: flex; align-items: center; min-height: 44px; font-size: 13px; font-weight: 700; color: var(--a-sage); cursor: pointer; }
+
+@media (min-width: 640px) {
+  .adm-ed--kpi { grid-column: span 3; }
+  .adm-ed--hero { grid-column: span 6; }
+}
+@media (min-width: 1024px) {
+  /* editando, os indicadores ganham largura (no painel normal são 2 de 12 colunas, estreito demais para os controles) */
+  .adm-ed--kpi { grid-column: span 4; }
+  .adm-ed--hero { grid-column: span 12; }
+  .adm-ed--s12, .adm-pin.adm-s12 { grid-column: span 12; }
+  .adm-ed--s8, .adm-pin.adm-s8 { grid-column: span 8; }
+  .adm-ed--s7, .adm-pin.adm-s7 { grid-column: span 7; }
+  .adm-ed--s6, .adm-pin.adm-s6 { grid-column: span 6; }
+  .adm-ed--s5, .adm-pin.adm-s5 { grid-column: span 5; }
+  .adm-ed--s4, .adm-pin.adm-s4 { grid-column: span 4; }
+  /* no modo editar o invólucro já ocupa as colunas: o bloco dentro dele preenche o espaço */
+  .adm-ed > .adm-pin.is-wrapped { grid-column: auto; }
+}

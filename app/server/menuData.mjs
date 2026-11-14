@@ -1,4 +1,4 @@
-const allowed = new Set(['list_my_cafes', 'get_menu_editor', 'create_menu_draft', 'save_menu_draft', 'restore_menu_draft_version', 'rename_menu_draft', 'delete_menu_draft', 'publish_menu_draft', 'set_product_availability', 'set_product_stock'])
+const allowed = new Set(['list_my_cafes', 'get_menu_editor', 'create_menu_draft', 'save_menu_draft', 'restore_menu_draft_version', 'rename_menu_draft', 'delete_menu_draft', 'publish_menu_draft', 'set_product_availability', 'set_product_stock', 'get_dashboard_layouts', 'save_dashboard_layout', 'restore_dashboard_layout'])
 
 export async function readJson(req, limit = 1048576) {
   if (req.body !== undefined) {
