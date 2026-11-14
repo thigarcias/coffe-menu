@@ -403,11 +403,30 @@ img { display: block; max-width: none; }
 
 /* ---------- fim da categoria ("você viu tudo") ---------- */
 .slide--end { --dock-space: calc(var(--dock-h) + max(16px, env(safe-area-inset-bottom)) + 12px); }
-.end { grid-row: 2 / 4; grid-column: 1; align-self: center; justify-self: center; width: min(100% - 2 * var(--gutter), 340px); display: grid; justify-items: center; gap: 10px; text-align: center; }
-.end__icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--matcha); color: var(--sage); }
-.end__title { margin: 6px 0 0; font-family: var(--font-display); font-size: 24px; line-height: 1.15; letter-spacing: -0.2px; text-wrap: balance; }
-.end__sub { margin: 0 0 8px; color: var(--ink-2); font-size: 14px; }
-.end .cta { max-width: 320px; }
+.end { grid-row: 2 / 4; grid-column: 1; align-self: center; justify-self: center; width: min(100% - 2 * var(--gutter), 340px); display: grid; justify-items: center; gap: 8px; text-align: center; }
+.end__stack, .end__mini { display: flex; align-items: center; }
+.end__stack img { width: 52px; height: 52px; margin-left: -14px; border-radius: 50%; object-fit: cover; background: var(--surface); border: 3px solid var(--bg); box-shadow: 0 6px 16px rgba(74, 52, 36, .16); }
+.end__stack img:first-child, .end__mini img:first-child { margin-left: 0; }
+.end__kicker { margin-top: 10px; color: var(--sage); font-size: 10.5px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; }
+.end__title { margin: 0; font-family: var(--font-display); font-size: 26px; line-height: 1.12; letter-spacing: -0.3px; text-wrap: balance; }
+.end__sub { margin: 0 0 14px; color: var(--ink-2); font-size: 14px; line-height: 1.35; text-wrap: balance; }
+.end__next { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 320px; min-height: 64px; padding: 10px 12px 10px 12px; border-radius: var(--r-capsule); text-align: left; transition: transform .18s cubic-bezier(.3,.7,.4,1.4); }
+.end__next:active { transform: scale(.98); }
+.end__mini img { width: 40px; height: 40px; margin-left: -14px; border-radius: 50%; object-fit: cover; background: var(--surface); border: 2px solid var(--glass-hi); }
+.end__nexttxt { display: grid; min-width: 0; flex: 1; line-height: 1.15; }
+.end__nexttxt small { color: var(--ink-3); font-size: 10.5px; font-weight: 600; letter-spacing: .4px; }
+.end__nexttxt b { font-family: var(--font-display); font-size: 18px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.end__go { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--surface); font-size: 18px; }
+.end__grid { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 14px; color: var(--ink-2); font-size: 14px; font-weight: 600; }
+/* entra devagar quando o cartão aparece (sem movimento para quem pediu menos animação) */
+.slide--end .end > * { opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s cubic-bezier(.2,.7,.2,1); }
+.slide--end-in .end > * { opacity: 1; transform: none; }
+.slide--end-in .end > :nth-child(2) { transition-delay: .06s; }
+.slide--end-in .end > :nth-child(3) { transition-delay: .12s; }
+.slide--end-in .end > :nth-child(4) { transition-delay: .18s; }
+.slide--end-in .end > :nth-child(5) { transition-delay: .24s; }
+.slide--end-in .end > :nth-child(6) { transition-delay: .3s; }
+@media (prefers-reduced-motion: reduce) { .slide--end .end > * { opacity: 1; transform: none; transition: none; } }
 
 /* ---------- dica "deslize" ---------- */
 .swipe-hint {

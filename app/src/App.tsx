@@ -390,7 +390,7 @@ export function App({ menu: menuProp, storageScope, refreshMenu }: AppProps = {}
         key={activeCat ?? 'todas'}
         items={feedItems}
         categoryLabel={catName(activeCat ?? '')}
-        nextCategory={nextCat}
+        nextCategory={nextCat && { id: nextCat.id, name: nextCat.name, photos: items.filter((i) => i.category === nextCat.id && i.image).slice(0, 3).map((i) => i.image as string) }}
         wraps={catIndex === categories.length - 1}
         onNextCategory={() => nextCat && pickCategory(nextCat.id)}
         onGrid={switchMode}

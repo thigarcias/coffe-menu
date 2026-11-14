@@ -1,8 +1,8 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import type { MenuItem } from '../types'
 import { nameSize, priceParts } from '../lib/format'
 import { track } from '../lib/track'
-import { BagPlus, Check, Grid } from './Icons'
+import { BagPlus, Grid } from './Icons'
 import { ProductImage } from './ProductImage'
 
 export interface FeedHandle {
@@ -19,7 +19,7 @@ interface Props {
   /** nome da categoria que o feed mostra (usado no cartão do fim) */
   categoryLabel: string
   /** a categoria do lado; quando é a última, vem a primeira (o menu fecha em círculo) */
-  nextCategory: { id: string; name: string } | null
+  nextCategory: { id: string; name: string; photos: string[] } | null
   /** a próxima já é a primeira: o texto diz "voltar" em vez de "próxima" */
   wraps: boolean
   onNextCategory: () => void
@@ -39,6 +39,7 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
   const current = useRef<{ id: string; since: number } | null>(null)
   const onEndRef = useRef(onEnd)
   onEndRef.current = onEnd
+  const [endSeen, setEndSeen] = useState(false)
 
   useImperativeHandle(ref, () => ({
     // Rola o próprio feed até o slide (sem scrollIntoView, que no Safari ignora
@@ -66,6 +67,7 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
           if ((e.target as HTMLElement).dataset.end !== undefined) {
             flush()
             current.current = null
+            setEndSeen(true)
             onEndRef.current?.()
             continue
           }
@@ -92,6 +94,11 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
       document.removeEventListener('visibilitychange', onHide)
     }
   }, [items, onActive])
+
+  // fotos dos produtos que a pessoa acabou de ver, para o fim ter cara de "pronto, você passou por tudo"
+  // (espalhadas pela categoria, não só as primeiras, para variar)
+  const withPhoto = items.map((i) => i.image).filter((x): x is string => !!x)
+  const seenPhotos = [0, Math.floor(withPhoto.length / 3), Math.floor((2 * withPhoto.length) / 3)].map((i) => withPhoto[i]).filter((x, i, a): x is string => !!x && a.indexOf(x) === i)
 
   return (
     <div className="feed" ref={box}>
@@ -137,19 +144,32 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
       })}
 
       {/* Fim da categoria: o feed não continua em outra categoria. Aqui a pessoa decide o próximo passo. */}
-      <section className="slide slide--end" data-end aria-label={`Fim de ${categoryLabel}`}>
+      <section className={`slide slide--end ${endSeen ? 'slide--end-in' : ''}`} data-end aria-label={`Fim de ${categoryLabel}`}>
         <div className="end">
-          <span className="end__icon" aria-hidden><Check size={26} /></span>
+          {seenPhotos.length > 0 && (
+            <div className="end__stack" aria-hidden>
+              {seenPhotos.map((src) => <img key={src} src={src} alt="" loading="lazy" />)}
+            </div>
+          )}
+          <span className="end__kicker">Fim de {categoryLabel}</span>
           <h2 className="end__title">Você viu tudo em {categoryLabel}</h2>
-          <p className="end__sub">{items.length === 1 ? '1 item' : `${items.length} itens`} nesta categoria.{nextCategory ? ' Que tal olhar outra?' : ''}</p>
+          <p className="end__sub">{items.length === 1 ? '1 item' : `${items.length} itens`} por aqui.{nextCategory ? ' Que tal olhar outra categoria?' : ''}</p>
           {nextCategory && (
-            <button className="cta end__next" onClick={onNextCategory}>
-              {wraps ? `Voltar para ${nextCategory.name}` : `Ver ${nextCategory.name}`}
-              <span aria-hidden>→</span>
+            <button className="glass end__next" onClick={onNextCategory} aria-label={wraps ? `Voltar para ${nextCategory.name}` : `Ver ${nextCategory.name}`}>
+              {nextCategory.photos.length > 0 && (
+                <span className="end__mini" aria-hidden>
+                  {nextCategory.photos.map((src) => <img key={src} src={src} alt="" loading="lazy" />)}
+                </span>
+              )}
+              <span className="end__nexttxt">
+                <small>{wraps ? 'Voltar ao começo' : 'Próxima categoria'}</small>
+                <b>{nextCategory.name}</b>
+              </span>
+              <span className="end__go" aria-hidden>→</span>
             </button>
           )}
-          <button className="cta cta--ghost end__grid" onClick={onGrid}>
-            <Grid size={18} /> Ver em grade
+          <button className="end__grid" onClick={onGrid}>
+            <Grid size={16} /> Ver em grade
           </button>
         </div>
       </section>

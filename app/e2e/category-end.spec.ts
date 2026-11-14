@@ -98,7 +98,7 @@ test.describe('o feed termina no fim da categoria', () => {
     const vw = page.viewportSize()!.width
     const cs = await box(page, '.cats')
     const dock = await box(page, '.dock')
-    for (const sel of ['.end__icon', '.end__title', '.end__sub', '.end__next', '.end__grid']) {
+    for (const sel of ['.end__stack', '.end__kicker', '.end__title', '.end__sub', '.end__next', '.end__grid']) {
       const b = await box(page, sel)
       expect(b.x, sel).toBeGreaterThanOrEqual(0)
       expect(b.x + b.width, sel).toBeLessThanOrEqual(vw + 0.5)
