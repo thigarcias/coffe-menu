@@ -5,6 +5,8 @@
  * principal, então um cardápio salvo só com "principal" também ganha fundo e chips na mesma família.
  * Toda cor vem de fora (banco), então só entra no CSS se for #RRGGBB.
  */
+import { HEX, mix, contrast, rgb as rgbOf } from '../../shared/color.mjs'
+
 export interface ThemeBranding {
   theme?: string | null
   accent_color?: string | null
@@ -22,7 +24,7 @@ export interface ThemePreset {
   soft: string
 }
 
-export const HEX = /^#[0-9a-fA-F]{6}$/
+export { HEX, mix, contrast }
 
 export const THEMES: ThemePreset[] = [
   { id: 'matcha', name: 'Matcha', accent: '#4f7f64', secondary: '#b07a45', background: '#f5efe6', soft: '#dcebe2' },
@@ -40,29 +42,7 @@ export type ThemeField = (typeof THEME_FIELDS)[number]
 
 const hex = (v: unknown): string | null => (typeof v === 'string' && HEX.test(v) ? v.toLowerCase() : null)
 
-const rgb = (h: string): [number, number, number] => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)) as [number, number, number]
-const toHex = (c: number[]) => '#' + c.map((n) => Math.round(Math.min(255, Math.max(0, n))).toString(16).padStart(2, '0')).join('')
-
-/** Mistura `a` com `b`: t = 0 devolve `a`, t = 1 devolve `b`. */
-export function mix(a: string, b: string, t: number): string {
-  const x = rgb(a)
-  const y = rgb(b)
-  return toHex(x.map((n, i) => n + (y[i] - n) * t))
-}
-
-const lum = (h: string) => {
-  const [r, g, b] = rgb(h).map((n) => {
-    const s = n / 255
-    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4
-  })
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b
-}
-
-/** Razão de contraste WCAG entre duas cores (1 a 21). */
-export function contrast(a: string, b: string): number {
-  const [hi, lo] = [lum(a), lum(b)].sort((p, q) => q - p)
-  return (hi + 0.05) / (lo + 0.05)
-}
+const rgb = (h: string) => rgbOf(h) as [number, number, number]
 
 export const presetOf = (id: string | null | undefined) => THEMES.find((t) => t.id === id) ?? null
 

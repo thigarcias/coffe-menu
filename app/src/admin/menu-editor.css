@@ -431,3 +431,10 @@
   .menu-editor__themes { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .menu-editor__phone-wrap { grid-template-columns: 320px minmax(0, 1fr); align-items: start; justify-items: stretch; }
 }
+.menu-editor__ai-palette { display: grid; gap: 8px; justify-items: start; }
+.menu-editor__ai-palette > small { color: var(--me-muted); font-size: 12px; }
+.menu-editor__suggested { display: grid; gap: 8px; width: 100%; }
+.menu-editor__suggest-chip { width: 100%; }
+.menu-editor__suggest-chip > span:last-child { display: grid; gap: 2px; min-width: 0; }
+.menu-editor__suggest-chip small { color: var(--me-muted); font-size: 12px; font-weight: 500; }
+@media (min-width: 900px) { .menu-editor__suggested { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

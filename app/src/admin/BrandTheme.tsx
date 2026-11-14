@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { extractColors } from '../lib/extractColors'
+import { askPalettes, type SuggestedPalette } from './paletteApi'
 import { THEMES, THEME_FIELDS, presetOf, resolveTheme, themeWarnings, type ThemeBranding, type ThemeField } from '../lib/theme'
 
 const FIELD_INFO: Record<ThemeField, { label: string; hint: string }> = {
@@ -18,6 +21,31 @@ export function BrandTheme({ branding, onChange }: Props) {
   const preset = presetOf(branding?.theme)
   const custom = !!current && !preset
   const warnings = themeWarnings(branding)
+  const [busy, setBusy] = useState(false)
+  const [aiError, setAiError] = useState('')
+  const [suggested, setSuggested] = useState<SuggestedPalette[]>([])
+
+  async function suggest(files: FileList | null) {
+    const list = [...(files ?? [])]
+    if (!list.length) return
+    setAiError('')
+    setSuggested([])
+    if (list.length > 4) return setAiError('Envie até 4 imagens por vez.')
+    if (list.some((f) => !/^image\/(jpeg|png|webp)$/.test(f.type) || f.size > 3 * 1024 * 1024)) return setAiError('Use imagens JPG, PNG ou WebP de até 3 MB.')
+    setBusy(true)
+    try {
+      const found = await Promise.all(list.map((f) => extractColors(f)))
+      const colors = [...new Set(found.flatMap((f) => f.colors))].slice(0, 12)
+      const result = await askPalettes(colors, found.map((f) => f.preview))
+      if (result.ok) setSuggested(result.palettes)
+      else setAiError(result.message)
+    } catch {
+      setAiError('Não consegui ler essas imagens. Tente outro arquivo.')
+    } finally {
+      setBusy(false)
+    }
+  }
+  const applySuggested = (p: SuggestedPalette) => onChange({ theme: null, accent_color: p.accent, secondary_color: p.secondary, background_color: p.background, soft_color: p.soft })
 
   const pick = (id: string) => {
     const t = THEMES.find((x) => x.id === id)
@@ -61,6 +89,26 @@ export function BrandTheme({ branding, onChange }: Props) {
             <span>{t.name}</span>
           </button>
         ))}
+      </div>
+      <div className="menu-editor__ai-palette">
+        <label className="menu-editor__secondary menu-editor__file-button">
+          {busy ? 'Lendo as imagens…' : 'Sugerir paletas com IA'}
+          <input type="file" accept="image/jpeg,image/png,image/webp" multiple disabled={busy} aria-label="Imagens da marca para sugerir paletas" onChange={(e) => { void suggest(e.target.files); e.target.value = '' }} />
+        </label>
+        <small>Envie logo, posts ou fotos da marca (até 4). A IA sugere 3 paletas com as cores delas. As imagens não são guardadas.</small>
+        {aiError && <p className="menu-editor__error" role="alert">{aiError}</p>}
+        {suggested.length > 0 && (
+          <div className="menu-editor__suggested" role="group" aria-label="Paletas sugeridas">
+            {suggested.map((p) => (
+              <button key={p.name + p.accent} type="button" className="menu-editor__theme-chip menu-editor__suggest-chip" onClick={() => applySuggested(p)}>
+                <span className="menu-editor__swatch" aria-hidden>
+                  <i style={{ background: p.background }} /><i style={{ background: p.soft }} /><i style={{ background: p.accent }} /><i style={{ background: p.secondary }} />
+                </span>
+                <span><b>{p.name}</b><small>{p.note}</small></span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       <details className="menu-editor__theme-adv" open={custom}>
         <summary>Ajustar cada cor</summary>

@@ -3,6 +3,6 @@
     { "source": "/admin", "destination": "/index.html" },
     { "source": "/auth/v1/:path*", "destination": "/api/auth?auth_path=:path*" }
   ],
-  "functions": { "api/admin-chat.mjs": { "maxDuration": 60 }, "api/admin-personalize.mjs": { "maxDuration": 60 }, "api/menu-suggest.mjs": { "maxDuration": 60 } }
+  "functions": { "api/admin-chat.mjs": { "maxDuration": 60 }, "api/admin-personalize.mjs": { "maxDuration": 60 }, "api/admin-palette.mjs": { "maxDuration": 60 }, "api/menu-suggest.mjs": { "maxDuration": 60 } }
 }
 

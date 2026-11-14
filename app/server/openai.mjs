@@ -16,7 +16,8 @@ export const config = () => ({
 /**
  * Chamada genérica à Responses API com saída em JSON estruturado (strict).
  * Mesmo modelo e esforço fixos de toda a IA do app. Devolve o objeto já convertido.
- * @param {{instructions: string, input: string, schema: object, name: string, signal?: AbortSignal}} o
+ * `input` pode ser texto ou a lista de mensagens da Responses API (com `input_image`).
+ * @param {{instructions: string, input: string | object[], schema: object, name: string, signal?: AbortSignal}} o
  */
 export async function callStructured({ instructions, input, schema, name, signal }) {
   const { key, model, effort, timeoutMs } = config()

@@ -85,3 +85,58 @@ test('marca: o tema vai junto no rascunho salvo e a tela cabe no celular', async
   expect(saved).toMatchObject({ theme: 'oceano', accent_color: '#1b6683', background_color: '#eef4f6', soft_color: '#d4e7ef' })
   await page.screenshot({ path: test.info().outputPath('marca.png'), fullPage: false })
 })
+
+/** PNG de verdade (gerado no navegador): fundo branco com um bloco roxo grande e um detalhe laranja. */
+async function brandImage(page: Page) {
+  const dataUrl = await page.evaluate(() => {
+    const c = document.createElement('canvas')
+    c.width = 300; c.height = 200
+    const g = c.getContext('2d')!
+    g.fillStyle = '#ffffff'; g.fillRect(0, 0, 300, 200)
+    g.fillStyle = '#6b3fa0'; g.fillRect(20, 20, 180, 160)
+    g.fillStyle = '#e8892b'; g.fillRect(210, 60, 70, 70)
+    return c.toDataURL('image/png')
+  })
+  return Buffer.from(dataUrl.split(',')[1], 'base64')
+}
+
+test('marca: imagens da marca viram 3 paletas sugeridas; as cores vêm do cálculo e a escolhida aparece na prévia', async ({ page }) => {
+  let sent: any
+  await page.route('**/api/admin-palette', async (route) => {
+    sent = route.request().postDataJSON()
+    const hexes = sent.colors.map((c: any) => c.hex)
+    await route.fulfill({ json: { ok: true, source: 'ia', palettes: [
+      { name: 'Fiel ao logo', note: 'Roxo do logo, fundo suave.', accent: hexes[0], secondary: hexes[1] ?? '#e8892b', background: '#f5f0f9', soft: '#e7dcf4' },
+      { name: 'Leve e claro', note: 'Quase branco.', accent: '#6b3fa0', secondary: '#e8892b', background: '#fbf9fd', soft: '#ece4f5' },
+      { name: 'Cheio de cor', note: 'Mais cor.', accent: '#6b3fa0', secondary: '#e8892b', background: '#efe6f8', soft: '#ddcdf0' },
+    ] } })
+  })
+  await openBrand(page)
+  await page.getByLabel('Imagens da marca para sugerir paletas').setInputFiles({ name: 'logo.png', mimeType: 'image/png', buffer: await brandImage(page) })
+  await expect(page.getByRole('group', { name: 'Paletas sugeridas' }).getByRole('button')).toHaveCount(3)
+  // o cálculo achou o roxo e o laranja (e o branco do fundo ficou de fora)
+  expect(sent.colors.length).toBeGreaterThan(0)
+  const near = (hex: string, ref: number[]) => { const n = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)); return Math.hypot(n[0] - ref[0], n[1] - ref[1], n[2] - ref[2]) < 40 }
+  expect(near(sent.colors[0].hex, [0x6b, 0x3f, 0xa0])).toBe(true)
+  expect(sent.colors.some((c: any) => near(c.hex, [0xe8, 0x89, 0x2b]))).toBe(true)
+  expect(sent.colors.some((c: any) => near(c.hex, [255, 255, 255]))).toBe(false)
+  // vai uma imagem reduzida (JPEG) para a IA ver
+  expect(sent.images).toHaveLength(1)
+  expect(sent.images[0]).toMatch(/^data:image\/jpeg;base64,/)
+  await page.getByRole('button', { name: /Cheio de cor/ }).click()
+  expect(await phoneVar(page, '--bg')).toBe('#efe6f8')
+  expect(await phoneVar(page, '--sage')).toBe('#6b3fa0')
+  await expect(page.getByText('Cores personalizadas')).toBeVisible()
+})
+
+test('marca: se a IA falha ou o arquivo não serve, mostra um aviso claro e não muda o tema', async ({ page }) => {
+  await page.route('**/api/admin-palette', (route) => route.fulfill({ status: 500, json: { error: 'detalhe interno' } }))
+  await openBrand(page)
+  const input = page.getByLabel('Imagens da marca para sugerir paletas')
+  await input.setInputFiles({ name: 'logo.png', mimeType: 'image/png', buffer: await brandImage(page) })
+  await expect(page.getByRole('alert').filter({ hasText: 'Não consegui sugerir paletas agora' })).toBeVisible()
+  await expect(page.getByText('detalhe interno')).toHaveCount(0)
+  await input.setInputFiles({ name: 'x.gif', mimeType: 'image/gif', buffer: Buffer.from('GIF89a') })
+  await expect(page.getByRole('alert')).toContainText('JPG, PNG ou WebP')
+  expect(await phoneVar(page, '--matcha')).toBe('#dcebe2')
+})

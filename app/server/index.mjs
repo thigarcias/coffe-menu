@@ -3,7 +3,7 @@ import { createServer } from 'node:http'
 import { readFile } from 'node:fs/promises'
 import { extname, join, normalize } from 'node:path'
 import { handleRecommend } from './ai.mjs'
-import { handleProtectedAdminChat, handleProtectedPersonalize } from './protectedAdminChat.mjs'
+import { handleProtectedAdminChat, handleProtectedPersonalize, handleProtectedPalette } from './protectedAdminChat.mjs'
 import { handleAuth } from './auth.mjs'
 import { handlePublicMenu } from './menuPublic.mjs'
 import { handleMenuData } from './menuData.mjs'
@@ -26,6 +26,7 @@ createServer(async (req, res) => {
   if (req.url.startsWith('/auth/v1/')) return handleAuth(req, res)
   if (req.method === 'POST' && req.url === '/api/admin-chat') return handleProtectedAdminChat(req, res)
   if (req.method === 'POST' && req.url === '/api/admin-personalize') return handleProtectedPersonalize(req, res)
+  if (req.method === 'POST' && req.url === '/api/admin-palette') return handleProtectedPalette(req, res)
   const path = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname)).replace(/^(\.\.[/\\])+/, '')
   const file = join(root, (/^[/\\]admin[/\\]?$/.test(path) || /^[/\\]c[/\\][a-z0-9-]+[/\\]?$/.test(path) || path.endsWith('/')) ? 'index.html' : path)
   try {
