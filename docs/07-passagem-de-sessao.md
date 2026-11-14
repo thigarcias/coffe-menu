@@ -18,6 +18,8 @@ Cardápio interativo para cafeterias (demo de venda para donos), com feed estilo
 - **Supabase de produção:** projeto `catalogo`, compartilhado com outros apps do usuário (não mexer nas tabelas que não são do cardápio). Migrações em `app/supabase/migrations/` (personalização, estoque, mídia de referência). Algumas foram aplicadas pelo conector Supabase do Claude: **mantenha o arquivo do repositório igual ao que foi aplicado**.
 - **Cardápio de referência publicado** em `cafeteria-mock` (162 produtos da Starbucks, estoque 20 cada, só para teste): abre em `/?unidade=cafeteria-mock`. É uma referência interna, não é para mostrar a terceiros como produto da Starbucks. Para publicá-lo foi preciso liberar as fotos e vídeos da biblioteca de referência (`menu/*`, `video/*`) na validação de publicação.
 - **Quebra de linha:** `.gitattributes` com `eol=lf`. **Capturas visuais** só comparam no Linux (`quiz.png` foi regerado lá).
+- **Disponibilidade:** cada produto tem miniatura e há filtros (busca, situação incluindo "Perto de acabar" com limite ajustável, categoria, ordem por estoque). Testes em `e2e/menu-editor-v2.spec.ts`.
+- **Testes por escopo:** mudança isolada numa tela roda só os specs dela; código compartilhado roda a suíte completa (regra no `CLAUDE.md`).
 - **Pendências desta rodada:** testar o "Preencher com IA" com o modelo de verdade (os testes simulam); o estoque não desconta com pedidos (checkout simulado); limite de uso do chat por conta.
 
 ## O que existe
