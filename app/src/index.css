@@ -401,6 +401,14 @@ img { display: block; max-width: none; }
 .thinking span:nth-child(3) { animation-delay: .3s; background: var(--fav); }
 @keyframes pulse { 0%, 100% { opacity: .25; transform: scale(.8); } 50% { opacity: 1; transform: scale(1); } }
 
+/* ---------- fim da categoria ("você viu tudo") ---------- */
+.slide--end { --dock-space: calc(var(--dock-h) + max(16px, env(safe-area-inset-bottom)) + 12px); }
+.end { grid-row: 2 / 4; grid-column: 1; align-self: center; justify-self: center; width: min(100% - 2 * var(--gutter), 340px); display: grid; justify-items: center; gap: 10px; text-align: center; }
+.end__icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--matcha); color: var(--sage); }
+.end__title { margin: 6px 0 0; font-family: var(--font-display); font-size: 24px; line-height: 1.15; letter-spacing: -0.2px; text-wrap: balance; }
+.end__sub { margin: 0 0 8px; color: var(--ink-2); font-size: 14px; }
+.end .cta { max-width: 320px; }
+
 /* ---------- dica "deslize" ---------- */
 .swipe-hint {
   position: absolute; z-index: 24; left: 50%;
@@ -712,7 +720,7 @@ img { display: block; max-width: none; }
 /* texto menor e mais perto do dock (foto e vídeo), para o produto aparecer mais */
 .slide { --dock-space: calc(var(--dock-h) + max(16px, env(safe-area-inset-bottom)) + 12px); }
 /* o primeiro produto guarda a faixa da dica "deslize" */
-.slide:first-child { --dock-space: calc(var(--dock-h) + max(16px, env(safe-area-inset-bottom)) + 50px); }
+.slide[data-first] { --dock-space: calc(var(--dock-h) + max(16px, env(safe-area-inset-bottom)) + 50px); }
 .slide .slide__body { gap: 2px; }
 .slide .slide__cat { font-size: 10px; letter-spacing: 1px; }
 .slide .badge { font-size: 9.5px; padding: 2px 7px; }

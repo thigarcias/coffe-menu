@@ -28,6 +28,7 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 ### Mobile first
 - O alvo é celular, de **320px a 430px** de largura. Tudo precisa caber em 320px.
 - O `.app` fica **preso à janela** (`position: fixed; inset: 0`) e com `overflow: clip`. Isso evita a faixa vazia sob a barra do Safari no iPhone e impede o app de rolar para o lado. Não troque por `100dvh`/`100vh`.
+- **O feed não é infinito:** mostra UMA categoria por vez (`feedItems` em `App.tsx`) e termina num cartão "Você viu tudo em X" (`.slide--end` em `Feed.tsx`) que leva à próxima categoria (a última volta para a primeira). Trocar de categoria remonta o feed (`key`); para ir a um produto de outra categoria use `goToItem`/`pendingScroll`, nunca `feed.scrollTo` direto. Nos testes use `revealItem` (`e2e/feedNav.ts`). O evento `category_end` registra quem chegou ao fim.
 - O slide do feed é uma **grade**: `[espaço do topo][foto 1fr][texto auto][espaço do dock]`. A foto ocupa só o espaço livre e nunca invade o texto. Use `subgrid`, não porcentagens fixas.
 - Alvos de toque com pelo menos 44px.
 - **Todo botão de ícone tem texto de apoio visível** ("Adicionar", "Sacola", "Ver tudo", "Editar", "Remover"). Só o X de fechar e o − / + de quantidade ficam sem texto. Pedido do usuário: o app ficou enxuto demais e não dava para saber o que cada ícone fazia.
@@ -74,7 +75,7 @@ Cardápio interativo para cafeterias: o cliente abre pelo QR, vê os produtos nu
 ```bash
 npm run dev -- --host     # app + rota da IA (precisa de OPENAI_API_KEY no .env)
 npm run build             # typecheck + build
-npm run test:e2e          # 1155 testes: 5 celulares (layout, capturas, quiz, painel, chat e editor) + Node (motor, guardrail, recomendação e servidor)
+npm run test:e2e          # 1206 testes: 5 celulares (layout, capturas, quiz, painel, chat e editor) + Node (motor, guardrail, recomendação e servidor)
 npm run test:menu-db      # migrações do Supabase no PGlite
 npm run test:e2e:update   # aceita uma mudança visual feita de propósito
 npm run artifact          # gera app/artifact/ para publicar como Artifact do claude.ai

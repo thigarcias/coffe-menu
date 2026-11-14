@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import type { MenuItem } from '../types'
 import { nameSize, priceParts } from '../lib/format'
 import { track } from '../lib/track'
-import { BagPlus } from './Icons'
+import { BagPlus, Check, Grid } from './Icons'
 import { ProductImage } from './ProductImage'
 
 export interface FeedHandle {
@@ -16,15 +16,29 @@ interface Props {
   counts: Map<string, number>
   onDetails: (item: MenuItem) => void
   onActive: (item: MenuItem) => void
+  /** nome da categoria que o feed mostra (usado no cartão do fim) */
+  categoryLabel: string
+  /** a categoria do lado; quando é a última, vem a primeira (o menu fecha em círculo) */
+  nextCategory: { id: string; name: string } | null
+  /** a próxima já é a primeira: o texto diz "voltar" em vez de "próxima" */
+  wraps: boolean
+  onNextCategory: () => void
+  onGrid: () => void
+  /** produto que guarda a faixa da dica "deslize" (o primeiro do cardápio) */
+  firstId?: string
+  /** o cartão do fim apareceu na tela */
+  onEnd?: () => void
 }
 
 /** Feed vertical em tela cheia, um produto por tela, no estilo Reels. */
 export const Feed = forwardRef<FeedHandle, Props>(function Feed(
-  { items, categoryName, counts, onDetails, onActive },
+  { items, categoryName, counts, onDetails, onActive, categoryLabel, nextCategory, wraps, onNextCategory, onGrid, firstId, onEnd },
   ref,
 ) {
   const box = useRef<HTMLDivElement>(null)
   const current = useRef<{ id: string; since: number } | null>(null)
+  const onEndRef = useRef(onEnd)
+  onEndRef.current = onEnd
 
   useImperativeHandle(ref, () => ({
     // Rola o próprio feed até o slide (sem scrollIntoView, que no Safari ignora
@@ -49,6 +63,12 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
       (entries) => {
         for (const e of entries) {
           if (!e.isIntersecting) continue
+          if ((e.target as HTMLElement).dataset.end !== undefined) {
+            flush()
+            current.current = null
+            onEndRef.current?.()
+            continue
+          }
           const id = (e.target as HTMLElement).dataset.item!
           if (current.current?.id === id) continue
           flush()
@@ -58,7 +78,7 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
       },
       { root: box.current, threshold: 0.6 },
     )
-    box.current?.querySelectorAll('[data-item]').forEach((el) => io.observe(el))
+    box.current?.querySelectorAll('[data-item], [data-end]').forEach((el) => io.observe(el))
     const onHide = () => {
       if (document.visibilityState === 'hidden') {
         flush()
@@ -79,7 +99,7 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
         const price = priceParts(item)
         const n = counts.get(item.id) ?? 0
         return (
-          <section key={item.id} className="slide" data-item={item.id}>
+          <section key={item.id} className="slide" data-item={item.id} data-first={item.id === firstId ? '' : undefined}>
             <ProductImage src={item.image} video={item.video} alt={item.name} eager={i < 2} className="slide__img" />
             <div className="slide__shade" />
 
@@ -115,6 +135,24 @@ export const Feed = forwardRef<FeedHandle, Props>(function Feed(
           </section>
         )
       })}
+
+      {/* Fim da categoria: o feed não continua em outra categoria. Aqui a pessoa decide o próximo passo. */}
+      <section className="slide slide--end" data-end aria-label={`Fim de ${categoryLabel}`}>
+        <div className="end">
+          <span className="end__icon" aria-hidden><Check size={26} /></span>
+          <h2 className="end__title">Você viu tudo em {categoryLabel}</h2>
+          <p className="end__sub">{items.length === 1 ? '1 item' : `${items.length} itens`} nesta categoria.{nextCategory ? ' Que tal olhar outra?' : ''}</p>
+          {nextCategory && (
+            <button className="cta end__next" onClick={onNextCategory}>
+              {wraps ? `Voltar para ${nextCategory.name}` : `Ver ${nextCategory.name}`}
+              <span aria-hidden>→</span>
+            </button>
+          )}
+          <button className="cta cta--ghost end__grid" onClick={onGrid}>
+            <Grid size={18} /> Ver em grade
+          </button>
+        </div>
+      </section>
     </div>
   )
 })

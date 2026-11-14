@@ -275,6 +275,19 @@ export function App({ menu: menuProp, storageScope, refreshMenu }: AppProps = {}
     [items],
   )
 
+  // O feed mostra UMA categoria por vez e termina com um cartão "você viu tudo": sem rolagem sem fim.
+  const feedItems = useMemo(() => items.filter((i) => i.category === activeCat), [items, activeCat])
+  const catIndex = categories.findIndex((c) => c.id === activeCat)
+  const nextCat = categories.length > 1 && catIndex >= 0 ? categories[(catIndex + 1) % categories.length] : null
+  // rolar até um produto de OUTRA categoria: troca a categoria e rola quando o feed novo estiver na tela
+  const pendingScroll = useRef<string | null>(null)
+  useEffect(() => {
+    if (pendingScroll.current && mode === 'feed') {
+      feed.current?.scrollTo(pendingScroll.current, false)
+      pendingScroll.current = null
+    }
+  }, [activeCat, mode])
+
   const pickCategory = (id: string) => {
     setActiveCat(id)
     track({ type: 'category', categoryId: id })
@@ -282,14 +295,18 @@ export function App({ menu: menuProp, storageScope, refreshMenu }: AppProps = {}
       document.getElementById(`sec-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     } else {
       const first = items.find((i) => i.category === id)
-      if (first) feed.current?.scrollTo(first.id, false)
+      if (first) {
+        if (id === activeCat) feed.current?.scrollTo(first.id, false)
+        else pendingScroll.current = first.id
+      }
     }
   }
 
   const goToItem = (item: MenuItem) => {
     setPanel(null)
+    pendingScroll.current = item.id
+    setActiveCat(item.category)
     setMode('feed')
-    requestAnimationFrame(() => feed.current?.scrollTo(item.id, false))
   }
 
   const openDetails = (item: MenuItem) => {
@@ -370,7 +387,15 @@ export function App({ menu: menuProp, storageScope, refreshMenu }: AppProps = {}
 
       <Feed
         ref={feed}
-        items={items}
+        key={activeCat ?? 'todas'}
+        items={feedItems}
+        categoryLabel={catName(activeCat ?? '')}
+        nextCategory={nextCat}
+        wraps={catIndex === categories.length - 1}
+        onNextCategory={() => nextCat && pickCategory(nextCat.id)}
+        onGrid={switchMode}
+        firstId={items[0]?.id}
+        onEnd={() => { setAtFirst(false); if (activeCat) track({ type: 'category_end', categoryId: activeCat }) }}
         categoryName={catName}
         counts={counts}
         onDetails={openDetails}

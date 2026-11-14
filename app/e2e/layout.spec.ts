@@ -1,4 +1,5 @@
 import { expect, test, type Page, type Locator } from '@playwright/test'
+import { revealItem } from './feedNav'
 
 /** Caixa de um elemento na tela (px CSS). */
 const box = async (l: Locator) => {
@@ -204,6 +205,7 @@ test.describe('cardápio no celular', () => {
 
   test('os botões do produto ficam dentro da área da foto e não tocam o texto', async ({ page }) => {
     for (const id of ['matcha-latte-proteico-gelado', 'chocolate-quente', 'bolo-red-velvet-fatia', 'mocha-strate-frappuccino-com-caramelo-salgado-cold-foam']) {
+      await revealItem(page, id)
       const slide = page.locator(`[data-item="${id}"]`)
       await slide.scrollIntoViewIfNeeded()
       const photo = await box(slide.locator('.pimg__box'))
@@ -225,6 +227,7 @@ test.describe('cardápio no celular', () => {
   test('a foto do produto não invade o texto nem as categorias', async ({ page }) => {
     // inclui o nome mais longo do cardápio: a foto não pode encolher demais no iPhone SE
     for (const id of ['matcha-latte-proteico-gelado', 'chocolate-quente', 'bolo-red-velvet-fatia', 'mocha-strate-frappuccino-com-caramelo-salgado-cold-foam']) {
+      await revealItem(page, id)
       const slide = page.locator(`[data-item="${id}"]`)
       await slide.scrollIntoViewIfNeeded()
       const img = await box(slide.locator('.pimg__box'))
@@ -237,6 +240,7 @@ test.describe('cardápio no celular', () => {
   })
 
   test('produto com preço "a partir de" cabe na largura, com descrição de uma linha', async ({ page }) => {
+    await revealItem(page, 'chocolate-quente')
     const slide = page.locator('[data-item="chocolate-quente"]')
     await slide.scrollIntoViewIfNeeded()
     const body = await box(slide.locator('.slide__body'))
@@ -358,10 +362,7 @@ test.describe('cardápio no celular', () => {
     ]
     const heights = new Set<number>()
     for (const id of ids) {
-      await page.locator('.feed').evaluate((feed, id) => {
-        const el = feed.querySelector<HTMLElement>(`[data-item="${id}"]`)!
-        feed.scrollTo({ top: el.offsetTop })
-      }, id)
+      await revealItem(page, id)
       await page.locator(`[data-item="${id}"] .wantbtn`).click()
       const sheet = page.locator('.sheet-wrap--open .sheet')
       await expect(sheet).toBeVisible()
@@ -432,10 +433,7 @@ test.describe('cardápio no celular', () => {
 
   /** Abre o detalhe de um produto do feed. */
   async function openDetail(page: Page, id: string) {
-    await page.locator('.feed').evaluate((feed, id) => {
-      const el = feed.querySelector<HTMLElement>(`[data-item="${id}"]`)!
-      feed.scrollTo({ top: el.offsetTop })
-    }, id)
+    await revealItem(page, id)
     await page.locator(`[data-item="${id}"] .wantbtn`).click()
     const sheet = page.locator('.sheet-wrap--open .sheet')
     await expect(sheet).toBeVisible()
@@ -499,10 +497,7 @@ const BRL = (v: string) => new RegExp(`R\\$\\s${v}`)
 
 /** Vai até o produto no feed, toca em "Eu quero" e adiciona pelo detalhe. */
 async function addFromFeed(page: Page, id: string) {
-  await page.locator('.feed').evaluate((feed, id) => {
-    const el = feed.querySelector<HTMLElement>(`[data-item="${id}"]`)!
-    feed.scrollTo({ top: el.offsetTop })
-  }, id)
+  await revealItem(page, id)
   await page.locator(`[data-item="${id}"] .wantbtn`).click()
   await page.locator('.sheet-wrap--open .sheet .cta').click()
 }
@@ -809,6 +804,7 @@ test.describe('sacola e pedido: layout', () => {
     expect(t.right).toBeLessThanOrEqual(vp.width)
     expect(t.y).toBeGreaterThanOrEqual((await box(page.locator('.cats'))).bottom)
     // o botão de sacola do produto continua livre para outro toque
+    await revealItem(page, 'cafe-latte')
     expect(t.bottom).toBeLessThanOrEqual((await box(page.locator('[data-item="cafe-latte"] .wantbtn'))).y)
     for (const b of await page.locator('.toast__btn').all()) expect((await box(b)).height).toBeGreaterThanOrEqual(44)
   })

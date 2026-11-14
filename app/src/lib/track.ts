@@ -9,6 +9,7 @@ export type TrackEvent =
   | { type: 'view'; itemId: string; ms: number }
   | { type: 'open_details'; itemId: string }
   | { type: 'category'; categoryId: string }
+  | { type: 'category_end'; categoryId: string }
   | { type: 'quiz_open' }
   | { type: 'quiz_result'; answers: Record<string, string | string[] | undefined>; itemIds: string[] }
   | { type: 'view_mode'; mode: 'feed' | 'grid' }

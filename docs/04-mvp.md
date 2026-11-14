@@ -22,7 +22,7 @@ O MVP é uma **demo de venda para donos de cafeteria**: um cardápio que o clien
 
 | Funcionalidade | Como funciona |
 | --- | --- |
-| Feed em tela cheia | Um produto por tela com rolagem que encaixa (estilo Reels). Foto inteira sobre o fundo pastel da própria foto. |
+| Feed em tela cheia | Um produto por tela com rolagem que encaixa (estilo Reels). Foto inteira sobre o fundo pastel da própria foto. **Uma categoria por vez e sem rolagem infinita:** depois do último produto vem o cartão "Você viu tudo em X" com "Ver <próxima categoria>" (na última, "Voltar para <primeira>") e "Ver em grade". Pedido do dono, para não passar a sensação de que não tem fim. |
 | Categorias gerais | Novidades, Cafés, Gelados, Bebidas, Salgados e Doces, numa cápsula de vidro com seletor deslizante. Tocar numa pula para a seção. |
 | Dica de deslizar | Um "deslize ↓" discreto no primeiro produto. |
 | Ver tudo | Uma grade de 2 colunas com todas as opções, separada por categoria. Tocar num item abre ele no feed. |
